@@ -30,6 +30,10 @@
                                      }
                                  ]
                              ],
-                 "backgroundColor":  "#050606"
+                 "backgroundColor":  "#0B1211",
+                 "androidStatusBar":  {
+                                          "backgroundColor":  "#0B1211",
+                                          "barStyle":  "light-content"
+                                      }
              }
 }

@@ -16,7 +16,6 @@ const onboardingFindPlaces = {
   title: "Find Places Near You",
   description:
     "Discover nearby hotels, nature spots, and historical attractions based on your current location.",
-  icon: "location",
   activeStep: 1,
   totalSteps: 3,
   primaryButton: "Next",
@@ -31,32 +30,23 @@ export default function OnboardingFindPlacesNearYou({
   return (
     <View style={styles.screen}>
       <View style={styles.heroFrame}>
-        {heroImageSource ? (
-          <ImageBackground
-            source={heroImageSource}
-            resizeMode="cover"
-            style={styles.heroImage}
-            imageStyle={styles.heroImageRadius}
-          >
-            <Pressable style={styles.topSkipButton} onPress={onSkip}>
-              <Text style={styles.topSkipText}>
-                {onboardingFindPlaces.secondaryButton}
-              </Text>
-            </Pressable>
-          </ImageBackground>
-        ) : (
-          <View style={styles.heroPlaceholder}>
-            <Pressable style={styles.topSkipButton} onPress={onSkip}>
-              <Text style={styles.topSkipText}>
-                {onboardingFindPlaces.secondaryButton}
-              </Text>
-            </Pressable>
-          </View>
-        )}
+        <ImageBackground
+          source={heroImageSource}
+          resizeMode="cover"
+          style={styles.heroImage}
+          imageStyle={styles.heroImageRadius}
+        >
+          <Pressable style={styles.topSkipButton} onPress={onSkip}>
+            <Text style={styles.topSkipText}>
+              {onboardingFindPlaces.secondaryButton}
+            </Text>
+          </Pressable>
+        </ImageBackground>
       </View>
 
       <View style={styles.content}>
         <Text style={styles.title}>{onboardingFindPlaces.title}</Text>
+
         <Text style={styles.description}>
           {onboardingFindPlaces.description}
         </Text>
@@ -96,14 +86,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0E453B",
     paddingHorizontal: 20,
-    paddingTop: 54,
-    paddingBottom: 26,
+    paddingTop: 52,
+    paddingBottom: 34,
   },
 
   heroFrame: {
     width: "100%",
     maxWidth: 360,
-    height: 455,
+    height: 475,
     overflow: "hidden",
     borderRadius: 26,
     backgroundColor: "#0E453B",
@@ -132,17 +122,11 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
 
-  heroPlaceholder: {
-    flex: 1,
-    borderRadius: 26,
-    backgroundColor: "#0E453B",
-  },
-
   content: {
     width: "100%",
     maxWidth: 340,
     alignItems: "center",
-    marginTop: 24,
+    marginTop: 28,
   },
 
   title: {
@@ -163,13 +147,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: rgba(colors.neutral[50], 0.85),
     textAlign: "center",
-  },
-
-  footer: {
-    width: "100%",
-    maxWidth: 306,
-    alignItems: "center",
-    marginTop: "auto",
   },
 
   steps: {
@@ -195,9 +172,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0C46C",
   },
 
+  footer: {
+    width: "100%",
+    maxWidth: 306,
+    alignItems: "center",
+    marginTop: 42,
+  },
+
   primaryButton: {
     width: "100%",
-    minHeight: 46,
+    minHeight: 50,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 14,

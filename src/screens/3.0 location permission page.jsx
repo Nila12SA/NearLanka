@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import * as Location from "expo-location";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
@@ -18,18 +18,37 @@ const locationPermission = {
 
 export default function LocationPermissionScreen({ onAllow, onLater }) {
   const [isRequesting, setIsRequesting] = useState(false);
+  const [permissionMessage, setPermissionMessage] = useState("");
+  const [isPermissionSheetVisible, setIsPermissionSheetVisible] = useState(false);
 
-  const handleAllowLocation = async () => {
+  const requestLocationPermission = async (choiceLabel) => {
     if (isRequesting) return;
 
     setIsRequesting(true);
+    setPermissionMessage("");
+    setIsPermissionSheetVisible(false);
 
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status === "granted") {
+        setPermissionMessage(`${choiceLabel} selected. Location access enabled.`);
+      } else {
+        setPermissionMessage("Location permission was not allowed.");
+      }
+
       onAllow?.(status);
+    } catch {
+      setPermissionMessage("Location permission is unavailable right now.");
     } finally {
       setIsRequesting(false);
     }
+  };
+
+  const handleDenyLocation = () => {
+    setIsPermissionSheetVisible(false);
+    setPermissionMessage("Location permission was not allowed.");
+    onAllow?.("denied");
   };
 
   return (
@@ -53,7 +72,10 @@ export default function LocationPermissionScreen({ onAllow, onLater }) {
 
       <View style={styles.bottomSection}>
         <View style={styles.actions}>
-          <Pressable style={styles.primaryButton} onPress={handleAllowLocation}>
+          <Pressable
+            style={styles.primaryButton}
+            onPress={() => setIsPermissionSheetVisible(true)}
+          >
             <Text style={styles.primaryButtonText}>
               {isRequesting ? "Requesting..." : locationPermission.primaryButton}
             </Text>
@@ -64,10 +86,52 @@ export default function LocationPermissionScreen({ onAllow, onLater }) {
               {locationPermission.secondaryButton}
             </Text>
           </Pressable>
+          {permissionMessage ? (
+            <Text style={styles.permissionMessage}>{permissionMessage}</Text>
+          ) : null}
         </View>
 
         <Text style={styles.footnote}>{locationPermission.footnote}</Text>
       </View>
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={isPermissionSheetVisible}
+        onRequestClose={() => setIsPermissionSheetVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.permissionSheet}>
+            <Text style={styles.sheetTitle}>
+              Allow "NearLanka" to use your location?
+            </Text>
+            <Text style={styles.sheetDescription}>
+              Your location helps NearLanka show nearby Sri Lankan places,
+              hotels, attractions, and distance.
+            </Text>
+
+            <Pressable
+              style={styles.sheetOption}
+              onPress={() => requestLocationPermission("Allow Once")}
+            >
+              <Text style={styles.sheetOptionText}>Allow Once</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.sheetOption}
+              onPress={() => requestLocationPermission("Allow While Using App")}
+            >
+              <Text style={styles.sheetOptionText}>Allow While Using App</Text>
+            </Pressable>
+
+            <Pressable style={styles.sheetOption} onPress={handleDenyLocation}>
+              <Text style={[styles.sheetOptionText, styles.denyOptionText]}>
+                Don't Allow
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -205,6 +269,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
+  permissionMessage: {
+    marginTop: 8,
+    fontFamily: typography.fontFamily.body,
+    color: rgba(colors.neutral[50], 0.7),
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: "center",
+  },
+
   footnote: {
     width: "100%",
     maxWidth: 286,
@@ -214,5 +287,64 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     textAlign: "center",
+  },
+
+  modalOverlay: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 38,
+    backgroundColor: "rgba(0,0,0,0.44)",
+  },
+
+  permissionSheet: {
+    width: "100%",
+    maxWidth: 312,
+    overflow: "hidden",
+    borderRadius: 14,
+    backgroundColor: "rgba(245,245,245,0.96)",
+  },
+
+  sheetTitle: {
+    paddingTop: 20,
+    paddingHorizontal: 22,
+    fontFamily: typography.fontFamily.body,
+    color: "#000000",
+    fontSize: 17,
+    lineHeight: 22,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+
+  sheetDescription: {
+    paddingTop: 8,
+    paddingBottom: 16,
+    paddingHorizontal: 22,
+    fontFamily: typography.fontFamily.body,
+    color: "rgba(0,0,0,0.58)",
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: "center",
+  },
+
+  sheetOption: {
+    minHeight: 48,
+    alignItems: "center",
+    justifyContent: "center",
+    borderTopWidth: 1,
+    borderTopColor: "rgba(0,0,0,0.14)",
+  },
+
+  sheetOptionText: {
+    fontFamily: typography.fontFamily.body,
+    color: "#007AFF",
+    fontSize: 17,
+    lineHeight: 22,
+    fontWeight: typography.fontWeight.regular,
+    textAlign: "center",
+  },
+
+  denyOptionText: {
+    fontWeight: "600",
   },
 });

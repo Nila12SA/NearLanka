@@ -3,7 +3,7 @@ import { Animated, StyleSheet, Text, View } from "react-native";
 import { colors } from "../theme/colors";
 import { typography } from "../theme/typography";
 
-export default function SplashScreen() {
+export default function SplashScreen({ onContinue }) {
   const logoText = "NearLanka";
 
   const letterAnimations = useRef(
@@ -26,14 +26,18 @@ export default function SplashScreen() {
       ])
     );
 
-    const loopAnimation = Animated.loop(
-      Animated.stagger(120, animations)
-    );
-
+    const loopAnimation = Animated.loop(Animated.stagger(120, animations));
     loopAnimation.start();
 
-    return () => loopAnimation.stop();
-  }, [letterAnimations]);
+    const timer = setTimeout(() => {
+      onContinue?.();
+    }, 3000);
+
+    return () => {
+      loopAnimation.stop();
+      clearTimeout(timer);
+    };
+  }, [letterAnimations, onContinue]);
 
   return (
     <View style={styles.container}>

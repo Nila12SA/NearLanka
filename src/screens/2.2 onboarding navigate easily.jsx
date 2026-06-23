@@ -46,6 +46,7 @@ export default function OnboardingNavigateEasily({
 
       <View style={styles.content}>
         <Text style={styles.title}>{onboardingNavigateEasily.title}</Text>
+
         <Text style={styles.description}>
           {onboardingNavigateEasily.description}
         </Text>
@@ -86,14 +87,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0E453B",
     paddingHorizontal: 20,
-    paddingTop: 54,
-    paddingBottom: 26,
+    paddingTop: 52,
+    paddingBottom: 34,
   },
 
   heroFrame: {
     width: "100%",
     maxWidth: 360,
-    height: 455,
+    height: 475,
     overflow: "hidden",
     borderRadius: 26,
     backgroundColor: "#0E453B",
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 340,
     alignItems: "center",
-    marginTop: 24,
+    marginTop: 28,
   },
 
   title: {
@@ -147,13 +148,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: rgba(colors.neutral[50], 0.85),
     textAlign: "center",
-  },
-
-  footer: {
-    width: "100%",
-    maxWidth: 306,
-    alignItems: "center",
-    marginTop: "auto",
   },
 
   steps: {
@@ -179,9 +173,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0C46C",
   },
 
+  footer: {
+    width: "100%",
+    maxWidth: 306,
+    alignItems: "center",
+    marginTop: 42,
+  },
+
   primaryButton: {
     width: "100%",
-    minHeight: 46,
+    minHeight: 50,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 14,

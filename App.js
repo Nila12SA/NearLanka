@@ -1,72 +1,57 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 import SplashScreen from "./src/screens/1.0 splashscreen";
-import OnboardingFindPlacesNearYou from "./src/screens/2.0 onboarding find places near you";
-import OnboardingSaveYourFavorites from "./src/screens/2.1 onboarding save your favorites";
-import OnboardingNavigateEasily from "./src/screens/2.2 onboarding navigate easily";
-import LocationPermissionScreen from "./src/screens/3.0 location permission page";
+import OnboardingFindPlaces from "./src/screens/2.0 onboarding find places near you";
+import OnboardingSaveFavorites from "./src/screens/2.1 onboarding save your favorites";
+import OnboardingNavigate from "./src/screens/2.2 onboarding navigate easily";
+import LocationPermission from "./src/screens/3.0 location permission page";
+import HomePage from "./src/screens/4.0 home page";
 
 export default function App() {
-  const [activeScreen, setActiveScreen] = useState("splash");
+  const [screen, setScreen] = useState("splash");
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setActiveScreen("onboardingFindPlaces");
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const currentBackground =
-    activeScreen === "splash" ? "#050606" : "#0E453B";
+  const goToLocation = () => {
+    setScreen("location");
+  };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: currentBackground }]}
-        edges={["top", "bottom"]}
-      >
-        <StatusBar style="light" />
+    <>
+      <StatusBar style="light" backgroundColor="#0B1211" />
 
-        {activeScreen === "splash" && <SplashScreen />}
+      {screen === "splash" && (
+        <SplashScreen onContinue={() => setScreen("onboarding1")} />
+      )}
 
-        {activeScreen === "onboardingFindPlaces" && (
-          <OnboardingFindPlacesNearYou
-            onNext={() => setActiveScreen("onboardingSaveFavorites")}
-            onSkip={() => setActiveScreen("onboardingSaveFavorites")}
-          />
-        )}
+      {screen === "onboarding1" && (
+        <OnboardingFindPlaces
+          onNext={() => setScreen("onboarding2")}
+          onSkip={goToLocation}
+        />
+      )}
 
-        {activeScreen === "onboardingSaveFavorites" && (
-          <OnboardingSaveYourFavorites
-            onNext={() => setActiveScreen("onboardingNavigateEasily")}
-            onSkip={() => setActiveScreen("onboardingNavigateEasily")}
-          />
-        )}
+      {screen === "onboarding2" && (
+        <OnboardingSaveFavorites
+          onNext={() => setScreen("onboarding3")}
+          onSkip={goToLocation}
+        />
+      )}
 
-        {activeScreen === "onboardingNavigateEasily" && (
-          <OnboardingNavigateEasily
-            onNext={() => setActiveScreen("locationPermission")}
-            onSkip={() => setActiveScreen("locationPermission")}
-          />
-        )}
+      {screen === "onboarding3" && (
+        <OnboardingNavigate
+          onNext={goToLocation}
+          onSkip={goToLocation}
+        />
+      )}
 
-        {activeScreen === "locationPermission" && (
-          <LocationPermissionScreen
-            onAllow={() => {}}
-            onLater={() => {}}
-          />
-        )}
-      </SafeAreaView>
-    </SafeAreaProvider>
+      {screen === "location" && (
+        <LocationPermission
+          onAllow={() => setScreen("home")}
+          onLater={() => setScreen("home")}
+        />
+      )}
+
+      {screen === "home" && <HomePage />}
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

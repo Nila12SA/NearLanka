@@ -61,14 +61,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#0E453B",
     paddingHorizontal: 20,
-    paddingTop: 54,
-    paddingBottom: 26,
+    paddingTop: 52,
+    paddingBottom: 34,
   },
 
   heroFrame: {
     width: "100%",
     maxWidth: 360,
-    height: 455,
+    height: 475,
     borderRadius: 26,
     overflow: "hidden",
     backgroundColor: "#0E453B",
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 340,
     alignItems: "center",
-    marginTop: 24,
+    marginTop: 28,
   },
 
   title: {
@@ -121,13 +121,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     textAlign: "center",
-  },
-
-  bottomArea: {
-    width: "100%",
-    maxWidth: 306,
-    alignItems: "center",
-    marginTop: "auto",
   },
 
   dots: {
@@ -153,9 +146,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0C46C",
   },
 
+  bottomArea: {
+    width: "100%",
+    maxWidth: 306,
+    alignItems: "center",
+    marginTop: 42,
+  },
+
   nextButton: {
     width: "100%",
-    minHeight: 46,
+    minHeight: 50,
     borderRadius: 14,
     backgroundColor: "#F0C46C",
     alignItems: "center",
