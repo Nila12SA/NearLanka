@@ -87,7 +87,7 @@ const recentlyViewed = [
   },
 ];
 
-export default function HomePage() {
+export default function HomePage({ onHotelsPress, onCategoryPress }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor={APP_BG} />
@@ -140,6 +140,13 @@ export default function HomePage() {
               {filters.map((filter, index) => (
                 <Pressable
                   key={filter}
+                  onPress={() => {
+                    onCategoryPress?.(filter);
+
+                    if (filter === "Hotels") {
+                      onHotelsPress?.();
+                    }
+                  }}
                   style={[
                     styles.filterPill,
                     index === 0 && styles.activeFilterPill,

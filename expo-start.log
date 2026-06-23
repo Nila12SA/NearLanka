@@ -84,3 +84,140 @@ iOS Bundled 29ms index.js (1 module)
 iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
 iOS Bundled 30ms index.js (1 module)
  WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 29ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 25ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+Unable to resolve "./src/screens/3.0 location permission" from "App.js"
+[0m [90m  6 |[39m [36mimport[39m [33mOnboardingSaveFavorites[39m [36mfrom[39m [32m"./src/screens/2.1 onboarding save your favorites"[39m[33m;[39m
+ [90m  7 |[39m [36mimport[39m [33mOnboardingNavigate[39m [36mfrom[39m [32m"./src/screens/2.2 onboarding navigate easily"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 |[39m [36mimport[39m [33mLocationPermission[39m [36mfrom[39m [32m"./src/screens/3.0 location permission"[39m[33m;[39m
+ [90m    |[39m                                 [31m[1m^[22m[39m
+ [90m  9 |[39m [36mimport[39m [33mHomePage[39m [36mfrom[39m [32m"./src/screens/4.0 home page"[39m[33m;[39m
+ [90m 10 |[39m
+ [90m 11 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mApp[39m() {[0m
+
+Import stack:
+
+ App.js
+ | import "./src/screens/3.0 location permission"
+
+ index.js
+ | import "./App"
+
+ 
+ | import "./index"
+
+ ERROR  [Error: UnableToResolveError Unable to resolve module ./src/screens/3.0 location permission from C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\App.js: 
+
+None of these files exist:
+  * src\screens\3.0 location permission(.ios.ts|.native.ts|.ts|.ios.tsx|.native.tsx|.tsx|.ios.mjs|.native.mjs|.mjs|.ios.js|.native.js|.js|.ios.jsx|.native.jsx|.jsx|.ios.json|.native.json|.json|.ios.cjs|.native.cjs|.cjs|.ios.scss|.native.scss|.scss|.ios.sass|.native.sass|.sass|.ios.css|.native.css|.css)
+  * src\screens\3.0 location permission
+[0m [90m  6 |[39m [36mimport[39m [33mOnboardingSaveFavorites[39m [36mfrom[39m [32m"./src/screens/2.1 onboarding save your favorites"[39m[33m;[39m
+ [90m  7 |[39m [36mimport[39m [33mOnboardingNavigate[39m [36mfrom[39m [32m"./src/screens/2.2 onboarding navigate easily"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 |[39m [36mimport[39m [33mLocationPermission[39m [36mfrom[39m [32m"./src/screens/3.0 location permission"[39m[33m;[39m
+ [90m    |[39m                                 [31m[1m^[22m[39m
+ [90m  9 |[39m [36mimport[39m [33mHomePage[39m [36mfrom[39m [32m"./src/screens/4.0 home page"[39m[33m;[39m
+ [90m 10 |[39m
+ [90m 11 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mApp[39m() {[0m]
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundling failed 16ms index.js (1 module)
+Unable to resolve "./src/screens/3.0 location permission" from "App.js"
+[0m [90m  6 |[39m [36mimport[39m [33mOnboardingSaveFavorites[39m [36mfrom[39m [32m"./src/screens/2.1 onboarding save your favorites"[39m[33m;[39m
+ [90m  7 |[39m [36mimport[39m [33mOnboardingNavigate[39m [36mfrom[39m [32m"./src/screens/2.2 onboarding navigate easily"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 |[39m [36mimport[39m [33mLocationPermission[39m [36mfrom[39m [32m"./src/screens/3.0 location permission"[39m[33m;[39m
+ [90m    |[39m                                 [31m[1m^[22m[39m
+ [90m  9 |[39m [36mimport[39m [33mHomePage[39m [36mfrom[39m [32m"./src/screens/4.0 home page"[39m[33m;[39m
+ [90m 10 |[39m
+ [90m 11 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mApp[39m() {[0m
+
+Import stack:
+
+ App.js
+ | import "./src/screens/3.0 location permission"
+
+ index.js
+ | import "./App"
+
+ 
+ | import "./index"
+
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 59ms index.js (1 module)
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 33ms index.js (1 module)
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 28ms index.js (1 module)
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 114ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundling failed 111ms index.js (1 module)
+Unable to resolve "../../assets/colombo-seven-h-facilities-rt.jpg" from "src\screens\5.0 hotels page.jsx"
+[0m [90m 14 |[39m [36mimport[39m { [33mIonicons[39m[33m,[39m [33mMaterialCommunityIcons[39m } [36mfrom[39m [32m"@expo/vector-icons"[39m[33m;[39m
+ [90m 15 |[39m
+[31m[1m>[22m[39m[90m 16 |[39m [36mconst[39m cityHotelImage [33m=[39m require([32m"../../assets/colombo-seven-h-facilities-rt.jpg"[39m)[33m;[39m
+ [90m    |[39m                                 [31m[1m^[22m[39m
+ [90m 17 |[39m [36mconst[39m rooftopHotelImage [33m=[39m require([32m"../../assets/colombo-seven-h-facilities-left.jpg"[39m)[33m;[39m
+ [90m 18 |[39m [36mconst[39m poolHotelImage [33m=[39m require([32m"../../assets/poolside-exterior-view-1076x818.jpg"[39m)[33m;[39m
+ [90m 19 |[39m [36mconst[39m gardenHotelImage [33m=[39m require([32m"../../assets/Home-Main-1742X871.jpg"[39m)[33m;[39m[0m
+
+Import stack:
+
+ src\screens\5.0 hotels page.jsx
+ | import "../../assets/colombo-seven-h-facilities-rt.jpg"
+
+ App.js
+ | import "./src/screens/5.0 hotels page"
+
+ index.js
+ | import "./App"
+
+ 
+ | import "./index"
+
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 560ms index.js (1 module)
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 50ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 54ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 63ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "10" is not a valid icon name for family "ionicons"
+ WARN  "11" is not a valid icon name for family "ionicons"
+ WARN  "12" is not a valid icon name for family "ionicons"
+ WARN  "13" is not a valid icon name for family "ionicons"
+ WARN  "8" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 41ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ ERROR  Text strings must be rendered within a <Text> component.
