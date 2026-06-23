@@ -19,11 +19,13 @@ const navItems = [
   { icon: navUserIcon, label: "Profile", key: "Profile" },
 ];
 
-export default function BottomNav({ activeKey, onNavPress }) {
+export default function BottomNav({ activeKey, activeTab, onNavPress }) {
+  const selectedTab = activeTab || activeKey;
   return (
     <View style={styles.bottomNav}>
       {navItems.map((item) => {
-        const isActive = item.key === activeKey;
+        const isActive =
+          item.key.toLowerCase() === String(selectedTab).toLowerCase();
 
         return (
           <Pressable
@@ -53,6 +55,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    zIndex: 30,
+    elevation: 30,
     height: 76,
     flexDirection: "row",
     alignItems: "center",

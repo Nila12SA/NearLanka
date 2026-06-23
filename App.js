@@ -15,7 +15,13 @@ import NaturePage from "./src/screens/6.0 nature page";
 import NatureInnerPage from "./src/screens/6.1 nature inner page";
 import HistoricalPage from "./src/screens/7.0 historical page";
 import HistoricalInnerPage from "./src/screens/7.1 historical inner page";
+import MapPage from "./src/screens/9.0 map page";
 import FavoritesPage from "./src/screens/10.0 favorites page";
+import ProfilePage from "./src/screens/11.0 profile page";
+import SearchPage from "./src/screens/12.0 search page";
+import ReviewsPage from "./src/screens/13.0 review page";
+import EmptyStatePage from "./src/screens/14.0 empty error state page";
+import LoginPage from "./src/screens/15.0 login page";
 
 const hotelDetailFavorite = {
   id: "hotel-nearby-city-hotel",
@@ -49,6 +55,7 @@ export default function App() {
   const [favorites, setFavorites] = useState([]);
   const [selectedHistoricalPlace, setSelectedHistoricalPlace] = useState(null);
   const [hasLocationPermission, setHasLocationPermission] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const onboardingTransition = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -126,6 +133,32 @@ export default function App() {
     setScreen("home");
   };
 
+  const goToSearch = () => {
+    setScreen("search");
+  };
+
+  const goToReviews = () => {
+    setScreen(isLoggedIn ? "reviews" : "login");
+  };
+
+  const goToEmptyStates = () => {
+    setScreen(isLoggedIn ? "emptyStates" : "login");
+  };
+
+  const goToLogin = () => {
+    setScreen("login");
+  };
+
+  const completeLogin = () => {
+    setIsLoggedIn(true);
+    setScreen("profile");
+  };
+
+  const signOut = () => {
+    setIsLoggedIn(false);
+    setScreen("login");
+  };
+
   const goToHotels = () => {
     setScreen("hotels");
   };
@@ -168,7 +201,7 @@ export default function App() {
     }
 
     if (screenName === "Map") {
-      setScreen("home");
+      setScreen("map");
       return;
     }
 
@@ -178,7 +211,7 @@ export default function App() {
     }
 
     if (screenName === "Profile") {
-      setScreen("home");
+      setScreen(isLoggedIn ? "profile" : "login");
     }
   };
 
@@ -235,10 +268,20 @@ export default function App() {
             onLater={continueWithoutLocation}
           />
         )}
+      {screen === "login" && (
+        <LoginPage
+  onSignIn={() => setCurrentScreen("home")}
+  onSignUp={() => setCurrentScreen("signup")}
+  onGooglePress={() => setCurrentScreen("googleLogin")}
+  onApplePress={() => setCurrentScreen("appleLogin")}
+  onForgotPassword={() => setCurrentScreen("forgotPassword")}
+/>
+      )}
 
       {screen === "home" && (
         <HomePage
           onNavPress={handleNavPress}
+          onSearchPress={goToSearch}
           onHotelsPress={goToHotels}
           onHotelPress={goToHotels}
           hasLocationPermission={hasLocationPermission}
@@ -278,11 +321,20 @@ export default function App() {
         <ExplorePage
           onNavPress={handleNavPress}
           onMenuPress={() => {}}
+          onSearchPress={goToSearch}
           hasLocationPermission={hasLocationPermission}
           favoriteIds={favoriteIds}
           onFavoritePress={(place) => addFavorite(place)}
         />
       )}
+
+      {screen === "search" && (
+        <SearchPage
+          onNavPress={handleNavPress}
+          onMenuPress={() => {}}
+        />
+      )}
+
       {screen === "hotels" && (
         <HotelsPage
           onNavPress={handleNavPress}
@@ -345,6 +397,37 @@ export default function App() {
               type: "HISTORICAL",
             })
           }
+        />
+      )}
+
+
+      {screen === "map" && (
+        <MapPage
+          onNavPress={handleNavPress}
+          hasLocationPermission={hasLocationPermission}
+        />
+      )}
+
+      {screen === "profile" && isLoggedIn && (
+        <ProfilePage
+          onNavPress={handleNavPress}
+          onReviewsPress={goToReviews}
+          onEmptyStatesPress={goToEmptyStates}
+          onLoginPress={signOut}
+          hasLocationPermission={hasLocationPermission}
+          savedPlacesCount={favorites.length}
+        />
+      )}
+      {screen === "reviews" && isLoggedIn && (
+        <ReviewsPage
+          onNavPress={handleNavPress}
+          onMenuPress={() => {}}
+        />
+      )}
+      {screen === "emptyStates" && isLoggedIn && (
+        <EmptyStatePage
+          onNavPress={handleNavPress}
+          onMenuPress={() => {}}
         />
       )}
 

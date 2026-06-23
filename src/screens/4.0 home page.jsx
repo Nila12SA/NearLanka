@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
 import BottomNav from "../components/BottomNav";
+import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
 
 const teaEstateImage = require("../../assets/home-tea-estate.jpg");
@@ -94,6 +95,7 @@ export default function HomePage({
   onCategoryPress,
   onFavoritePress,
   onNavPress,
+  onSearchPress,
   hasLocationPermission = true,
   favoriteIds = [],
 }) {
@@ -102,22 +104,7 @@ export default function HomePage({
       <StatusBar barStyle="light-content" backgroundColor={APP_BG} />
 
       <View style={styles.screen}>
-        <View style={styles.header}>
-          <View style={styles.menuIcon}>
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-          </View>
-
-          <Text style={styles.logoText}>NearLanka</Text>
-          <View style={styles.loginLogoButton}>
-            <Image
-              source={navLoginIcon}
-              style={styles.loginLogoIcon}
-              resizeMode="contain"
-            />
-          </View>
-        </View>
+        <AppHeader onProfilePress={() => onNavPress?.("Profile")} />
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -135,10 +122,10 @@ export default function HomePage({
           </Text>
 
           <View style={styles.searchPanel}>
-            <View style={styles.searchBox}>
+            <Pressable style={styles.searchBox} onPress={onSearchPress}>
               <Ionicons name="search" size={22} color="#B9C4BE" />
               <Text style={styles.searchPlaceholder}>Search nearby places</Text>
-            </View>
+            </Pressable>
 
             <ScrollView
               horizontal

@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
+import AppHeader from "../components/AppHeader";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -37,22 +38,10 @@ export default function FavoritesPage({ favorites = [], onNavPress, onMenuPress 
       <StatusBar style="light" backgroundColor={APP_BG} />
 
       <View style={styles.screen}>
-        <View style={styles.header}>
-          <Pressable style={styles.menuIcon} onPress={onMenuPress} hitSlop={10}>
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-            <View style={styles.menuLine} />
-          </Pressable>
-
-          <Text style={styles.logoText}>NearLanka</Text>
-
-          <Pressable
-            style={styles.loginLogoButton}
-            onPress={() => onNavPress?.("Profile")}
-          >
-            <Image source={navLoginIcon} style={styles.loginLogoIcon} resizeMode="contain" />
-          </Pressable>
-        </View>
+        <AppHeader
+          onMenuPress={onMenuPress}
+          onProfilePress={() => onNavPress?.("Profile")}
+        />
 
         <ScrollView
           showsVerticalScrollIndicator={false}
