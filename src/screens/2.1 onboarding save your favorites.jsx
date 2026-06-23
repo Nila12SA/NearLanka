@@ -38,15 +38,15 @@ export default function OnboardingSaveYourFavorites({
           Bookmark places you want to visit and access them anytime, even when
           offline.
         </Text>
-      </View>
 
-      <View style={styles.bottomArea}>
         <View style={styles.dots}>
           <View style={styles.dot} />
           <View style={styles.activeDot} />
           <View style={styles.dot} />
         </View>
+      </View>
 
+      <View style={styles.bottomArea}>
         <Pressable style={styles.nextButton} onPress={onNext}>
           <Text style={styles.nextButtonText}>Next</Text>
         </Pressable>
@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
 
   heroFrame: {
     width: "100%",
-    maxWidth: 350,
-    height: 430,
+    maxWidth: 360,
+    height: 455,
     borderRadius: 26,
     overflow: "hidden",
     backgroundColor: "#0E453B",
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 14,
     height: 14,
-    marginBottom: 24,
+    marginTop: 24,
   },
 
   dot: {
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
 
   nextButton: {
     width: "100%",
-    minHeight: 64,
+    minHeight: 46,
     borderRadius: 14,
     backgroundColor: "#F0C46C",
     alignItems: "center",
@@ -165,9 +165,9 @@ const styles = StyleSheet.create({
   nextButtonText: {
     fontFamily: typography.fontFamily.body,
     color: "#000000",
-    fontSize: 18,
-    fontWeight: "700",
-    lineHeight: 26,
+    fontSize: 16,
+    fontWeight: typography.fontWeight.regular,
+    lineHeight: 24,
     textAlign: "center",
   },
 });

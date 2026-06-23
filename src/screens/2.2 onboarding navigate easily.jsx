@@ -49,9 +49,7 @@ export default function OnboardingNavigateEasily({
         <Text style={styles.description}>
           {onboardingNavigateEasily.description}
         </Text>
-      </View>
 
-      <View style={styles.footer}>
         <View style={styles.steps}>
           {Array.from({ length: onboardingNavigateEasily.totalSteps }).map(
             (_, index) => {
@@ -67,7 +65,9 @@ export default function OnboardingNavigateEasily({
             }
           )}
         </View>
+      </View>
 
+      <View style={styles.footer}>
         <Pressable style={styles.primaryButton} onPress={onNext}>
           <Text style={styles.primaryButtonText}>
             {onboardingNavigateEasily.primaryButton}
@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
 
   heroFrame: {
     width: "100%",
-    maxWidth: 350,
-    height: 430,
+    maxWidth: 360,
+    height: 455,
     overflow: "hidden",
     borderRadius: 26,
     backgroundColor: "#0E453B",
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 14,
     height: 14,
-    marginBottom: 24,
+    marginTop: 24,
   },
 
   stepDot: {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
 
   primaryButton: {
     width: "100%",
-    minHeight: 64,
+    minHeight: 46,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 14,
@@ -190,9 +190,9 @@ const styles = StyleSheet.create({
 
   primaryButtonText: {
     fontFamily: typography.fontFamily.body,
-    fontSize: 18,
-    fontWeight: "700",
-    lineHeight: 26,
+    fontSize: 16,
+    fontWeight: typography.fontWeight.regular,
+    lineHeight: 24,
     color: "#000000",
     textAlign: "center",
   },

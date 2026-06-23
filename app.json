@@ -22,7 +22,13 @@
                          },
                  "plugins":  [
                                  "expo-sqlite",
-                                 "expo-font"
+                                 "expo-font",
+                                 [
+                                     "expo-location",
+                                     {
+                                         "locationWhenInUsePermission":  "Allow NearLanka to use your location to show nearby places and distances."
+                                     }
+                                 ]
                              ],
                  "backgroundColor":  "#050606"
              }

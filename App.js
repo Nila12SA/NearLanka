@@ -7,6 +7,7 @@ import SplashScreen from "./src/screens/1.0 splashscreen";
 import OnboardingFindPlacesNearYou from "./src/screens/2.0 onboarding find places near you";
 import OnboardingSaveYourFavorites from "./src/screens/2.1 onboarding save your favorites";
 import OnboardingNavigateEasily from "./src/screens/2.2 onboarding navigate easily";
+import LocationPermissionScreen from "./src/screens/3.0 location permission page";
 
 export default function App() {
   const [activeScreen, setActiveScreen] = useState("splash");
@@ -47,7 +48,17 @@ export default function App() {
         )}
 
         {activeScreen === "onboardingNavigateEasily" && (
-          <OnboardingNavigateEasily />
+          <OnboardingNavigateEasily
+            onNext={() => setActiveScreen("locationPermission")}
+            onSkip={() => setActiveScreen("locationPermission")}
+          />
+        )}
+
+        {activeScreen === "locationPermission" && (
+          <LocationPermissionScreen
+            onAllow={() => {}}
+            onLater={() => {}}
+          />
         )}
       </SafeAreaView>
     </SafeAreaProvider>
