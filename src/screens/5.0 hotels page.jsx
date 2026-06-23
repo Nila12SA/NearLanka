@@ -434,6 +434,7 @@ const styles = StyleSheet.create({
 
   activeFilterText: {
     color: "#123B37",
+    fontWeight: "700",
   },
 
   hotelCard: {

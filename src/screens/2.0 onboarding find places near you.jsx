@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   topSkipText: {
     fontFamily: typography.fontFamily.body,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
     lineHeight: 24,
     color: "#FFFFFF",
   },
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     fontFamily: typography.fontFamily.body,
     fontSize: 16,
-    fontWeight: typography.fontWeight.regular,
+    fontWeight: "700",
     lineHeight: 24,
     color: "#000000",
     textAlign: "center",

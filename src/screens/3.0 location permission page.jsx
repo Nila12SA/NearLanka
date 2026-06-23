@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     color: "#000000",
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: typography.fontWeight.regular,
+    fontWeight: "700",
     textAlign: "center",
   },
 
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     color: rgba(colors.neutral[50], 0.86),
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: typography.fontWeight.regular,
+    fontWeight: "700",
     textAlign: "center",
   },
 
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     color: "#007AFF",
     fontSize: 17,
     lineHeight: 22,
-    fontWeight: typography.fontWeight.regular,
+    fontWeight: "700",
     textAlign: "center",
   },
 

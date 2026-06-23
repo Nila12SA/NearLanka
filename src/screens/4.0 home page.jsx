@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
 
@@ -87,7 +88,7 @@ const recentlyViewed = [
   },
 ];
 
-export default function HomePage({ onHotelsPress, onCategoryPress }) {
+export default function HomePage({ onHotelsPress, onCategoryPress, onFavoritePress, onNavPress }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor={APP_BG} />
@@ -186,9 +187,9 @@ export default function HomePage({ onHotelsPress, onCategoryPress }) {
                   imageStyle={styles.nearbyImageRadius}
                   resizeMode="cover"
                 >
-                  <View style={styles.favoriteButton}>
-                    <Text style={styles.favoriteText}>Save</Text>
-                  </View>
+                  <Pressable style={styles.favoriteButton} onPress={() => onFavoritePress?.(place)}>
+                    <Ionicons name="heart-outline" size={22} color="#E3EFEC" />
+                  </Pressable>
 
                   <View style={styles.nearbyOverlay}>
                     <View style={styles.metaRow}>
@@ -269,7 +270,7 @@ export default function HomePage({ onHotelsPress, onCategoryPress }) {
 
         <View style={styles.bottomNav}>
           {navItems.map(({ icon, label, isActive }) => (
-            <View key={label} style={styles.navItem}>
+            <Pressable key={label} style={styles.navItem} onPress={() => onNavPress?.(label)}>
               <Image
                 source={icon}
                 style={[styles.navIcon, isActive && styles.activeNavIcon]}
@@ -278,7 +279,7 @@ export default function HomePage({ onHotelsPress, onCategoryPress }) {
               <Text style={[styles.navLabel, isActive && styles.activeNavText]}>
                 {label}
               </Text>
-            </View>
+            </Pressable>
           ))}
         </View>
       </View>
@@ -452,10 +453,12 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.body,
     color: rgba(colors.neutral[50], 0.72),
     fontSize: 15,
+    fontWeight: "700",
   },
 
   activeFilterText: {
     color: "#183633",
+    fontWeight: "700",
   },
 
   sectionHeaderRow: {

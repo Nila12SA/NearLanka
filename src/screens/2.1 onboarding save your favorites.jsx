@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.body,
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
     lineHeight: 24,
   },
 
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.body,
     color: "#000000",
     fontSize: 16,
-    fontWeight: typography.fontWeight.regular,
+    fontWeight: "700",
     lineHeight: 24,
     textAlign: "center",
   },
