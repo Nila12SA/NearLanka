@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 340,
     alignItems: "center",
-    marginTop: 28,
+    marginTop: 26,
   },
 
   title: {
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
   description: {
     maxWidth: 320,
     marginTop: 10,
+    minHeight: 72,
     fontFamily: typography.fontFamily.body,
     fontSize: 16,
     fontWeight: typography.fontWeight.regular,
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 14,
     height: 14,
-    marginTop: 24,
+    marginTop: 18,
   },
 
   stepDot: {
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 306,
     alignItems: "center",
-    marginTop: 42,
+    marginTop: 30,
   },
 
   primaryButton: {

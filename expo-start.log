@@ -727,3 +727,428 @@ iOS Bundled 41ms index.js (1 module)
  WARN  "local-parking" is not a valid icon name for family "ionicons"
  WARN  "local-parking" is not a valid icon name for family "ionicons"
  WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ ERROR  SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\App.js: Missing semicolon. (60:92)
+
+  58 |   }, [screen]);
+  59 |
+> 60 |   const favoriteIds = favorites.flatMap((item) => [item.id, item.title]).filter(Boolean);`r`n`r`n  const addFavorite = (item) => {
+     |                                                                                             ^
+  61 |     if (!item?.title) {
+  62 |       return;
+  63 |     }
+    at constructor (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:365:19)
+    at FlowParserMixin.raise (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6616:19)
+    at FlowParserMixin.semicolon (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6912:10)
+    at FlowParserMixin.parseExpressionStatement (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13302:10)
+    at FlowParserMixin.parseExpressionStatement (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2952:18)
+    at FlowParserMixin.parseStatementContent (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12916:19)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12784:17)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2930:24)
+    at FlowParserMixin.parseStatementListItem (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12764:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13333:61)
+    at FlowParserMixin.parseBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseBlock (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13314:10)
+    at FlowParserMixin.parseFunctionBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12117:24)
+    at FlowParserMixin.parseFunctionBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2907:11)
+    at FlowParserMixin.parseFunctionBodyAndFinish (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12103:10)
+    at FlowParserMixin.parseFunctionBodyAndFinish (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2915:18)
+    at C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13462:12
+    at FlowParserMixin.withSmartMixTopicForbiddingContext (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12420:14)
+    at FlowParserMixin.parseFunction (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13461:10)
+    at FlowParserMixin.parseExportDefaultExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13924:19)
+    at FlowParserMixin.parseExportDefaultExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2978:18)
+    at FlowParserMixin.parseExport (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13845:25)
+    at FlowParserMixin.parseStatementContent (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12895:27)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12784:17)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2930:24)
+    at FlowParserMixin.parseModuleItem (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12761:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13333:36)
+    at FlowParserMixin.parseBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseProgram (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12639:10)
+    at FlowParserMixin.parseTopLevel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12629:25)
+    at FlowParserMixin.parseTopLevel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3697:28)
+    at FlowParserMixin.parse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:14505:25)
+    at parse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:14518:26)
+    at parser (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transformation\normalize-file.js:51:37)
+    at normalizeFile.next (<anonymous>)
+    at run (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transformation\index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at evaluateSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\gensync\index.js:251:28)
+    at sync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\gensync\index.js:89:14)
+    at stopHiding - secret - don't use this - v1 (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\errors\rewrite-stack-trace.js:47:12)
+    at Object.transformSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transform.js:40:76)
+    at parseWithBabel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:75:18)
+    at transformSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:64:12)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\babel-transformer.js:127:58)
+    at transformJSWithBabel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:468:47)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:583:12)
+ ERROR  [Error: TransformError SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\App.js: Missing semicolon. (60:92)
+
+[0m [90m 58 |[39m   }[33m,[39m [screen])[33m;[39m
+ [90m 59 |[39m
+[31m[1m>[22m[39m[90m 60 |[39m   [36mconst[39m favoriteIds [33m=[39m favorites[33m.[39mflatMap((item) [33m=>[39m [item[33m.[39mid[33m,[39m item[33m.[39mtitle])[33m.[39mfilter([33mBoolean[39m)[33m;[39m[32m`r`[39mn[32m`r`[39mn  [36mconst[39m addFavorite [33m=[39m (item) [33m=>[39m {
+ [90m    |[39m                                                                                             [31m[1m^[22m[39m
+ [90m 61 |[39m     [36mif[39m ([33m![39mitem[33m?[39m[33m.[39mtitle) {
+ [90m 62 |[39m       [36mreturn[39m[33m;[39m
+ [90m 63 |[39m     }[0m]
+ ERROR  SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Unexpected token (91:34)
+
+  89 | ];
+  90 |
+> 91 | export default function HomePage({`r`n  onHotelsPress,`r`n  onCategoryPress,`r`n  onFavoritePress,`r`n  onNavPress,`r`n  favoriteIds = [],`r`n}) {
+     |                                   ^
+  92 |   return (
+  93 |     <SafeAreaView style={styles.safeArea}>
+  94 |       <StatusBar barStyle="light-content" backgroundColor={APP_BG} />
+    at constructor (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:365:19)
+    at FlowParserMixin.raise (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6616:19)
+    at FlowParserMixin.unexpected (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6636:16)
+    at FlowParserMixin.parsePropertyName (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12041:18)
+    at FlowParserMixin.parseBindingProperty (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:7439:12)
+    at FlowParserMixin.parseObjectLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11847:21)
+    at FlowParserMixin.parseBindingAtom (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:7369:21)
+    at FlowParserMixin.parseBindingAtom (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3475:22)
+    at FlowParserMixin.parseMaybeDefault (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:7461:39)
+    at FlowParserMixin.parseMaybeDefault (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3379:24)
+    at FlowParserMixin.parseBindingElement (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:7445:23)
+    at FlowParserMixin.parseBindingList (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:7409:24)
+    at FlowParserMixin.parseFunctionParams (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13478:24)
+    at FlowParserMixin.parseFunctionParams (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3483:11)
+    at FlowParserMixin.parseFunction (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13460:10)
+    at FlowParserMixin.parseExportDefaultExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13924:19)
+    at FlowParserMixin.parseExportDefaultExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2978:18)
+    at FlowParserMixin.parseExport (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13845:25)
+    at FlowParserMixin.parseStatementContent (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12895:27)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12784:17)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2930:24)
+    at FlowParserMixin.parseModuleItem (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12761:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13333:36)
+    at FlowParserMixin.parseBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseProgram (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12639:10)
+    at FlowParserMixin.parseTopLevel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12629:25)
+    at FlowParserMixin.parseTopLevel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3697:28)
+    at FlowParserMixin.parse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:14505:25)
+    at parse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:14518:26)
+    at parser (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transformation\normalize-file.js:51:37)
+    at normalizeFile.next (<anonymous>)
+    at run (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transformation\index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at evaluateSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\gensync\index.js:251:28)
+    at sync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\gensync\index.js:89:14)
+    at stopHiding - secret - don't use this - v1 (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\errors\rewrite-stack-trace.js:47:12)
+    at Object.transformSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transform.js:40:76)
+    at parseWithBabel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:75:18)
+    at transformSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:64:12)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\babel-transformer.js:127:58)
+    at transformJSWithBabel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:468:47)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:583:12)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js:178:19)
+    at transformFile (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js:67:36)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js:42:10)
+    at execFunction (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:149:17)
+ ERROR  [Error: TransformError SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Unexpected token (91:34)
+
+[0m [90m 89 |[39m ][33m;[39m
+ [90m 90 |[39m
+[31m[1m>[22m[39m[90m 91 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mHomePage[39m({[32m`r`[39mn  onHotelsPress[33m,[39m[32m`r`[39mn  onCategoryPress[33m,[39m[32m`r`[39mn  onFavoritePress[33m,[39m[32m`r`[39mn  onNavPress[33m,[39m[32m`r`[39mn  favoriteIds [33m=[39m [][33m,[39m[32m`r`[39mn}) {
+ [90m    |[39m                                   [31m[1m^[22m[39m
+ [90m 92 |[39m   [36mreturn[39m (
+ [90m 93 |[39m     [33m<[39m[33mSafeAreaView[39m style[33m=[39m{styles[33m.[39msafeArea}[33m>[39m
+ [90m 94 |[39m       [33m<[39m[33mStatusBar[39m barStyle[33m=[39m[32m"light-content"[39m backgroundColor[33m=[39m{[33mAPP_BG[39m} [33m/[39m[33m>[39m[0m]
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 352ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+ ERROR  SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Expected corresponding JSX closing tag for <Pressable>. (173:10)
+
+  171 |               ))}
+  172 |             </ScrollView>
+> 173 |           </View>
+      |           ^
+  174 |
+  175 |           <View style={styles.sectionHeaderRow}>
+  176 |             <View>
+    at constructor (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:365:19)
+    at FlowParserMixin.raise (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6616:19)
+    at FlowParserMixin.jsxParseElementAt (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4739:16)
+    at FlowParserMixin.jsxParseElementAt (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4710:32)
+    at FlowParserMixin.jsxParseElementAt (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4710:32)
+    at FlowParserMixin.jsxParseElementAt (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4710:32)
+    at FlowParserMixin.jsxParseElement (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4761:17)
+    at FlowParserMixin.parseExprAtom (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4771:19)
+    at FlowParserMixin.parseExprSubscripts (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11098:23)
+    at FlowParserMixin.parseUpdate (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11083:21)
+    at FlowParserMixin.parseMaybeUnary (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11063:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10916:61)
+    at FlowParserMixin.parseExprOps (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10921:23)
+    at FlowParserMixin.parseMaybeConditional (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10898:23)
+    at FlowParserMixin.parseMaybeAssign (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3510:39
+    at FlowParserMixin.tryParse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6924:20)
+    at FlowParserMixin.parseMaybeAssign (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3510:18)
+    at C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10817:39
+    at FlowParserMixin.allowInAnd (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12443:12)
+    at FlowParserMixin.parseMaybeAssignAllowIn (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10817:17)
+    at FlowParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12510:17)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11692:28)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3603:18)
+    at FlowParserMixin.parseExprAtom (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11348:23)
+    at FlowParserMixin.parseExprAtom (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4776:20)
+    at FlowParserMixin.parseExprSubscripts (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11098:23)
+    at FlowParserMixin.parseUpdate (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11083:21)
+    at FlowParserMixin.parseMaybeUnary (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11063:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10916:61)
+    at FlowParserMixin.parseExprOps (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10921:23)
+    at FlowParserMixin.parseMaybeConditional (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10898:23)
+    at FlowParserMixin.parseMaybeAssign (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10848:21)
+    at FlowParserMixin.parseMaybeAssign (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3561:18)
+    at FlowParserMixin.parseExpressionBase (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10797:39
+    at FlowParserMixin.allowInAnd (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12438:16)
+    at FlowParserMixin.parseExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10797:17)
+    at FlowParserMixin.parseReturnStatement (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13159:28)
+    at FlowParserMixin.parseStatementContent (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12815:21)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12784:17)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2930:24)
+    at FlowParserMixin.parseStatementListItem (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12764:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13333:61)
+    at FlowParserMixin.parseBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseBlock (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13314:10)
+    at FlowParserMixin.parseFunctionBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12117:24)
+    at FlowParserMixin.parseFunctionBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2907:11)
+    at FlowParserMixin.parseFunctionBodyAndFinish (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12103:10)
+    at FlowParserMixin.parseFunctionBodyAndFinish (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2915:18)
+ ERROR  [Error: TransformError SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Expected corresponding JSX closing tag for <Pressable>. (173:10)
+
+[0m [90m 171 |[39m               ))}
+ [90m 172 |[39m             [33m<[39m[33m/[39m[33mScrollView[39m[33m>[39m
+[31m[1m>[22m[39m[90m 173 |[39m           [33m<[39m[33m/[39m[33mView[39m[33m>[39m
+ [90m     |[39m           [31m[1m^[22m[39m
+ [90m 174 |[39m
+ [90m 175 |[39m           [33m<[39m[33mView[39m style[33m=[39m{styles[33m.[39msectionHeaderRow}[33m>[39m
+ [90m 176 |[39m             [33m<[39m[33mView[39m[33m>[39m[0m]
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 38ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 37ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+ ERROR  Text strings must be rendered within a <Text> component.
+ ERROR  SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Expected corresponding JSX closing tag for <View>. (276:8)
+
+  274 |             ))}
+  275 |           </View>
+> 276 |         </ScrollView>
+      |         ^
+  277 |
+  278 |         <View style={styles.mapButton}>
+  279 |           <Text style={styles.mapButtonText}>Map</Text>
+    at constructor (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:365:19)
+    at FlowParserMixin.raise (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6616:19)
+    at FlowParserMixin.jsxParseElementAt (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4739:16)
+    at FlowParserMixin.jsxParseElementAt (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4710:32)
+    at FlowParserMixin.jsxParseElement (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4761:17)
+    at FlowParserMixin.parseExprAtom (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4771:19)
+    at FlowParserMixin.parseExprSubscripts (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11098:23)
+    at FlowParserMixin.parseUpdate (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11083:21)
+    at FlowParserMixin.parseMaybeUnary (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11063:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10916:61)
+    at FlowParserMixin.parseExprOps (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10921:23)
+    at FlowParserMixin.parseMaybeConditional (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10898:23)
+    at FlowParserMixin.parseMaybeAssign (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10848:21)
+    at C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3510:39
+    at FlowParserMixin.tryParse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6924:20)
+    at FlowParserMixin.parseMaybeAssign (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3510:18)
+    at C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10817:39
+    at FlowParserMixin.allowInAnd (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12443:12)
+    at FlowParserMixin.parseMaybeAssignAllowIn (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10817:17)
+    at FlowParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12510:17)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11692:28)
+    at FlowParserMixin.parseParenAndDistinguishExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3603:18)
+    at FlowParserMixin.parseExprAtom (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11348:23)
+    at FlowParserMixin.parseExprAtom (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4776:20)
+    at FlowParserMixin.parseExprSubscripts (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11098:23)
+    at FlowParserMixin.parseUpdate (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11083:21)
+    at FlowParserMixin.parseMaybeUnary (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:11063:23)
+    at FlowParserMixin.parseMaybeUnaryOrPrivate (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10916:61)
+    at FlowParserMixin.parseExprOps (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10921:23)
+    at FlowParserMixin.parseMaybeConditional (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10898:23)
+    at FlowParserMixin.parseMaybeAssign (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10848:21)
+    at FlowParserMixin.parseMaybeAssign (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3561:18)
+    at FlowParserMixin.parseExpressionBase (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10801:23)
+    at C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10797:39
+    at FlowParserMixin.allowInAnd (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12438:16)
+    at FlowParserMixin.parseExpression (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:10797:17)
+    at FlowParserMixin.parseReturnStatement (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13159:28)
+    at FlowParserMixin.parseStatementContent (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12815:21)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12784:17)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2930:24)
+    at FlowParserMixin.parseStatementListItem (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12764:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13333:61)
+    at FlowParserMixin.parseBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseBlock (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13314:10)
+    at FlowParserMixin.parseFunctionBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12117:24)
+    at FlowParserMixin.parseFunctionBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2907:11)
+    at FlowParserMixin.parseFunctionBodyAndFinish (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12103:10)
+    at FlowParserMixin.parseFunctionBodyAndFinish (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2915:18)
+    at C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13462:12
+    at FlowParserMixin.withSmartMixTopicForbiddingContext (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12420:14)
+ ERROR  [Error: TransformError SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Expected corresponding JSX closing tag for <View>. (276:8)
+
+[0m [90m 274 |[39m             ))}
+ [90m 275 |[39m           [33m<[39m[33m/[39m[33mView[39m[33m>[39m
+[31m[1m>[22m[39m[90m 276 |[39m         [33m<[39m[33m/[39m[33mScrollView[39m[33m>[39m
+ [90m     |[39m         [31m[1m^[22m[39m
+ [90m 277 |[39m
+ [90m 278 |[39m         [33m<[39m[33mView[39m style[33m=[39m{styles[33m.[39mmapButton}[33m>[39m
+ [90m 279 |[39m           [33m<[39m[33mText[39m style[33m=[39m{styles[33m.[39mmapButtonText}[33m>[39m[33mMap[39m[33m<[39m[33m/[39m[33mText[39m[33m>[39m[0m]
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 35ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+iOS Bundled 33ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 46ms index.js (1 module)
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 44ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+ ERROR  SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Expecting Unicode escape sequence \uXXXX. (1:3)
+
+> 1 | C:\Users\ASUS
+    |    ^
+  2 |
+    at constructor (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:365:19)
+    at FlowParserMixin.raise (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6616:19)
+    at FlowParserMixin.readWord1 (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6576:16)
+    at FlowParserMixin.readWord (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6596:23)
+    at FlowParserMixin.getTokenFromCode (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6315:14)
+    at FlowParserMixin.getTokenFromCode (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4809:11)
+    at FlowParserMixin.getTokenFromCode (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3209:13)
+    at FlowParserMixin.nextToken (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:5799:10)
+    at FlowParserMixin.next (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:5709:10)
+    at FlowParserMixin.eat (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:5713:12)
+    at FlowParserMixin.parseStatementContent (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12913:76)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12784:17)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2930:24)
+    at FlowParserMixin.parseModuleItem (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12761:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13333:36)
+    at FlowParserMixin.parseBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseProgram (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12639:10)
+    at FlowParserMixin.parseTopLevel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12629:25)
+    at FlowParserMixin.parseTopLevel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3697:28)
+    at FlowParserMixin.parse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:14505:25)
+    at parse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:14518:26)
+    at parser (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transformation\normalize-file.js:51:37)
+    at normalizeFile.next (<anonymous>)
+    at run (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transformation\index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at evaluateSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\gensync\index.js:251:28)
+    at sync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\gensync\index.js:89:14)
+    at stopHiding - secret - don't use this - v1 (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\errors\rewrite-stack-trace.js:47:12)
+    at Object.transformSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transform.js:40:76)
+    at parseWithBabel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:75:18)
+    at transformSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:64:12)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\babel-transformer.js:127:58)
+    at transformJSWithBabel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:468:47)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:583:12)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js:178:19)
+    at transformFile (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js:67:36)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js:42:10)
+    at execFunction (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:149:17)
+    at execHelper (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:137:5)
+    at execMethod (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:140:5)
+    at process.messageListener (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:44:7)
+    at process.emit (node:events:509:28)
+    at emit (node:internal/child_process:972:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)
+ ERROR  [Error: TransformError SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Expecting Unicode escape sequence \uXXXX. (1:3)
+
+[0m[31m[1m>[22m[39m[90m 1 |[39m [33mC[39m[33m:[39m[37m[41m[1m\[22m[49m[39m[33mUsers[39m[37m[41m[1m\[22m[49m[39m[33mASUS[39m
+ [90m   |[39m    [31m[1m^[22m[39m
+ [90m 2 |[39m[0m]
+ ERROR  SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Expecting Unicode escape sequence \uXXXX. (1:3)
+
+> 1 | C:\Users\ASUS
+    |    ^
+  2 |
+    at constructor (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:365:19)
+    at FlowParserMixin.raise (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6616:19)
+    at FlowParserMixin.readWord1 (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6576:16)
+    at FlowParserMixin.readWord (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6596:23)
+    at FlowParserMixin.getTokenFromCode (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:6315:14)
+    at FlowParserMixin.getTokenFromCode (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:4809:11)
+    at FlowParserMixin.getTokenFromCode (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3209:13)
+    at FlowParserMixin.nextToken (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:5799:10)
+    at FlowParserMixin.next (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:5709:10)
+    at FlowParserMixin.eat (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:5713:12)
+    at FlowParserMixin.parseStatementContent (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12913:76)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12784:17)
+    at FlowParserMixin.parseStatementLike (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:2930:24)
+    at FlowParserMixin.parseModuleItem (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12761:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13333:36)
+    at FlowParserMixin.parseBlockBody (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:13326:10)
+    at FlowParserMixin.parseProgram (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12639:10)
+    at FlowParserMixin.parseTopLevel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:12629:25)
+    at FlowParserMixin.parseTopLevel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:3697:28)
+    at FlowParserMixin.parse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:14505:25)
+    at parse (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\parser\lib\index.js:14518:26)
+    at parser (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transformation\normalize-file.js:51:37)
+    at normalizeFile.next (<anonymous>)
+    at run (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transformation\index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at evaluateSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\gensync\index.js:251:28)
+    at sync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\gensync\index.js:89:14)
+    at stopHiding - secret - don't use this - v1 (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\errors\rewrite-stack-trace.js:47:12)
+    at Object.transformSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@babel\core\lib\transform.js:40:76)
+    at parseWithBabel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:75:18)
+    at transformSync (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transformSync.js:64:12)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\babel-transformer.js:127:58)
+    at transformJSWithBabel (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:468:47)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\metro-transform-worker.js:583:12)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\expo\node_modules\@expo\metro-config\build\transform-worker\transform-worker.js:178:19)
+    at transformFile (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js:67:36)
+    at Object.transform (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\@expo\metro\node_modules\metro\src\DeltaBundler\Worker.flow.js:42:10)
+    at execFunction (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:149:17)
+    at execHelper (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:137:5)
+    at execMethod (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:140:5)
+    at process.messageListener (C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\node_modules\jest-worker\build\workers\processChild.js:44:7)
+    at process.emit (node:events:509:28)
+    at emit (node:internal/child_process:972:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)
+ ERROR  [Error: TransformError SyntaxError: C:\Users\ASUS\Desktop\Mobile Assignment\nearlanka-js\src\screens\4.0 home page.jsx: Expecting Unicode escape sequence \uXXXX. (1:3)
+
+[0m[31m[1m>[22m[39m[90m 1 |[39m [33mC[39m[33m:[39m[37m[41m[1m\[22m[49m[39m[33mUsers[39m[37m[41m[1m\[22m[49m[39m[33mASUS[39m
+ [90m   |[39m    [31m[1m^[22m[39m
+ [90m 2 |[39m[0m]
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 37ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 39ms index.js (1 module)
+ WARN  SafeAreaView has been deprecated and will be removed in a future release. Please use 'react-native-safe-area-context' instead. See https://github.com/th3rdwave/react-native-safe-area-context
+ WARN  "local-parking" is not a valid icon name for family "ionicons"
+iOS .\index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 61ms index.js (1 module)

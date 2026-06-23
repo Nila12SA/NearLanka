@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const heroImage = require("../../assets/historical-sigiriya.jpg");
@@ -35,6 +36,7 @@ const facilities = [
 export default function HistoricalInnerPage({
   onBack,
   onFavoritePress,
+  onNavPress,
   favoriteIds = [],
 }) {
   const favoriteItem = {
@@ -46,8 +48,9 @@ export default function HistoricalInnerPage({
     image: heroImage,
   };
 
-  const favoriteKey = "HISTORICAL-nearby-heritage-site";
-  const isFavorite = favoriteIds.includes(favoriteKey);
+  const favoriteKey = favoriteItem.id;
+  const isFavorite =
+    favoriteIds.includes(favoriteKey) || favoriteIds.includes(favoriteItem.title);
 
   const handleFavoritePress = () => {
     onFavoritePress?.(favoriteItem);
@@ -211,6 +214,8 @@ export default function HistoricalInnerPage({
             </Pressable>
           </View>
         </ScrollView>
+
+        <BottomNav activeKey="Explore" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
@@ -228,7 +233,7 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingBottom: 42,
+    paddingBottom: 112,
   },
 
   hero: {

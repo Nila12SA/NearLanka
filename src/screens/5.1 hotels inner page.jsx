@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const hotelHeroImage = require("../../assets/Home-Main-1742X871.jpg");
@@ -43,7 +44,14 @@ const navItems = [
   { icon: navUserIcon, label: "Profile", key: "Profile" },
 ];
 
-export default function HotelInnerPage({ onBack, onFavoritePress, onNavPress }) {
+export default function HotelInnerPage({
+  onBack,
+  onFavoritePress,
+  onNavPress,
+  favoriteIds = [],
+}) {
+  const isFavorite = favoriteIds.includes("hotel-nearby-city-hotel") ||
+    favoriteIds.includes("Nearby City Hotel");
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -66,8 +74,15 @@ export default function HotelInnerPage({ onBack, onFavoritePress, onNavPress }) 
                 <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
               </Pressable>
 
-              <Pressable style={styles.circleButton} onPress={onFavoritePress}>
-                <Ionicons name="heart-outline" size={24} color="#FFFFFF" />
+              <Pressable
+                style={[styles.circleButton, isFavorite && styles.activeCircleButton]}
+                onPress={onFavoritePress}
+              >
+                <Ionicons
+                  name={isFavorite ? "heart" : "heart-outline"}
+                  size={24}
+                  color={isFavorite ? GOLD : "#FFFFFF"}
+                />
               </Pressable>
             </View>
 
@@ -150,30 +165,18 @@ export default function HotelInnerPage({ onBack, onFavoritePress, onNavPress }) 
               <Text style={styles.primaryButtonText}>Get Directions</Text>
             </Pressable>
 
-            <Pressable style={styles.secondaryButton} onPress={onFavoritePress}>
-              <Text style={styles.secondaryButtonText}>Add to Favorites</Text>
+            <Pressable
+              style={[styles.secondaryButton, isFavorite && styles.activeSecondaryButton]}
+              onPress={onFavoritePress}
+            >
+              <Text style={styles.secondaryButtonText}>
+                {isFavorite ? "Added to Favorites" : "Add to Favorites"}
+              </Text>
             </Pressable>
           </View>
         </ScrollView>
 
-        <View style={styles.bottomNav}>
-          {navItems.map((item) => (
-            <Pressable
-              key={item.key}
-              style={styles.navItem}
-              onPress={() => onNavPress?.(item.key)}
-            >
-              <Image
-                source={item.icon}
-                style={[styles.navIcon, item.active && styles.activeNavIcon]}
-                resizeMode="contain"
-              />
-              <Text style={[styles.navLabel, item.active && styles.activeNavText]}>
-                {item.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+        <BottomNav activeKey="Explore" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
@@ -228,6 +231,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(11,18,17,0.25)",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  activeCircleButton: {
+    borderColor: "rgba(255,192,90,0.85)",
+    backgroundColor: "rgba(18,63,58,0.82)",
   },
 
   heroContent: {
@@ -468,6 +476,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#507875",
   },
 
+  activeSecondaryButton: {
+    borderWidth: 1,
+    borderColor: "rgba(255,192,90,0.65)",
+  },
+
   secondaryButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
@@ -475,45 +488,9 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
-  bottomNav: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 76,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.06)",
-    backgroundColor: APP_BG,
-  },
 
-  navItem: {
-    minWidth: 58,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  navIcon: {
-    width: 22,
-    height: 22,
-    tintColor: "rgba(255,255,255,0.72)",
-  },
 
-  activeNavIcon: {
-    tintColor: SOFT_TEAL,
-  },
 
-  navLabel: {
-    marginTop: 3,
-    color: "rgba(255,255,255,0.72)",
-    fontSize: 12,
-    lineHeight: 16,
-  },
 
-  activeNavText: {
-    color: SOFT_TEAL,
-    fontWeight: "700",
-  },
 });

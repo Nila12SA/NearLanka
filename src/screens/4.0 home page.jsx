@@ -13,12 +13,13 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
+import BottomNav from "../components/BottomNav";
+import LocationPill from "../components/LocationPill";
 
 const teaEstateImage = require("../../assets/home-tea-estate.jpg");
 const trainBridgeImage = require("../../assets/home-nine-arch-train.jpg");
 const mountainViewImage = require("../../assets/home-mountain-view.jpg");
 const navUserIcon = require("../../assets/nav-user.png");
-const locationIcon = require("../../assets/home-location-icon.png");
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
 const navMapIcon = require("../../assets/nav-map.png");
@@ -88,7 +89,14 @@ const recentlyViewed = [
   },
 ];
 
-export default function HomePage({ onHotelsPress, onCategoryPress, onFavoritePress, onNavPress }) {
+export default function HomePage({
+  onHotelsPress,
+  onCategoryPress,
+  onFavoritePress,
+  onNavPress,
+  hasLocationPermission = true,
+  favoriteIds = [],
+}) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor={APP_BG} />
@@ -115,12 +123,11 @@ export default function HomePage({ onHotelsPress, onCategoryPress, onFavoritePre
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.locationChip}>
-            <Image source={locationIcon} style={styles.locationIcon} resizeMode="contain" />
-            <Text style={styles.locationText}>Using your current location</Text>
-          </View>
+          {hasLocationPermission ? (
+            <LocationPill text="Using your current location" />
+          ) : null}
 
-          <Text style={styles.heroTitle}>Explore Nearby Sri Lankan Places</Text>
+          <Text style={styles.heroTitle}>Explore Nearby SriLankan Places</Text>
 
           <Text style={styles.heroDescription}>
             Find hotels, nature spots, and historical places near your current
@@ -129,7 +136,7 @@ export default function HomePage({ onHotelsPress, onCategoryPress, onFavoritePre
 
           <View style={styles.searchPanel}>
             <View style={styles.searchBox}>
-              <Text style={styles.searchText}>Search</Text>
+              <Ionicons name="search" size={22} color="#B9C4BE" />
               <Text style={styles.searchPlaceholder}>Search nearby places</Text>
             </View>
 
@@ -187,8 +194,19 @@ export default function HomePage({ onHotelsPress, onCategoryPress, onFavoritePre
                   imageStyle={styles.nearbyImageRadius}
                   resizeMode="cover"
                 >
-                  <Pressable style={styles.favoriteButton} onPress={() => onFavoritePress?.(place)}>
-                    <Ionicons name="heart-outline" size={22} color="#E3EFEC" />
+                  <Pressable
+                    style={[
+                      styles.favoriteButton,
+                      favoriteIds.includes(place.id || place.title) &&
+                        styles.activeFavoriteButton,
+                    ]}
+                    onPress={() => onFavoritePress?.(place)}
+                  >
+                    <Ionicons
+                      name={favoriteIds.includes(place.id || place.title) ? "heart" : "heart-outline"}
+                      size={22}
+                      color={favoriteIds.includes(place.id || place.title) ? "#F5C965" : "#E3EFEC"}
+                    />
                   </Pressable>
 
                   <View style={styles.nearbyOverlay}>
@@ -268,20 +286,7 @@ export default function HomePage({ onHotelsPress, onCategoryPress, onFavoritePre
           <Text style={styles.mapButtonText}>Map</Text>
         </View>
 
-        <View style={styles.bottomNav}>
-          {navItems.map(({ icon, label, isActive }) => (
-            <Pressable key={label} style={styles.navItem} onPress={() => onNavPress?.(label)}>
-              <Image
-                source={icon}
-                style={[styles.navIcon, isActive && styles.activeNavIcon]}
-                resizeMode="contain"
-              />
-              <Text style={[styles.navLabel, isActive && styles.activeNavText]}>
-                {label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+        <BottomNav activeKey="Home" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
@@ -352,32 +357,6 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 150,
   },
-
-  locationChip: {
-    alignSelf: "flex-start",
-    flexDirection: "row",
-    alignItems: "center",
-    minHeight: 32,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "rgba(175,203,200,0.24)",
-    backgroundColor: "#273D3B",
-  },
-
-  locationIcon: {
-    width: 16,
-    height: 16,
-    marginRight: 7,
-  },
-
-  locationText: {
-    fontFamily: typography.fontFamily.body,
-    color: "#B5D0CE",
-    fontSize: 15,
-    lineHeight: 20,
-  },
-
   heroTitle: {
     maxWidth: 302,
     marginTop: 18,
@@ -398,21 +377,16 @@ const styles = StyleSheet.create({
   },
 
   searchPanel: {
-    marginTop: 58,
-    padding: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "rgba(83,166,158,0.26)",
-    backgroundColor: CARD_BG,
+    marginTop: 38,
   },
 
   searchBox: {
-    height: 46,
+    height: 50,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 14,
-    borderRadius: 10,
-    backgroundColor: DARK_CARD,
+    paddingHorizontal: 15,
+    borderRadius: 25,
+    backgroundColor: "#303330",
   },
 
   searchText: {
@@ -423,41 +397,44 @@ const styles = StyleSheet.create({
   },
 
   searchPlaceholder: {
+    marginLeft: 12,
     fontFamily: typography.fontFamily.body,
-    color: rgba(colors.neutral[50], 0.5),
+    color: "#B9C4BE",
     fontSize: 15,
+    lineHeight: 20,
+    fontWeight: "600",
   },
 
   filterRow: {
-    gap: 10,
-    paddingTop: 14,
+    gap: 12,
+    paddingTop: 18,
   },
 
   filterPill: {
-    minWidth: 84,
-    height: 40,
+    minWidth: 82,
+    height: 36,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 18,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.08)",
-    backgroundColor: "#333734",
+    paddingHorizontal: 16,
+    borderRadius: 18,
+    backgroundColor: "#303330",
   },
 
   activeFilterPill: {
-    backgroundColor: ACCENT_TEAL,
+    minWidth: 58,
+    backgroundColor: "#F5C965",
   },
 
   filterText: {
     fontFamily: typography.fontFamily.body,
-    color: rgba(colors.neutral[50], 0.72),
+    color: "#D9E2DF",
     fontSize: 15,
+    lineHeight: 20,
     fontWeight: "700",
   },
 
   activeFilterText: {
-    color: "#183633",
+    color: "#1D211F",
     fontWeight: "700",
   },
 
@@ -465,7 +442,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "space-between",
-    marginTop: 46,
+    marginTop: 38,
   },
 
   sectionTitleNoTop: {
@@ -495,7 +472,7 @@ const styles = StyleSheet.create({
 
   seeAllText: {
     fontFamily: typography.fontFamily.body,
-    color: "#A6C8C5",
+    color: "#D19F65",
     fontSize: 14,
     lineHeight: 20,
   },
@@ -530,9 +507,16 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
+    borderWidth: 1,
+    borderColor: "rgba(227,239,236,0.24)",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(14,69,59,0.72)",
+  },
+
+  activeFavoriteButton: {
+    borderColor: "rgba(245,201,101,0.85)",
+    backgroundColor: "rgba(18,63,58,0.94)",
   },
 
   favoriteText: {
@@ -793,49 +777,6 @@ const styles = StyleSheet.create({
     color: APP_BG,
     fontSize: 13,
     lineHeight: 18,
-    fontWeight: "700",
-  },
-
-  bottomNav: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 76,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.06)",
-    backgroundColor: APP_BG,
-  },
-
-  navItem: {
-    minWidth: 58,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  navIcon: {
-    width: 22,
-    height: 22,
-    tintColor: rgba(colors.neutral[50], 0.72),
-  },
-
-  activeNavIcon: {
-    tintColor: ACCENT_TEAL,
-  },
-
-  navLabel: {
-    marginTop: 3,
-    fontFamily: typography.fontFamily.body,
-    color: rgba(colors.neutral[50], 0.72),
-    fontSize: 12,
-    lineHeight: 16,
-  },
-
-  activeNavText: {
-    color: ACCENT_TEAL,
     fontWeight: "700",
   },
 });

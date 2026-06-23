@@ -11,6 +11,8 @@ import {
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import BottomNav from "../components/BottomNav";
+import LocationPill from "../components/LocationPill";
 import { Ionicons } from "@expo/vector-icons";
 
 const littleAdamsPeak = require("../../assets/nature-little-adams-peak.jpg");
@@ -84,7 +86,14 @@ const navItems = [
   { icon: navUserIcon, label: "Profile", key: "Profile" },
 ];
 
-export default function NaturePage({ onMenuPress, onNavPress, onNaturePress, onFavoritePress }) {
+export default function NaturePage({
+  onMenuPress,
+  onNavPress,
+  onNaturePress,
+  onFavoritePress,
+  favoriteIds = [],
+  hasLocationPermission = true,
+}) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -122,10 +131,13 @@ export default function NaturePage({ onMenuPress, onNavPress, onNaturePress, onF
             <Text style={styles.searchText}>Search nearby nature spots</Text>
           </View>
 
-          <View style={styles.locationPill}>
-            <Ionicons name="navigate-outline" size={15} color="#C5D4D1" />
-            <Text style={styles.locationText}>Near your current location</Text>
-          </View>
+          {hasLocationPermission ? (
+            <LocationPill
+              text="Near your current location"
+              iconName="navigate-outline"
+              style={styles.locationPill}
+            />
+          ) : null}
 
           <ScrollView
             horizontal
@@ -166,8 +178,19 @@ export default function NaturePage({ onMenuPress, onNavPress, onNaturePress, onF
                     <Text style={styles.badge}>BEST IN MORNING</Text>
                   </View>
 
-                  <Pressable style={styles.favoriteButton} onPress={() => onFavoritePress?.(spot)}>
-                    <Ionicons name="heart-outline" size={22} color="#E3EFEC" />
+                  <Pressable
+                    style={[
+                      styles.favoriteButton,
+                      favoriteIds.includes(spot.id || spot.title) &&
+                        styles.activeFavoriteButton,
+                    ]}
+                    onPress={() => onFavoritePress?.(spot)}
+                  >
+                    <Ionicons
+                      name={favoriteIds.includes(spot.id || spot.title) ? "heart" : "heart-outline"}
+                      size={22}
+                      color={favoriteIds.includes(spot.id || spot.title) ? GOLD : "#E3EFEC"}
+                    />
                   </Pressable>
                 </ImageBackground>
 
@@ -196,24 +219,7 @@ export default function NaturePage({ onMenuPress, onNavPress, onNaturePress, onF
           </View>
         </ScrollView>
 
-        <View style={styles.bottomNav}>
-          {navItems.map((item) => (
-            <Pressable
-              key={item.key}
-              style={styles.navItem}
-              onPress={() => onNavPress?.(item.key)}
-            >
-              <Image
-                source={item.icon}
-                style={[styles.navIcon, item.active && styles.activeNavIcon]}
-                resizeMode="contain"
-              />
-              <Text style={[styles.navLabel, item.active && styles.activeNavText]}>
-                {item.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+        <BottomNav activeKey="Explore" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
@@ -307,22 +313,8 @@ const styles = StyleSheet.create({
     color: "#91A8A5",
     fontSize: 16,
   },
-
   locationPill: {
-    alignSelf: "flex-start",
-    height: 36,
-    borderRadius: 18,
-    paddingHorizontal: 15,
-    backgroundColor: "#273D3B",
-    flexDirection: "row",
-    alignItems: "center",
     marginBottom: 24,
-  },
-
-  locationText: {
-    marginLeft: 7,
-    fontSize: 14,
-    color: "#D1DEDB",
   },
 
   filtersRow: {
@@ -430,9 +422,16 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "rgba(227,239,236,0.24)",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(13,48,45,0.72)",
+  },
+
+  activeFavoriteButton: {
+    borderColor: "rgba(255,192,90,0.85)",
+    backgroundColor: "rgba(18,63,58,0.95)",
   },
 
   cardContent: {
@@ -499,45 +498,9 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
 
-  bottomNav: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 76,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.06)",
-    backgroundColor: APP_BG,
-  },
 
-  navItem: {
-    minWidth: 58,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  navIcon: {
-    width: 22,
-    height: 22,
-    tintColor: "rgba(255,255,255,0.72)",
-  },
 
-  activeNavIcon: {
-    tintColor: SOFT_TEAL,
-  },
 
-  navLabel: {
-    marginTop: 3,
-    color: "rgba(255,255,255,0.72)",
-    fontSize: 12,
-    lineHeight: 16,
-  },
 
-  activeNavText: {
-    color: "#123B37",
-    fontWeight: "700",
-  },
 });

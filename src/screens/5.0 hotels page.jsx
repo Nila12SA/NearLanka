@@ -12,6 +12,8 @@ import {
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import BottomNav from "../components/BottomNav";
+import LocationPill from "../components/LocationPill";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const cityHotelImage = require("../../assets/colombo-seven-h-facilities-rt.jpg");
@@ -95,6 +97,8 @@ export default function HotelsPage({
   onHotelPress,
   onFavoritePress,
   onNavPress,
+  favoriteIds = [],
+  hasLocationPermission = true,
 }) {
   const [activeFilter, setActiveFilter] = useState("All");
 
@@ -139,10 +143,13 @@ export default function HotelsPage({
             />
           </View>
 
-          <View style={styles.locationPill}>
-            <Ionicons name="navigate-outline" size={15} color="#C5D4D1" />
-            <Text style={styles.locationText}>Near your current location</Text>
-          </View>
+          {hasLocationPermission ? (
+            <LocationPill
+              text="Near your current location"
+              iconName="navigate-outline"
+              style={styles.locationPill}
+            />
+          ) : null}
 
           <ScrollView
             horizontal
@@ -185,10 +192,18 @@ export default function HotelsPage({
                 <View style={styles.imageOverlay} />
 
                 <Pressable
-                  style={styles.favoriteButton}
+                  style={[
+                    styles.favoriteButton,
+                    favoriteIds.includes(hotel.id || hotel.title) &&
+                      styles.activeFavoriteButton,
+                  ]}
                   onPress={() => onFavoritePress?.(hotel)}
                 >
-                  <Ionicons name="heart-outline" size={25} color="#DCE8E5" />
+                  <Ionicons
+                    name={favoriteIds.includes(hotel.id || hotel.title) ? "heart" : "heart-outline"}
+                    size={25}
+                    color={favoriteIds.includes(hotel.id || hotel.title) ? "#FFC05A" : "#DCE8E5"}
+                  />
                 </Pressable>
 
                 <View style={styles.hotelImageContent}>
@@ -252,52 +267,9 @@ export default function HotelsPage({
           </View>
         </ScrollView>
 
-        <View style={styles.bottomNav}>
-          <BottomNavItem
-            icon={navHomeIcon}
-            label="Home"
-            onPress={() => onNavPress?.("Home")}
-          />
-          <BottomNavItem
-            icon={navCompassIcon}
-            label="Explore"
-            active
-            onPress={() => onNavPress?.("Explore")}
-          />
-          <BottomNavItem
-            icon={navMapIcon}
-            label="Map"
-            onPress={() => onNavPress?.("Map")}
-          />
-          <BottomNavItem
-            icon={navLoveIcon}
-            label="Favorites"
-            onPress={() => onNavPress?.("Favorites")}
-          />
-          <BottomNavItem
-            icon={navUserIcon}
-            label="Profile"
-            onPress={() => onNavPress?.("Profile")}
-          />
-        </View>
+        <BottomNav activeKey="Explore" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
-  );
-}
-
-function BottomNavItem({ icon, label, active, onPress }) {
-  return (
-    <Pressable style={styles.navItem} onPress={onPress}>
-      <Image
-        source={icon}
-        style={[styles.navIcon, active && styles.activeNavIcon]}
-        resizeMode="contain"
-      />
-      <Text style={[styles.navText, active && styles.activeNavText]}>
-        {label}
-      </Text>
-
-    </Pressable>
   );
 }
 
@@ -390,22 +362,8 @@ const styles = StyleSheet.create({
     color: "#E7EFED",
     fontSize: 16,
   },
-
   locationPill: {
-    alignSelf: "flex-start",
-    height: 36,
-    borderRadius: 18,
-    paddingHorizontal: 15,
-    backgroundColor: "#273D3B",
-    flexDirection: "row",
-    alignItems: "center",
     marginBottom: 24,
-  },
-
-  locationText: {
-    marginLeft: 7,
-    fontSize: 14,
-    color: "#D1DEDB",
   },
 
   filtersRow: {
@@ -476,6 +434,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(20, 72, 66, 0.75)",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  activeFavoriteButton: {
+    borderColor: "rgba(255, 192, 90, 0.85)",
+    backgroundColor: "rgba(18, 63, 58, 0.95)",
   },
 
   hotelImageContent: {
@@ -604,45 +567,9 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
-  bottomNav: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 76,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.06)",
-    backgroundColor: "#0B1211",
-  },
 
-  navItem: {
-    minWidth: 58,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  navIcon: {
-    width: 22,
-    height: 22,
-    tintColor: "rgba(255,255,255,0.72)",
-  },
 
-  activeNavIcon: {
-    tintColor: "#B6D9D6",
-  },
 
-  navText: {
-    marginTop: 3,
-    color: "rgba(255,255,255,0.72)",
-    fontSize: 12,
-    lineHeight: 16,
-  },
 
-  activeNavText: {
-    color: "#B6D9D6",
-    fontWeight: "700",
-  },
 });

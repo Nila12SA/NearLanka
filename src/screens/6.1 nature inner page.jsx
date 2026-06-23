@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const heroImage = require("../../assets/nature-bomburella-waterfall.jpg");
@@ -26,7 +27,14 @@ const facilities = [
   { icon: "human-male-female-child", label: "Family Friendly", type: "mc" },
 ];
 
-export default function NatureInnerPage({ onBack, onFavoritePress }) {
+export default function NatureInnerPage({
+  onBack,
+  onFavoritePress,
+  onNavPress,
+  favoriteIds = [],
+}) {
+  const isFavorite = favoriteIds.includes("nature-nearby-nature-spot") ||
+    favoriteIds.includes("Nearby Nature Spot");
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -49,8 +57,15 @@ export default function NatureInnerPage({ onBack, onFavoritePress }) {
                 <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
               </Pressable>
 
-              <Pressable style={styles.circleButton} onPress={onFavoritePress}>
-                <Ionicons name="bookmark-outline" size={23} color="#FFFFFF" />
+              <Pressable
+                style={[styles.circleButton, isFavorite && styles.activeCircleButton]}
+                onPress={onFavoritePress}
+              >
+                <Ionicons
+                  name={isFavorite ? "bookmark" : "bookmark-outline"}
+                  size={23}
+                  color={isFavorite ? GOLD : "#FFFFFF"}
+                />
               </Pressable>
             </View>
 
@@ -142,12 +157,19 @@ export default function NatureInnerPage({ onBack, onFavoritePress }) {
                 <Text style={styles.primaryButtonText}>Get Directions</Text>
               </Pressable>
 
-              <Pressable style={styles.secondaryButton} onPress={onFavoritePress}>
-                <Text style={styles.secondaryButtonText}>Add to Favorites</Text>
+              <Pressable
+                style={[styles.secondaryButton, isFavorite && styles.activeSecondaryButton]}
+                onPress={onFavoritePress}
+              >
+                <Text style={styles.secondaryButtonText}>
+                  {isFavorite ? "Added to Favorites" : "Add to Favorites"}
+                </Text>
               </Pressable>
             </View>
           </View>
         </ScrollView>
+
+        <BottomNav activeKey="Explore" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
@@ -170,7 +192,7 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingBottom: 44,
+    paddingBottom: 112,
   },
 
   hero: {
@@ -195,9 +217,16 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.22)",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(13,48,45,0.72)",
+  },
+
+  activeCircleButton: {
+    borderColor: "rgba(255,192,90,0.85)",
+    backgroundColor: "rgba(18,63,58,0.95)",
   },
 
   heroContent: {
@@ -509,6 +538,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 14,
     backgroundColor: "#507875",
+  },
+
+  activeSecondaryButton: {
+    borderWidth: 1,
+    borderColor: "rgba(255,192,90,0.65)",
   },
 
   secondaryButtonText: {

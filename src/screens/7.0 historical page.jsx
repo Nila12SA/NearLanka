@@ -12,6 +12,8 @@ import {
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import BottomNav from "../components/BottomNav";
+import LocationPill from "../components/LocationPill";
 import { Ionicons } from "@expo/vector-icons";
 
 const sigiriyaImage = require("../../assets/historical-sigiriya.jpg");
@@ -97,6 +99,8 @@ export default function HistoricalPage({
   onNavPress,
   onHistoricalPress,
   onFavoritePress,
+  favoriteIds = [],
+  hasLocationPermission = true,
 }) {
   const [activeFilter, setActiveFilter] = useState("All");
 
@@ -141,10 +145,13 @@ export default function HistoricalPage({
             />
           </View>
 
-          <View style={styles.locationPill}>
-            <Ionicons name="navigate-outline" size={15} color="#C5D4D1" />
-            <Text style={styles.locationText}>Near your current location</Text>
-          </View>
+          {hasLocationPermission ? (
+            <LocationPill
+              text="Near your current location"
+              iconName="navigate-outline"
+              style={styles.locationPill}
+            />
+          ) : null}
 
           <ScrollView
             horizontal
@@ -183,6 +190,7 @@ export default function HistoricalPage({
                 place={place}
                 onHistoricalPress={onHistoricalPress}
                 onFavoritePress={onFavoritePress}
+                favoriteIds={favoriteIds}
               />
             ))}
 
@@ -207,34 +215,25 @@ export default function HistoricalPage({
               place={historicalPlaces[3]}
               onHistoricalPress={onHistoricalPress}
               onFavoritePress={onFavoritePress}
-            />
+                favoriteIds={favoriteIds}
+              />
           </View>
         </ScrollView>
 
-        <View style={styles.bottomNav}>
-          {navItems.map((item) => (
-            <Pressable
-              key={item.key}
-              style={styles.navItem}
-              onPress={() => onNavPress?.(item.key)}
-            >
-              <Image
-                source={item.icon}
-                style={[styles.navIcon, item.active && styles.activeNavIcon]}
-                resizeMode="contain"
-              />
-              <Text style={[styles.navLabel, item.active && styles.activeNavText]}>
-                {item.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+        <BottomNav activeKey="Explore" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
 }
 
-function HistoricalCard({ place, onHistoricalPress, onFavoritePress }) {
+function HistoricalCard({
+  place,
+  onHistoricalPress,
+  onFavoritePress,
+  favoriteIds = [],
+}) {
+  const isFavorite = favoriteIds.includes(place.id || place.title);
+
   return (
     <View style={styles.placeCard}>
       <ImageBackground
@@ -246,10 +245,14 @@ function HistoricalCard({ place, onHistoricalPress, onFavoritePress }) {
         <View style={styles.imageOverlay} />
 
         <Pressable
-          style={styles.favoriteButton}
+          style={[styles.favoriteButton, isFavorite && styles.activeFavoriteButton]}
           onPress={() => onFavoritePress?.(place)}
         >
-          <Ionicons name="heart-outline" size={23} color="#DCE8E5" />
+          <Ionicons
+            name={isFavorite ? "heart" : "heart-outline"}
+            size={23}
+            color={isFavorite ? GOLD : "#DCE8E5"}
+          />
         </Pressable>
 
         <View style={styles.cardBottomContent}>
@@ -378,22 +381,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingVertical: 0,
   },
-
   locationPill: {
-    alignSelf: "flex-start",
-    height: 36,
-    borderRadius: 18,
-    paddingHorizontal: 15,
-    backgroundColor: "#273D3B",
-    flexDirection: "row",
-    alignItems: "center",
     marginBottom: 24,
-  },
-
-  locationText: {
-    marginLeft: 7,
-    fontSize: 14,
-    color: "#D1DEDB",
   },
 
   filtersRow: {
@@ -462,9 +451,16 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(220,232,229,0.24)",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(18,60,57,0.78)",
+  },
+
+  activeFavoriteButton: {
+    borderColor: "rgba(255,192,90,0.85)",
+    backgroundColor: "rgba(18,63,58,0.95)",
   },
 
   cardBottomContent: {
@@ -626,45 +622,9 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
 
-  bottomNav: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 76,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.06)",
-    backgroundColor: APP_BG,
-  },
 
-  navItem: {
-    minWidth: 58,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  navIcon: {
-    width: 22,
-    height: 22,
-    tintColor: "rgba(255,255,255,0.72)",
-  },
 
-  activeNavIcon: {
-    tintColor: SOFT_TEAL,
-  },
 
-  navLabel: {
-    marginTop: 3,
-    color: "rgba(255,255,255,0.72)",
-    fontSize: 12,
-    lineHeight: 16,
-  },
 
-  activeNavText: {
-    color: SOFT_TEAL,
-    fontWeight: "700",
-  },
 });

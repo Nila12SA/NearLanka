@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import {
   Image,
   Platform,
@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import BottomNav from "../components/BottomNav";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -91,24 +92,7 @@ export default function FavoritesPage({ favorites = [], onNavPress, onMenuPress 
           )}
         </ScrollView>
 
-        <View style={styles.bottomNav}>
-          {navItems.map((item) => (
-            <Pressable
-              key={item.key}
-              style={styles.navItem}
-              onPress={() => onNavPress?.(item.key)}
-            >
-              <Image
-                source={item.icon}
-                style={[styles.navIcon, item.active && styles.activeNavIcon]}
-                resizeMode="contain"
-              />
-              <Text style={[styles.navLabel, item.active && styles.activeNavText]}>
-                {item.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+        <BottomNav activeKey="Favorites" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
@@ -267,45 +251,9 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
 
-  bottomNav: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 76,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.06)",
-    backgroundColor: APP_BG,
-  },
 
-  navItem: {
-    minWidth: 58,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  navIcon: {
-    width: 22,
-    height: 22,
-    tintColor: "rgba(255,255,255,0.72)",
-  },
 
-  activeNavIcon: {
-    tintColor: SOFT_TEAL,
-  },
 
-  navLabel: {
-    marginTop: 3,
-    color: "rgba(255,255,255,0.72)",
-    fontSize: 12,
-    lineHeight: 16,
-  },
 
-  activeNavText: {
-    color: SOFT_TEAL,
-    fontWeight: "700",
-  },
 });

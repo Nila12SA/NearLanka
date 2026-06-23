@@ -1,5 +1,6 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
+import { Animated, Easing } from "react-native";
 
 import SplashScreen from "./src/screens/1.0 splashscreen";
 import OnboardingFindPlaces from "./src/screens/2.0 onboarding find places near you";
@@ -7,13 +8,14 @@ import OnboardingSaveFavorites from "./src/screens/2.1 onboarding save your favo
 import OnboardingNavigate from "./src/screens/2.2 onboarding navigate easily";
 import LocationPermission from "./src/screens/3.0 location permission page";
 import HomePage from "./src/screens/4.0 home page";
+import ExplorePage from "./src/screens/8.0 explore page";
 import HotelsPage from "./src/screens/5.0 hotels page";
 import HotelInnerPage from "./src/screens/5.1 hotels inner page";
 import NaturePage from "./src/screens/6.0 nature page";
 import NatureInnerPage from "./src/screens/6.1 nature inner page";
 import HistoricalPage from "./src/screens/7.0 historical page";
 import HistoricalInnerPage from "./src/screens/7.1 historical inner page";
-import FavoritesPage from "./src/screens/8.0 favorites page";
+import FavoritesPage from "./src/screens/10.0 favorites page";
 
 const hotelDetailFavorite = {
   id: "hotel-nearby-city-hotel",
@@ -46,6 +48,8 @@ export default function App() {
   const [screen, setScreen] = useState("splash");
   const [favorites, setFavorites] = useState([]);
   const [selectedHistoricalPlace, setSelectedHistoricalPlace] = useState(null);
+  const [hasLocationPermission, setHasLocationPermission] = useState(true);
+  const onboardingTransition = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (screen === "splash") {
@@ -56,6 +60,29 @@ export default function App() {
       return () => clearTimeout(timer);
     }
   }, [screen]);
+
+  useEffect(() => {
+    const onboardingScreens = [
+      "onboarding1",
+      "onboarding2",
+      "onboarding3",
+      "location",
+    ];
+
+    if (!onboardingScreens.includes(screen)) {
+      return;
+    }
+
+    onboardingTransition.setValue(0);
+    Animated.timing(onboardingTransition, {
+      toValue: 1,
+      duration: 520,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  }, [onboardingTransition, screen]);
+
+  const favoriteIds = favorites.flatMap((item) => [item.id, item.title]).filter(Boolean);
 
   const addFavorite = (item) => {
     if (!item?.title) {
@@ -86,7 +113,16 @@ export default function App() {
     setScreen("location");
   };
 
-  const goToHome = () => {
+  const goToHome = (locationStatus) => {
+    if (locationStatus) {
+      setHasLocationPermission(locationStatus === "granted");
+    }
+
+    setScreen("home");
+  };
+
+  const continueWithoutLocation = () => {
+    setHasLocationPermission(false);
     setScreen("home");
   };
 
@@ -127,7 +163,7 @@ export default function App() {
     }
 
     if (screenName === "Explore") {
-      setScreen("historical");
+      setScreen("explore");
       return;
     }
 
@@ -146,6 +182,23 @@ export default function App() {
     }
   };
 
+  const onboardingAnimatedStyle = {
+    flex: 1,
+    opacity: onboardingTransition,
+    transform: [
+      {
+        translateX: onboardingTransition.interpolate({
+          inputRange: [0, 1],
+          outputRange: [28, 0],
+        }),
+      },
+    ],
+  };
+
+  const renderOnboardingTransition = (content) => (
+    <Animated.View style={onboardingAnimatedStyle}>{content}</Animated.View>
+  );
+
   return (
     <>
       <StatusBar style="light" backgroundColor="#0B1211" />
@@ -154,33 +207,42 @@ export default function App() {
         <SplashScreen onContinue={() => setScreen("onboarding1")} />
       )}
 
-      {screen === "onboarding1" && (
-        <OnboardingFindPlaces
-          onNext={() => setScreen("onboarding2")}
-          onSkip={goToLocation}
-        />
-      )}
+      {screen === "onboarding1" &&
+        renderOnboardingTransition(
+          <OnboardingFindPlaces
+            onNext={() => setScreen("onboarding2")}
+            onSkip={goToLocation}
+          />
+        )}
 
-      {screen === "onboarding2" && (
-        <OnboardingSaveFavorites
-          onNext={() => setScreen("onboarding3")}
-          onSkip={goToLocation}
-        />
-      )}
+      {screen === "onboarding2" &&
+        renderOnboardingTransition(
+          <OnboardingSaveFavorites
+            onNext={() => setScreen("onboarding3")}
+            onSkip={goToLocation}
+          />
+        )}
 
-      {screen === "onboarding3" && (
-        <OnboardingNavigate onNext={goToLocation} onSkip={goToLocation} />
-      )}
+      {screen === "onboarding3" &&
+        renderOnboardingTransition(
+          <OnboardingNavigate onNext={goToLocation} onSkip={goToLocation} />
+        )}
 
-      {screen === "location" && (
-        <LocationPermission onAllow={goToHome} onLater={goToHome} />
-      )}
+      {screen === "location" &&
+        renderOnboardingTransition(
+          <LocationPermission
+            onAllow={goToHome}
+            onLater={continueWithoutLocation}
+          />
+        )}
 
       {screen === "home" && (
         <HomePage
           onNavPress={handleNavPress}
           onHotelsPress={goToHotels}
           onHotelPress={goToHotels}
+          hasLocationPermission={hasLocationPermission}
+          favoriteIds={favoriteIds}
           onFavoritePress={(place) =>
             addFavorite({ ...place, type: place.category || "PLACE" })
           }
@@ -212,11 +274,22 @@ export default function App() {
         />
       )}
 
+      {screen === "explore" && (
+        <ExplorePage
+          onNavPress={handleNavPress}
+          onMenuPress={() => {}}
+          hasLocationPermission={hasLocationPermission}
+          favoriteIds={favoriteIds}
+          onFavoritePress={(place) => addFavorite(place)}
+        />
+      )}
       {screen === "hotels" && (
         <HotelsPage
           onNavPress={handleNavPress}
           onMenuPress={() => {}}
           onHotelPress={goToHotelDetails}
+          hasLocationPermission={hasLocationPermission}
+          favoriteIds={favoriteIds}
           onFavoritePress={(hotel) => addFavorite({ ...hotel, type: "HOTEL" })}
         />
       )}
@@ -225,6 +298,7 @@ export default function App() {
         <HotelInnerPage
           onBack={goToHotels}
           onNavPress={handleNavPress}
+          favoriteIds={favoriteIds}
           onFavoritePress={() => addFavorite(hotelDetailFavorite)}
         />
       )}
@@ -234,6 +308,8 @@ export default function App() {
           onNavPress={handleNavPress}
           onMenuPress={() => {}}
           onNaturePress={goToNatureDetails}
+          hasLocationPermission={hasLocationPermission}
+          favoriteIds={favoriteIds}
           onFavoritePress={(spot) => addFavorite({ ...spot, type: "NATURE" })}
         />
       )}
@@ -241,6 +317,7 @@ export default function App() {
       {screen === "natureDetails" && (
         <NatureInnerPage
           onBack={goToNature}
+          favoriteIds={favoriteIds}
           onFavoritePress={() => addFavorite(natureDetailFavorite)}
         />
       )}
@@ -250,6 +327,8 @@ export default function App() {
           onNavPress={handleNavPress}
           onMenuPress={() => {}}
           onHistoricalPress={goToHistoricalDetails}
+          hasLocationPermission={hasLocationPermission}
+          favoriteIds={favoriteIds}
           onFavoritePress={(place) =>
             addFavorite({ ...place, type: "HISTORICAL" })
           }
@@ -259,6 +338,7 @@ export default function App() {
       {screen === "historicalDetails" && (
         <HistoricalInnerPage
           onBack={goToHistorical}
+          favoriteIds={favoriteIds}
           onFavoritePress={(place) =>
             addFavorite({
               ...(place || selectedHistoricalPlace || historicalDetailFavorite),
