@@ -16,6 +16,8 @@ import { typography } from "../theme/typography";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
+import DataState from "../components/DataState";
+import usePlaces from "../hooks/usePlaces";
 
 const teaEstateImage = require("../../assets/home-tea-estate.jpg");
 const trainBridgeImage = require("../../assets/home-nine-arch-train.jpg");
@@ -94,11 +96,36 @@ export default function HomePage({
   onHotelsPress,
   onCategoryPress,
   onFavoritePress,
+  onPlacePress,
   onNavPress,
   onSearchPress,
   hasLocationPermission = true,
   favoriteIds = [],
+  recentPlaces = [],
 }) {
+  const { places, loading, error, reload, usedLocation } = usePlaces({
+    nearby: true,
+    hasLocationPermission,
+  });
+
+  // The API is distance-sorted; rank the closest six by rating.
+  const popularNearby = [...places]
+    .slice(0, 6)
+    .sort((first, second) => Number(second.rating) - Number(first.rating))
+    .slice(0, 2);
+
+  const recommendedPlace =
+    places.find((place) => !popularNearby.some((popular) => popular.id === place.id)) ||
+    places[0];
+
+  const formatViewedTime = (viewedAt) => {
+    if (!viewedAt) return "Recently viewed";
+    const minutes = Math.max(1, Math.round((Date.now() - new Date(viewedAt).getTime()) / 60000));
+    if (minutes < 60) return `Viewed ${minutes}m ago`;
+    const hours = Math.round(minutes / 60);
+    if (hours < 24) return `Viewed ${hours}h ago`;
+    return `Viewed ${Math.round(hours / 24)}d ago`;
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor={APP_BG} />
@@ -110,7 +137,7 @@ export default function HomePage({
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {hasLocationPermission ? (
+          {usedLocation ? (
             <LocationPill text="Using your current location" />
           ) : null}
 
@@ -168,13 +195,21 @@ export default function HomePage({
             <Text style={styles.seeAllText}>See All &gt;</Text>
           </View>
 
+          <DataState
+            loading={loading}
+            error={error}
+            empty={!loading && !error && places.length === 0}
+            onRetry={reload}
+          />
+
+          {!loading && !error && places.length > 0 ? (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.nearbyRow}
           >
-            {nearbyPlaces.map((place) => (
-              <View key={place.title} style={styles.nearbyCard}>
+            {places.map((place) => (
+              <View key={place.id || place.title} style={styles.nearbyCard}>
                 <ImageBackground
                   source={place.image}
                   style={styles.nearbyImage}
@@ -203,9 +238,9 @@ export default function HomePage({
                     </View>
 
                     <Text style={styles.cardTitle}>{place.title}</Text>
-                    <Text style={styles.distanceText}>LOC {place.distance}</Text>
+                    <Text style={styles.distanceText}>{place.distance}</Text>
 
-                    <Pressable style={styles.detailsButton}>
+                    <Pressable style={styles.detailsButton} onPress={() => onPlacePress?.(place)}>
                       <Text style={styles.detailsButtonText}>View Details</Text>
                     </Pressable>
                   </View>
@@ -213,12 +248,17 @@ export default function HomePage({
               </View>
             ))}
           </ScrollView>
+          ) : null}
 
           <Text style={styles.sectionTitle}>Popular Near You</Text>
 
           <View style={styles.popularList}>
-            {popularPlaces.map((place) => (
-              <View key={place.title} style={styles.popularCard}>
+            {popularNearby.map((place) => (
+              <Pressable
+                key={place.id || place.title}
+                style={styles.popularCard}
+                onPress={() => onPlacePress?.(place)}
+              >
                 <Image source={place.image} style={styles.popularImage} />
 
                 <View style={styles.popularContent}>
@@ -227,44 +267,60 @@ export default function HomePage({
                     <Text style={styles.popularRating}>* {place.rating}</Text>
                   </View>
 
-                  <Text style={styles.popularSubtitle}>{place.subtitle}</Text>
+                  <Text style={styles.popularSubtitle}>{place.location}</Text>
                   <Text style={styles.popularDistance}>{place.distance}</Text>
                 </View>
 
                 <Text style={styles.arrowText}>&gt;</Text>
-              </View>
+              </Pressable>
             ))}
           </View>
 
           <Text style={styles.sectionTitle}>Recommended</Text>
 
-          <ImageBackground
-            source={mountainViewImage}
-            style={styles.recommendCard}
-            imageStyle={styles.recommendImageRadius}
-            resizeMode="cover"
-          >
-            <View style={styles.recommendShade} />
+          {recommendedPlace ? (
+            <Pressable onPress={() => onPlacePress?.(recommendedPlace)}>
+              <ImageBackground
+                source={recommendedPlace.image}
+                style={styles.recommendCard}
+                imageStyle={styles.recommendImageRadius}
+                resizeMode="cover"
+              >
+                <View style={styles.recommendShade} />
 
-            <View style={styles.recommendContent}>
-              <Text style={styles.recommendPill}>CURATED FOR YOU</Text>
-              <Text style={styles.recommendTitle}>Nirvana Wellness Spa</Text>
-              <Text style={styles.recommendText}>
-                Rejuvenate your soul with ancient Ayurvedic practices.
-              </Text>
-              <Text style={styles.bookText}>Book Experience &gt;</Text>
-            </View>
-          </ImageBackground>
+                <View style={styles.recommendContent}>
+                  <Text style={styles.recommendPill}>RECOMMENDED NEAR YOU</Text>
+                  <Text style={styles.recommendTitle}>{recommendedPlace.title}</Text>
+                  <Text style={styles.recommendText} numberOfLines={2}>
+                    {recommendedPlace.description}
+                  </Text>
+                  <Text style={styles.bookText}>
+                    {recommendedPlace.distance}  •  View Details &gt;
+                  </Text>
+                </View>
+              </ImageBackground>
+            </Pressable>
+          ) : null}
 
           <Text style={styles.sectionTitle}>Recently Viewed</Text>
 
+          {recentPlaces.length === 0 ? (
+            <Text style={styles.recentViewed}>Open a place to see it here.</Text>
+          ) : null}
+
           <View style={styles.recentGrid}>
-            {recentlyViewed.map((item) => (
-              <View key={item.title} style={styles.recentCard}>
+            {recentPlaces.slice(0, 2).map((item) => (
+              <Pressable
+                key={item.id || item.title}
+                style={styles.recentCard}
+                onPress={() => onPlacePress?.(item)}
+              >
                 <Image source={item.image} style={styles.recentImage} />
                 <Text style={styles.recentTitle}>{item.title}</Text>
-                <Text style={styles.recentViewed}>{item.viewed}</Text>
-              </View>
+                <Text style={styles.recentViewed}>
+                  {formatViewedTime(item.viewedAt)}
+                </Text>
+              </Pressable>
             ))}
           </View>
         </ScrollView>

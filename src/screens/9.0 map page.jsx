@@ -12,10 +12,14 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as Location from "expo-location";
+import { getBestAvailableLocation } from "../utils/location";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
+import DataState from "../components/DataState";
+import usePlaces from "../hooks/usePlaces";
+import { openPlaceDirections, openPlaceInMaps } from "../utils/maps";
 
 const placeImage = require("../../assets/Home-Main-1742X871.jpg");
 
@@ -54,6 +58,8 @@ const mapStyle = [
 ];
 
 export default function MapPage({ onNavPress, hasLocationPermission = true }) {
+  const { places, loading, error, reload } = usePlaces({ nearby: true, hasLocationPermission });
+  const [selectedPlace, setSelectedPlace] = useState(null);
   const mapRef = useRef(null);
   const [region, setRegion] = useState(defaultRegion);
   const [locationMessage, setLocationMessage] = useState(
@@ -61,6 +67,10 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
       ? "Here are the places around me right now."
       : "Location access is off. Showing nearby places on the map."
   );
+
+  useEffect(() => {
+    if (places.length > 0 && !selectedPlace) setSelectedPlace(places[0]);
+  }, [places, selectedPlace]);
 
   useEffect(() => {
     let subscription;
@@ -80,7 +90,7 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
         return;
       }
 
-      const currentPosition = await Location.getCurrentPositionAsync({});
+      const currentPosition = await getBestAvailableLocation();
       const currentRegion = {
         latitude: currentPosition.coords.latitude,
         longitude: currentPosition.coords.longitude,
@@ -113,7 +123,12 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
       );
     };
 
-    startLocationTracking();
+    startLocationTracking().catch((locationError) => {
+      console.warn("Map could not obtain the current location:", locationError.message);
+      if (isMounted) {
+        setLocationMessage("Current GPS location is unavailable. Showing Sri Lankan places instead.");
+      }
+    });
 
     return () => {
       isMounted = false;
@@ -121,37 +136,8 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
     };
   }, [hasLocationPermission]);
 
-  const openGoogleDirections = async () => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${featuredPlace.latitude},${featuredPlace.longitude}&travelmode=driving`;
-    const canOpen = await Linking.canOpenURL(url);
-
-    if (canOpen) {
-      Linking.openURL(url);
-      return;
-    }
-
-    Alert.alert("Maps unavailable", "Unable to open Google Maps directions right now.");
-  };
-
-  const openNativeMaps = async () => {
-    const label = encodeURIComponent(featuredPlace.title);
-    const url = Platform.select({
-      ios: `maps://?q=${label}&ll=${featuredPlace.latitude},${featuredPlace.longitude}`,
-      android: `geo:${featuredPlace.latitude},${featuredPlace.longitude}?q=${featuredPlace.latitude},${featuredPlace.longitude}(${label})`,
-      default: `https://www.google.com/maps/search/?api=1&query=${featuredPlace.latitude},${featuredPlace.longitude}`,
-    });
-
-    const canOpen = await Linking.canOpenURL(url);
-
-    if (canOpen) {
-      Linking.openURL(url);
-      return;
-    }
-
-    Linking.openURL(
-      `https://www.google.com/maps/search/?api=1&query=${featuredPlace.latitude},${featuredPlace.longitude}`
-    );
-  };
+  const openGoogleDirections = () => openPlaceDirections(selectedPlace);
+  const openNativeMaps = () => openPlaceInMaps(selectedPlace);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -169,16 +155,18 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
           showsMyLocationButton={false}
           followsUserLocation={hasLocationPermission}
         >
-          <Marker
-            coordinate={{
-              latitude: featuredPlace.latitude,
-              longitude: featuredPlace.longitude,
-            }}
-          >
-            <View style={styles.placeMarker}>
-              <Ionicons name="location" size={19} color="#102320" />
-            </View>
-          </Marker>
+          {places.map((place) => (
+            <Marker
+              key={place.id}
+              coordinate={{ latitude: place.latitude, longitude: place.longitude }}
+              title={place.title}
+              onPress={() => setSelectedPlace(place)}
+            >
+              <View style={styles.placeMarker}>
+                <Ionicons name="location" size={19} color="#102320" />
+              </View>
+            </Marker>
+          ))}
         </MapView>
 
         <View style={styles.mapTint} pointerEvents="none" />
@@ -189,26 +177,38 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
           <Text style={styles.messageText}>{locationMessage}</Text>
         </View>
         <View style={styles.placeCard}>
-          <Image source={placeImage} style={styles.placeImage} />
+          {!selectedPlace ? (
+            <DataState
+              loading={loading}
+              error={error}
+              empty={!loading && !error}
+              onRetry={reload}
+              compact
+            />
+          ) : (
+            <>
+              <Image source={selectedPlace.image || placeImage} style={styles.placeImage} />
 
-          <View style={styles.placeInfo}>
-            <Text style={styles.placeCategory}>{featuredPlace.category}</Text>
-            <Text style={styles.placeTitle}>{featuredPlace.title}</Text>
-            <View style={styles.distanceRow}>
-              <Ionicons name="navigate-outline" size={15} color={MUTED_TEXT} />
-              <Text style={styles.distanceText}>{featuredPlace.distance}</Text>
-            </View>
-          </View>
+              <View style={styles.placeInfo}>
+                <Text style={styles.placeCategory}>{selectedPlace.type || selectedPlace.category}</Text>
+                <Text style={styles.placeTitle}>{selectedPlace.title}</Text>
+                <View style={styles.distanceRow}>
+                  <Ionicons name="navigate-outline" size={15} color={MUTED_TEXT} />
+                  <Text style={styles.distanceText}>{selectedPlace.distance}</Text>
+                </View>
+              </View>
 
-          <View style={styles.buttonRow}>
-            <Pressable style={styles.directionsButton} onPress={openGoogleDirections}>
-              <Text style={styles.directionsButtonText}>Get Directions</Text>
-            </Pressable>
+              <View style={styles.buttonRow}>
+                <Pressable style={styles.directionsButton} onPress={openGoogleDirections}>
+                  <Text style={styles.directionsButtonText}>Get Directions</Text>
+                </Pressable>
 
-            <Pressable style={styles.mapsButton} onPress={openNativeMaps}>
-              <Text style={styles.mapsButtonText}>Open in Maps</Text>
-            </Pressable>
-          </View>
+                <Pressable style={styles.mapsButton} onPress={openNativeMaps}>
+                  <Text style={styles.mapsButtonText}>Open in Maps</Text>
+                </Pressable>
+              </View>
+            </>
+          )}
         </View>
 
         <BottomNav activeTab="map" onNavPress={onNavPress} />

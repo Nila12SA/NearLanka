@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Platform,
@@ -13,6 +13,7 @@ import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const alexImage = require("../../assets/review-alex.jpg");
 const sarahImage = require("../../assets/review-sarah.jpg");
@@ -27,7 +28,7 @@ const ACCENT = "#B6D9D6";
 const GOLD = "#D19F65";
 const BUTTON_GOLD = "#F5B956";
 
-const reviews = [
+const initialReviews = [
   {
     name: "Alex Mercer",
     date: "October 24, 2023",
@@ -58,6 +59,21 @@ const reviews = [
 ];
 
 export default function ReviewsPage({ onNavPress, onMenuPress }) {
+  const [reviews, setReviews] = useState(initialReviews);
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const saved = await AsyncStorage.getItem("@nearlanka/reviews");
+        if (saved) setReviews(JSON.parse(saved));
+        else await AsyncStorage.setItem("@nearlanka/reviews", JSON.stringify(initialReviews));
+      } catch (error) {
+        console.error("Unable to load local reviews:", error);
+      }
+    };
+
+    loadReviews();
+  }, []);
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />

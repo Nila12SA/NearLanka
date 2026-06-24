@@ -15,6 +15,8 @@ import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
+import DataState from "../components/DataState";
+import usePlaces from "../hooks/usePlaces";
 import { Ionicons } from "@expo/vector-icons";
 
 const sigiriyaImage = require("../../assets/historical-sigiriya.jpg");
@@ -104,6 +106,11 @@ export default function HistoricalPage({
   hasLocationPermission = true,
 }) {
   const [activeFilter, setActiveFilter] = useState("All");
+  const { places, loading, error, reload, usedLocation } = usePlaces({
+    category: "historical",
+    nearby: true,
+    hasLocationPermission,
+  });
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -130,7 +137,7 @@ export default function HistoricalPage({
             />
           </View>
 
-          {hasLocationPermission ? (
+          {usedLocation ? (
             <LocationPill
               text="Near your current location"
               iconName="navigate-outline"
@@ -169,7 +176,9 @@ export default function HistoricalPage({
           </ScrollView>
 
           <View style={styles.cardList}>
-            {historicalPlaces.slice(0, 3).map((place) => (
+            <DataState loading={loading} error={error} empty={!loading && !error && places.length === 0} onRetry={reload} />
+
+            {places.slice(0, 3).map((place) => (
               <HistoricalCard
                 key={place.id}
                 place={place}
@@ -196,12 +205,15 @@ export default function HistoricalPage({
               </Pressable>
             </View>
 
-            <HistoricalCard
-              place={historicalPlaces[3]}
-              onHistoricalPress={onHistoricalPress}
-              onFavoritePress={onFavoritePress}
+            {places.slice(3).map((place) => (
+              <HistoricalCard
+                key={place.id}
+                place={place}
+                onHistoricalPress={onHistoricalPress}
+                onFavoritePress={onFavoritePress}
                 favoriteIds={favoriteIds}
               />
+            ))}
           </View>
         </ScrollView>
 

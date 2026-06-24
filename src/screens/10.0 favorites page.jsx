@@ -12,6 +12,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
+import { Ionicons } from "@expo/vector-icons";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -32,7 +33,12 @@ const navItems = [
   { icon: navUserIcon, label: "Profile", key: "Profile" },
 ];
 
-export default function FavoritesPage({ favorites = [], onNavPress, onMenuPress }) {
+export default function FavoritesPage({
+  favorites = [],
+  onNavPress,
+  onMenuPress,
+  onFavoritePress,
+}) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -66,8 +72,15 @@ export default function FavoritesPage({ favorites = [], onNavPress, onMenuPress 
                   )}
 
                   <View style={styles.favoriteContent}>
+                    <Pressable
+                      style={styles.removeButton}
+                      onPress={() => onFavoritePress?.(item)}
+                      hitSlop={8}
+                    >
+                      <Ionicons name="heart" size={21} color={GOLD} />
+                    </Pressable>
                     <Text style={styles.favoriteType}>{item.type || item.category || "PLACE"}</Text>
-                    <Text style={styles.favoriteTitle}>{item.title}</Text>
+                    <Text style={styles.favoriteTitle}>{item.title || item.name}</Text>
                     {!!item.distance && (
                       <Text style={styles.favoriteMeta}>{item.distance}</Text>
                     )}
@@ -208,6 +221,13 @@ const styles = StyleSheet.create({
   favoriteContent: {
     flex: 1,
     padding: 14,
+  },
+
+  removeButton: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+    zIndex: 2,
   },
 
   favoriteType: {

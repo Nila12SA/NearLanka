@@ -15,6 +15,8 @@ import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
+import DataState from "../components/DataState";
+import usePlaces from "../hooks/usePlaces";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const cityHotelImage = require("../../assets/colombo-seven-h-facilities-rt.jpg");
@@ -70,7 +72,7 @@ const hotels = [
       "Enjoy a relaxing hotel stay with poolside comfort, open views, and premium facilities.",
     amenities: [
       { icon: "pool", label: "POOL", type: "mc" },
-      { icon: "local-parking", label: "PARKING", type: "ion" },
+      { icon: "car-outline", label: "PARKING", type: "ion" },
       { icon: "wifi", label: "WI-FI", type: "mc" },
     ],
   },
@@ -102,6 +104,11 @@ export default function HotelsPage({
   hasLocationPermission = true,
 }) {
   const [activeFilter, setActiveFilter] = useState("All");
+  const { places, loading, error, reload, usedLocation } = usePlaces({
+    category: "hotel",
+    nearby: true,
+    hasLocationPermission,
+  });
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -128,7 +135,7 @@ export default function HotelsPage({
             />
           </View>
 
-          {hasLocationPermission ? (
+          {usedLocation ? (
             <LocationPill
               text="Near your current location"
               iconName="navigate-outline"
@@ -166,7 +173,9 @@ export default function HotelsPage({
             })}
           </ScrollView>
 
-          {hotels.map((hotel) => (
+          <DataState loading={loading} error={error} empty={!loading && !error && places.length === 0} onRetry={reload} />
+
+          {places.map((hotel) => (
             <View key={hotel.id} style={styles.hotelCard}>
               <ImageBackground
                 source={hotel.image}
@@ -195,7 +204,7 @@ export default function HotelsPage({
                   <View style={styles.ratingRow}>
                     <Ionicons name="star" size={14} color="#FFC05A" />
                     <Text style={styles.ratingText}>
-                      {hotel.rating} ({hotel.reviews})
+                      {hotel.rating}
                     </Text>
                   </View>
 

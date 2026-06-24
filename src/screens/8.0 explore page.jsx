@@ -14,6 +14,8 @@ import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
+import DataState from "../components/DataState";
+import usePlaces from "../hooks/usePlaces";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const navHomeIcon = require("../../assets/nav-home.png");
@@ -94,6 +96,7 @@ export default function ExplorePage({
   favoriteIds = [],
   hasLocationPermission = true,
 }) {
+  const { places, loading, error, reload } = usePlaces();
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -151,7 +154,9 @@ export default function ExplorePage({
           <View style={styles.divider} />
 
           <View style={styles.cardList}>
-            {explorePlaces.map((place) => {
+            <DataState loading={loading} error={error} empty={!loading && !error && places.length === 0} onRetry={reload} />
+
+            {places.map((place) => {
               const isFavorite = favoriteIds.includes(place.id) ||
                 favoriteIds.includes(place.title);
 

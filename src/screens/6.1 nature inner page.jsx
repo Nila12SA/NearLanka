@@ -12,6 +12,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { openPlaceDirections } from "../utils/maps";
 
 const heroImage = require("../../assets/nature-bomburella-waterfall.jpg");
 
@@ -28,13 +29,18 @@ const facilities = [
 ];
 
 export default function NatureInnerPage({
+  place,
   onBack,
   onFavoritePress,
   onNavPress,
   favoriteIds = [],
 }) {
-  const isFavorite = favoriteIds.includes("nature-nearby-nature-spot") ||
-    favoriteIds.includes("Nearby Nature Spot");
+  const selectedPlace = place || {
+    id: "nature-nearby-nature-spot", title: "Nearby Nature Spot", image: heroImage, rating: "4.8",
+    location: "Sri Lanka", description: "Discover this Sri Lankan nature place.",
+    openingHours: "Hours not available", entryFee: "Fee information not available", bestTime: "Any time",
+  };
+  const isFavorite = favoriteIds.includes(selectedPlace.id || selectedPlace._id || selectedPlace.title);
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -46,7 +52,7 @@ export default function NatureInnerPage({
           contentContainerStyle={styles.scrollContent}
         >
           <ImageBackground
-            source={heroImage}
+            source={selectedPlace.image || heroImage}
             style={styles.hero}
             resizeMode="cover"
           >
@@ -59,7 +65,7 @@ export default function NatureInnerPage({
 
               <Pressable
                 style={[styles.circleButton, isFavorite && styles.activeCircleButton]}
-                onPress={onFavoritePress}
+                onPress={() => onFavoritePress?.(selectedPlace)}
               >
                 <Ionicons
                   name={isFavorite ? "bookmark" : "bookmark-outline"}
@@ -72,17 +78,15 @@ export default function NatureInnerPage({
             <View style={styles.heroContent}>
               <View style={styles.metaRow}>
                 <Text style={styles.categoryPill}>Nature</Text>
-                <Text style={styles.ratingText}>* 4.8</Text>
+                <Text style={styles.ratingText}>* {selectedPlace.rating}</Text>
                 <Text style={styles.reviewText}>(1.2k reviews)</Text>
               </View>
 
-              <Text style={styles.title}>Nearby Nature Spot</Text>
+              <Text style={styles.title}>{selectedPlace.title || selectedPlace.name}</Text>
 
               <View style={styles.locationRow}>
                 <Ionicons name="location-outline" size={15} color="#E0E9E6" />
-                <Text style={styles.locationText}>
-                  Ella, Central Highlands  •  2.4 km away
-                </Text>
+                <Text style={styles.locationText}>{selectedPlace.location}{selectedPlace.distanceKm != null ? `  â€¢  ${selectedPlace.distanceKm} km away` : ""}</Text>
               </View>
             </View>
           </ImageBackground>
@@ -91,30 +95,25 @@ export default function NatureInnerPage({
             <View style={styles.infoGrid}>
               <View style={styles.infoCard}>
                 <Text style={styles.infoLabel}>ENTRY FEE</Text>
-                <Text style={styles.infoValue}>Rs. 500</Text>
+                <Text style={styles.infoValue}>{selectedPlace.entryFee}</Text>
               </View>
 
               <View style={styles.infoCard}>
                 <Text style={styles.infoLabel}>BEST TIME</Text>
-                <Text style={styles.infoValue}>6 AM - 9 AM</Text>
+                <Text style={styles.infoValue}>{selectedPlace.bestTime}</Text>
               </View>
             </View>
 
             <View style={styles.hoursCard}>
               <View>
                 <Text style={styles.infoLabel}>OPENING HOURS</Text>
-                <Text style={styles.hoursValue}>Daily: 07:00 - 18:00</Text>
+                <Text style={styles.hoursValue}>{selectedPlace.openingHours}</Text>
               </View>
               <Text style={styles.openBadge}>OPEN NOW</Text>
             </View>
 
             <Text style={styles.sectionTitle}>About this Haven</Text>
-            <Text style={styles.description}>
-              Escape into a sanctuary where the emerald canopy meets the sky.
-              This hidden gem offers a serene hiking trail leading to a panoramic
-              overlook of the valley. Perfect for those seeking a moment of quiet
-              reflection amidst ancient boulders and vibrant tropical flora.
-            </Text>
+            <Text style={styles.description}>{selectedPlace.description}</Text>
 
             <Text style={styles.sectionTitle}>Facilities</Text>
             <View style={styles.facilityWrap}>
@@ -153,13 +152,13 @@ export default function NatureInnerPage({
             </View>
 
             <View style={styles.actionBar}>
-              <Pressable style={styles.primaryButton}>
+              <Pressable style={styles.primaryButton} onPress={() => openPlaceDirections(selectedPlace)}>
                 <Text style={styles.primaryButtonText}>Get Directions</Text>
               </Pressable>
 
               <Pressable
                 style={[styles.secondaryButton, isFavorite && styles.activeSecondaryButton]}
-                onPress={onFavoritePress}
+                onPress={() => onFavoritePress?.(selectedPlace)}
               >
                 <Text style={styles.secondaryButtonText}>
                   {isFavorite ? "Added to Favorites" : "Add to Favorites"}

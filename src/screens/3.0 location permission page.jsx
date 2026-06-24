@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import * as Location from "expo-location";
+import { Alert, Image, Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { getBestAvailableLocation } from "../utils/location";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
 
@@ -29,17 +29,21 @@ export default function LocationPermissionScreen({ onAllow, onLater }) {
     setIsPermissionSheetVisible(false);
 
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
+      await getBestAvailableLocation({ requestPermission: true });
+      setPermissionMessage(`${choiceLabel} selected. GPS location is ready.`);
+      onAllow?.("granted");
+    } catch (error) {
+      console.warn("Unable to prepare GPS location:", error.message);
+      setPermissionMessage(error.message);
 
-      if (status === "granted") {
-        setPermissionMessage(`${choiceLabel} selected. Location access enabled.`);
-      } else {
-        setPermissionMessage("Location permission was not allowed.");
-      }
-
-      onAllow?.(status);
-    } catch {
-      setPermissionMessage("Location permission is unavailable right now.");
+      Alert.alert(
+        "Location unavailable",
+        `${error.message}\n\nTurn on Location Services and Precise Location for Expo Go, then try again.`,
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Open Settings", onPress: () => Linking.openSettings() },
+        ]
+      );
     } finally {
       setIsRequesting(false);
     }

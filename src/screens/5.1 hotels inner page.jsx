@@ -13,6 +13,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { openPlaceDirections } from "../utils/maps";
 
 const hotelHeroImage = require("../../assets/Home-Main-1742X871.jpg");
 const routeImage = require("../../assets/onboarding-navigate-easily.jpg");
@@ -45,13 +46,18 @@ const navItems = [
 ];
 
 export default function HotelInnerPage({
+  place,
   onBack,
   onFavoritePress,
   onNavPress,
   favoriteIds = [],
 }) {
-  const isFavorite = favoriteIds.includes("hotel-nearby-city-hotel") ||
-    favoriteIds.includes("Nearby City Hotel");
+  const selectedPlace = place || {
+    id: "hotel-nearby-city-hotel", title: "Nearby City Hotel", image: hotelHeroImage,
+    rating: "4.8", location: "Near your current location", description: "Discover this Sri Lankan hotel.",
+    openingHours: "Open 24 hours", entryFee: "Room rates vary", bestTime: "Any time",
+  };
+  const isFavorite = favoriteIds.includes(selectedPlace.id || selectedPlace._id || selectedPlace.title);
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -62,7 +68,7 @@ export default function HotelInnerPage({
           contentContainerStyle={styles.scrollContent}
         >
           <ImageBackground
-            source={hotelHeroImage}
+            source={selectedPlace.image || hotelHeroImage}
             style={styles.hero}
             imageStyle={styles.heroImage}
             resizeMode="cover"
@@ -76,7 +82,7 @@ export default function HotelInnerPage({
 
               <Pressable
                 style={[styles.circleButton, isFavorite && styles.activeCircleButton]}
-                onPress={onFavoritePress}
+                onPress={() => onFavoritePress?.(selectedPlace)}
               >
                 <Ionicons
                   name={isFavorite ? "heart" : "heart-outline"}
@@ -88,11 +94,11 @@ export default function HotelInnerPage({
 
             <View style={styles.heroContent}>
               <Text style={styles.typePill}>Hotel</Text>
-              <Text style={styles.title}>Nearby City Hotel</Text>
+              <Text style={styles.title}>{selectedPlace.title || selectedPlace.name}</Text>
 
               <View style={styles.locationRow}>
                 <Ionicons name="location-outline" size={15} color="#C8D8D5" />
-                <Text style={styles.locationText}>Near your current location</Text>
+                <Text style={styles.locationText}>{selectedPlace.location}</Text>
               </View>
             </View>
           </ImageBackground>
@@ -101,18 +107,18 @@ export default function HotelInnerPage({
             <View style={styles.statsRow}>
               <View style={styles.ratingBlock}>
                 <Ionicons name="star" size={22} color="#E7B567" />
-                <Text style={styles.ratingValue}>4.8</Text>
+                <Text style={styles.ratingValue}>{selectedPlace.rating}</Text>
               </View>
 
               <View style={styles.divider} />
 
               <View style={styles.distanceBlock}>
-                <Text style={styles.distanceValue}>1.2</Text>
+                <Text style={styles.distanceValue}>{selectedPlace.distanceKm ?? "--"}</Text>
                 <Text style={styles.distanceUnit}>km</Text>
                 <Text style={styles.distanceLabel}>DISTANCE</Text>
               </View>
 
-              <Text style={styles.openPill}>Open 24 hours</Text>
+              <Text style={styles.openPill}>{selectedPlace.openingHours}</Text>
             </View>
 
             <Text style={styles.sectionLabel}>FACILITIES</Text>
@@ -134,14 +140,12 @@ export default function HotelInnerPage({
             </View>
 
             <Text style={styles.sectionLabel}>DESCRIPTION</Text>
-            <Text style={styles.description}>
-              Experience the pinnacle of urban luxury at the Nearby City Hotel.
-              Our rooms are designed with a sophisticated blend of contemporary
-              aesthetics and tropical charm, offering breathtaking views of the
-              cityscape. Whether you're here for business or a tranquil getaway,
-              our 24-hour concierge and world-class amenities ensure a seamless
-              stay in the heart of the city.
-            </Text>
+            <Text style={styles.description}>{selectedPlace.description}</Text>
+
+            <Text style={styles.sectionLabel}>ENTRY FEE</Text>
+            <Text style={styles.description}>{selectedPlace.entryFee}</Text>
+            <Text style={styles.sectionLabel}>BEST TIME</Text>
+            <Text style={styles.description}>{selectedPlace.bestTime}</Text>
 
             <ImageBackground
               source={routeImage}
@@ -161,13 +165,13 @@ export default function HotelInnerPage({
               </View>
             </ImageBackground>
 
-            <Pressable style={styles.primaryButton}>
+            <Pressable style={styles.primaryButton} onPress={() => openPlaceDirections(selectedPlace)}>
               <Text style={styles.primaryButtonText}>Get Directions</Text>
             </Pressable>
 
             <Pressable
               style={[styles.secondaryButton, isFavorite && styles.activeSecondaryButton]}
-              onPress={onFavoritePress}
+              onPress={() => onFavoritePress?.(selectedPlace)}
             >
               <Text style={styles.secondaryButtonText}>
                 {isFavorite ? "Added to Favorites" : "Add to Favorites"}

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, Pressable, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getPlaceId, normalizePlace } from "./src/utils/places";
 
 import SplashScreen from "./src/screens/1.0 splashscreen";
 import OnboardingFindPlaces from "./src/screens/2.0 onboarding find places near you";
@@ -50,13 +52,153 @@ const historicalDetailFavorite = {
   image: require("./assets/historical-sigiriya.jpg"),
 };
 
+function AuthOptionPage({ title, description, buttonText, onContinue, onBack }) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#0B1211",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 24,
+      }}
+    >
+      <View
+        style={{
+          width: "100%",
+          padding: 26,
+          borderRadius: 24,
+          backgroundColor: "rgba(18, 63, 58, 0.94)",
+          borderWidth: 1,
+          borderColor: "rgba(182, 217, 214, 0.22)",
+        }}
+      >
+        <Text
+          style={{
+            color: "#F4F6F2",
+            fontSize: 28,
+            fontWeight: "900",
+            textAlign: "center",
+          }}
+        >
+          {title}
+        </Text>
+
+        <Text
+          style={{
+            marginTop: 12,
+            color: "#B9C4BE",
+            fontSize: 14,
+            lineHeight: 21,
+            textAlign: "center",
+          }}
+        >
+          {description}
+        </Text>
+
+        <Pressable
+          onPress={onContinue}
+          style={{
+            height: 52,
+            marginTop: 26,
+            borderRadius: 15,
+            backgroundColor: "#D19F65",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "#102320",
+              fontSize: 15,
+              fontWeight: "900",
+            }}
+          >
+            {buttonText}
+          </Text>
+        </Pressable>
+
+        <Pressable
+          onPress={onBack}
+          style={{
+            marginTop: 18,
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "#D19F65",
+              fontSize: 14,
+              fontWeight: "800",
+            }}
+          >
+            Back to Login
+          </Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
 export default function App() {
   const [screen, setScreen] = useState("splash");
   const [favorites, setFavorites] = useState([]);
-  const [selectedHistoricalPlace, setSelectedHistoricalPlace] = useState(null);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [recentPlaces, setRecentPlaces] = useState([]);
+  const [recentPlacesLoaded, setRecentPlacesLoaded] = useState(false);
+  const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [hasLocationPermission, setHasLocationPermission] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const onboardingTransition = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        const savedFavorites = await AsyncStorage.getItem("@nearlanka/favorites");
+        if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
+      } catch (error) {
+        console.error("Unable to load favorites:", error);
+      } finally {
+        setFavoritesLoaded(true);
+      }
+    };
+
+    loadFavorites();
+  }, []);
+
+  useEffect(() => {
+    if (!favoritesLoaded) return;
+
+    AsyncStorage.setItem("@nearlanka/favorites", JSON.stringify(favorites)).catch(
+      (error) => console.error("Unable to save favorites:", error)
+    );
+  }, [favorites, favoritesLoaded]);
+
+  useEffect(() => {
+    const loadRecentPlaces = async () => {
+      try {
+        const saved = await AsyncStorage.getItem("@nearlanka/recent-places");
+        if (saved) setRecentPlaces(JSON.parse(saved));
+      } catch (error) {
+        console.error("Unable to load recently viewed places:", error);
+      } finally {
+        setRecentPlacesLoaded(true);
+      }
+    };
+
+    loadRecentPlaces();
+  }, []);
+
+  useEffect(() => {
+    if (!recentPlacesLoaded) return;
+
+    AsyncStorage.setItem(
+      "@nearlanka/recent-places",
+      JSON.stringify(recentPlaces)
+    ).catch((error) =>
+      console.error("Unable to save recently viewed places:", error)
+    );
+  }, [recentPlaces, recentPlacesLoaded]);
 
   useEffect(() => {
     if (screen === "splash") {
@@ -81,6 +223,7 @@ export default function App() {
     }
 
     onboardingTransition.setValue(0);
+
     Animated.timing(onboardingTransition, {
       toValue: 1,
       duration: 520,
@@ -89,30 +232,36 @@ export default function App() {
     }).start();
   }, [onboardingTransition, screen]);
 
-  const favoriteIds = favorites.flatMap((item) => [item.id, item.title]).filter(Boolean);
+  const favoriteIds = favorites
+    .flatMap((item) => [getPlaceId(item), item.id, item._id, item.title, item.name])
+    .filter(Boolean);
 
-  const addFavorite = (item) => {
-    if (!item?.title) {
-      return;
-    }
+  const addRecentlyViewed = (item) => {
+    const place = normalizePlace(item);
+    const placeId = getPlaceId(place);
+    if (!placeId) return;
 
-    const favorite = {
-      id: item.id || item.title,
-      type: item.type || item.category || "PLACE",
-      ...item,
-    };
+    setRecentPlaces((currentPlaces) => [
+      { ...place, viewedAt: new Date().toISOString() },
+      ...currentPlaces.filter(
+        (currentPlace) => getPlaceId(currentPlace) !== placeId
+      ),
+    ].slice(0, 6));
+  };
+
+  const toggleFavorite = (item) => {
+    const favorite = normalizePlace(item);
+    const favoriteId = getPlaceId(favorite);
+    if (!favoriteId) return;
 
     setFavorites((currentFavorites) => {
       const alreadySaved = currentFavorites.some(
-        (savedItem) =>
-          savedItem.id === favorite.id || savedItem.title === favorite.title
+        (savedItem) => getPlaceId(savedItem) === favoriteId
       );
 
-      if (alreadySaved) {
-        return currentFavorites;
-      }
-
-      return [favorite, ...currentFavorites];
+      return alreadySaved
+        ? currentFavorites.filter((savedItem) => getPlaceId(savedItem) !== favoriteId)
+        : [favorite, ...currentFavorites];
     });
   };
 
@@ -145,13 +294,9 @@ export default function App() {
     setScreen(isLoggedIn ? "emptyStates" : "login");
   };
 
-  const goToLogin = () => {
-    setScreen("login");
-  };
-
   const completeLogin = () => {
     setIsLoggedIn(true);
-    setScreen("profile");
+    setScreen("home");
   };
 
   const signOut = () => {
@@ -163,7 +308,10 @@ export default function App() {
     setScreen("hotels");
   };
 
-  const goToHotelDetails = () => {
+  const goToHotelDetails = (place) => {
+    const normalized = normalizePlace(place);
+    setSelectedPlace(normalized);
+    addRecentlyViewed(normalized);
     setScreen("hotelDetails");
   };
 
@@ -171,7 +319,10 @@ export default function App() {
     setScreen("nature");
   };
 
-  const goToNatureDetails = () => {
+  const goToNatureDetails = (place) => {
+    const normalized = normalizePlace(place);
+    setSelectedPlace(normalized);
+    addRecentlyViewed(normalized);
     setScreen("natureDetails");
   };
 
@@ -180,8 +331,26 @@ export default function App() {
   };
 
   const goToHistoricalDetails = (place) => {
-    setSelectedHistoricalPlace(place || historicalDetailFavorite);
+    const normalized = normalizePlace(place || historicalDetailFavorite);
+    setSelectedPlace(normalized);
+    addRecentlyViewed(normalized);
     setScreen("historicalDetails");
+  };
+
+  const handlePlacePress = (place) => {
+    const normalized = normalizePlace(place);
+
+    if (normalized?.category === "hotel") {
+      goToHotelDetails(normalized);
+      return;
+    }
+
+    if (normalized?.category === "nature") {
+      goToNatureDetails(normalized);
+      return;
+    }
+
+    goToHistoricalDetails(normalized);
   };
 
   const handleNavPress = (screenName) => {
@@ -268,14 +437,55 @@ export default function App() {
             onLater={continueWithoutLocation}
           />
         )}
+
       {screen === "login" && (
         <LoginPage
-  onSignIn={() => setCurrentScreen("home")}
-  onSignUp={() => setCurrentScreen("signup")}
-  onGooglePress={() => setCurrentScreen("googleLogin")}
-  onApplePress={() => setCurrentScreen("appleLogin")}
-  onForgotPassword={() => setCurrentScreen("forgotPassword")}
-/>
+          onSignIn={completeLogin}
+          onSignUp={() => setScreen("signup")}
+          onGooglePress={() => setScreen("googleLogin")}
+          onApplePress={() => setScreen("appleLogin")}
+          onForgotPassword={() => setScreen("forgotPassword")}
+        />
+      )}
+
+      {screen === "signup" && (
+        <AuthOptionPage
+          title="Create Account"
+          description="This is the sign up screen placeholder for NearLanka."
+          buttonText="Create Account"
+          onContinue={completeLogin}
+          onBack={() => setScreen("login")}
+        />
+      )}
+
+      {screen === "googleLogin" && (
+        <AuthOptionPage
+          title="Google Login"
+          description="Continue using your Google account to explore NearLanka."
+          buttonText="Continue with Google"
+          onContinue={completeLogin}
+          onBack={() => setScreen("login")}
+        />
+      )}
+
+      {screen === "appleLogin" && (
+        <AuthOptionPage
+          title="Apple Login"
+          description="Continue using your Apple account to explore NearLanka."
+          buttonText="Continue with Apple"
+          onContinue={completeLogin}
+          onBack={() => setScreen("login")}
+        />
+      )}
+
+      {screen === "forgotPassword" && (
+        <AuthOptionPage
+          title="Forgot Password"
+          description="Password reset screen placeholder for NearLanka."
+          buttonText="Back to Login"
+          onContinue={() => setScreen("login")}
+          onBack={() => setScreen("login")}
+        />
       )}
 
       {screen === "home" && (
@@ -284,10 +494,12 @@ export default function App() {
           onSearchPress={goToSearch}
           onHotelsPress={goToHotels}
           onHotelPress={goToHotels}
+          onPlacePress={handlePlacePress}
+          recentPlaces={recentPlaces}
           hasLocationPermission={hasLocationPermission}
           favoriteIds={favoriteIds}
           onFavoritePress={(place) =>
-            addFavorite({ ...place, type: place.category || "PLACE" })
+            toggleFavorite(place)
           }
           onCategoryPress={(category) => {
             if (
@@ -324,7 +536,7 @@ export default function App() {
           onSearchPress={goToSearch}
           hasLocationPermission={hasLocationPermission}
           favoriteIds={favoriteIds}
-          onFavoritePress={(place) => addFavorite(place)}
+          onFavoritePress={toggleFavorite}
         />
       )}
 
@@ -332,6 +544,8 @@ export default function App() {
         <SearchPage
           onNavPress={handleNavPress}
           onMenuPress={() => {}}
+          favoriteIds={favoriteIds}
+          onFavoritePress={toggleFavorite}
         />
       )}
 
@@ -342,16 +556,17 @@ export default function App() {
           onHotelPress={goToHotelDetails}
           hasLocationPermission={hasLocationPermission}
           favoriteIds={favoriteIds}
-          onFavoritePress={(hotel) => addFavorite({ ...hotel, type: "HOTEL" })}
+          onFavoritePress={toggleFavorite}
         />
       )}
 
       {screen === "hotelDetails" && (
         <HotelInnerPage
+          place={selectedPlace || normalizePlace(hotelDetailFavorite)}
           onBack={goToHotels}
           onNavPress={handleNavPress}
           favoriteIds={favoriteIds}
-          onFavoritePress={() => addFavorite(hotelDetailFavorite)}
+          onFavoritePress={toggleFavorite}
         />
       )}
 
@@ -362,15 +577,16 @@ export default function App() {
           onNaturePress={goToNatureDetails}
           hasLocationPermission={hasLocationPermission}
           favoriteIds={favoriteIds}
-          onFavoritePress={(spot) => addFavorite({ ...spot, type: "NATURE" })}
+          onFavoritePress={toggleFavorite}
         />
       )}
 
       {screen === "natureDetails" && (
         <NatureInnerPage
+          place={selectedPlace || normalizePlace(natureDetailFavorite)}
           onBack={goToNature}
           favoriteIds={favoriteIds}
-          onFavoritePress={() => addFavorite(natureDetailFavorite)}
+          onFavoritePress={toggleFavorite}
         />
       )}
 
@@ -381,25 +597,18 @@ export default function App() {
           onHistoricalPress={goToHistoricalDetails}
           hasLocationPermission={hasLocationPermission}
           favoriteIds={favoriteIds}
-          onFavoritePress={(place) =>
-            addFavorite({ ...place, type: "HISTORICAL" })
-          }
+          onFavoritePress={toggleFavorite}
         />
       )}
 
       {screen === "historicalDetails" && (
         <HistoricalInnerPage
+          place={selectedPlace || normalizePlace(historicalDetailFavorite)}
           onBack={goToHistorical}
           favoriteIds={favoriteIds}
-          onFavoritePress={(place) =>
-            addFavorite({
-              ...(place || selectedHistoricalPlace || historicalDetailFavorite),
-              type: "HISTORICAL",
-            })
-          }
+          onFavoritePress={toggleFavorite}
         />
       )}
-
 
       {screen === "map" && (
         <MapPage
@@ -418,22 +627,19 @@ export default function App() {
           savedPlacesCount={favorites.length}
         />
       )}
+
       {screen === "reviews" && isLoggedIn && (
-        <ReviewsPage
-          onNavPress={handleNavPress}
-          onMenuPress={() => {}}
-        />
+        <ReviewsPage onNavPress={handleNavPress} onMenuPress={() => {}} />
       )}
+
       {screen === "emptyStates" && isLoggedIn && (
-        <EmptyStatePage
-          onNavPress={handleNavPress}
-          onMenuPress={() => {}}
-        />
+        <EmptyStatePage onNavPress={handleNavPress} onMenuPress={() => {}} />
       )}
 
       {screen === "favorites" && (
         <FavoritesPage
           favorites={favorites}
+          onFavoritePress={toggleFavorite}
           onNavPress={handleNavPress}
           onMenuPress={() => {}}
         />

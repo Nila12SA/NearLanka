@@ -14,6 +14,8 @@ import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
+import DataState from "../components/DataState";
+import usePlaces from "../hooks/usePlaces";
 import { Ionicons } from "@expo/vector-icons";
 
 const littleAdamsPeak = require("../../assets/nature-little-adams-peak.jpg");
@@ -95,6 +97,11 @@ export default function NaturePage({
   favoriteIds = [],
   hasLocationPermission = true,
 }) {
+  const { places, loading, error, reload, usedLocation } = usePlaces({
+    category: "nature",
+    nearby: true,
+    hasLocationPermission,
+  });
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -116,7 +123,7 @@ export default function NaturePage({
             <Text style={styles.searchText}>Search nearby nature spots</Text>
           </View>
 
-          {hasLocationPermission ? (
+          {usedLocation ? (
             <LocationPill
               text="Near your current location"
               iconName="navigate-outline"
@@ -149,8 +156,10 @@ export default function NaturePage({
           </View>
 
           <View style={styles.cardList}>
-            {natureSpots.map((spot, index) => (
-              <View key={spot.title} style={styles.natureCard}>
+            <DataState loading={loading} error={error} empty={!loading && !error && places.length === 0} onRetry={reload} />
+
+            {places.map((spot, index) => (
+              <View key={spot.id || spot.title} style={styles.natureCard}>
                 <ImageBackground
                   source={spot.image}
                   style={[styles.cardImage, index === 3 && styles.tallCardImage]}

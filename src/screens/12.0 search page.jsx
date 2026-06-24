@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -15,6 +15,9 @@ import { StatusBar } from "expo-status-bar";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
+import DataState from "../components/DataState";
+import { getAllPlaces, searchPlaces as searchPlacesApi } from "../api/api";
+import { normalizePlaces } from "../utils/places";
 
 const nineArchImage = require("../../assets/home-nine-arch-train.jpg");
 const beachImage = require("../../assets/home-mountain-view.jpg");
@@ -103,31 +106,48 @@ const searchPlaces = [
   },
 ];
 
-export default function SearchPage({ onNavPress, onMenuPress }) {
+export default function SearchPage({
+  onNavPress,
+  onMenuPress,
+  favoriteIds = [],
+  onFavoritePress,
+}) {
   const [query, setQuery] = useState("");
-  const normalizedQuery = query.trim().toLowerCase();
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [retryCounter, setRetryCounter] = useState(0);
+  const normalizedQuery = query.trim();
 
-  const filteredPlaces = useMemo(() => {
-    if (!normalizedQuery) {
-      return searchPlaces;
-    }
+  useEffect(() => {
+    let active = true;
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      setError("");
 
-    return searchPlaces.filter((place) => {
-      const searchableText = [
-        place.title,
-        place.location,
-        place.distance,
-        ...place.tags,
-        ...place.keywords,
-      ]
-        .join(" ")
-        .toLowerCase();
+      try {
+        const data = normalizedQuery
+          ? await searchPlacesApi(normalizedQuery)
+          : await getAllPlaces();
+        if (active) setFilteredPlaces(normalizePlaces(data));
+      } catch (searchError) {
+        console.error("Unable to search NearLanka places:", searchError);
+        if (active) {
+          setError(searchError.message || "Search is unavailable right now.");
+          setFilteredPlaces([]);
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    }, normalizedQuery ? 350 : 0);
 
-      return searchableText.includes(normalizedQuery);
-    });
-  }, [normalizedQuery]);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [normalizedQuery, retryCounter]);
 
-  const hasNoResults = normalizedQuery.length > 0 && filteredPlaces.length === 0;
+  const hasNoResults = normalizedQuery.length > 0 && !loading && !error && filteredPlaces.length === 0;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -210,7 +230,9 @@ export default function SearchPage({ onNavPress, onMenuPress }) {
             {normalizedQuery ? `${filteredPlaces.length} Results` : "Nearby You"}
           </Text>
 
-          {hasNoResults ? (
+          {loading || error ? (
+            <DataState loading={loading} error={error} onRetry={() => setRetryCounter((count) => count + 1)} />
+          ) : hasNoResults ? (
             <View style={styles.emptyCard}>
               <View style={styles.emptyIconCircle}>
                 <MaterialCommunityIcons name="magnify-close" size={32} color={ACCENT} />
@@ -226,7 +248,7 @@ export default function SearchPage({ onNavPress, onMenuPress }) {
           ) : (
             <View style={styles.cardList}>
               {filteredPlaces.map((place) => (
-                <View key={place.title} style={styles.placeCard}>
+                <View key={place.id || place.title} style={styles.placeCard}>
                   <Image source={place.image} style={styles.placeImage} resizeMode="cover" />
                   <View style={styles.ratingPill}>
                     <Text style={styles.ratingText}>{place.rating}</Text>
@@ -243,16 +265,18 @@ export default function SearchPage({ onNavPress, onMenuPress }) {
                         </View>
                       </View>
 
-                      <Ionicons
-                        name={place.favorite ? "heart" : "heart-outline"}
-                        size={25}
-                        color={place.favorite ? GOLD : TEXT}
-                      />
+                      <Pressable onPress={() => onFavoritePress?.(place)} hitSlop={10}>
+                        <Ionicons
+                          name={favoriteIds.includes(place.id || place.title) ? "heart" : "heart-outline"}
+                          size={25}
+                          color={favoriteIds.includes(place.id || place.title) ? GOLD : TEXT}
+                        />
+                      </Pressable>
                     </View>
 
                     <View style={styles.cardFooter}>
                       <View style={styles.tagRow}>
-                        {place.tags.map((tag) => (
+                        {[place.type].map((tag) => (
                           <Text key={tag} style={styles.tagPill}>{tag}</Text>
                         ))}
                       </View>

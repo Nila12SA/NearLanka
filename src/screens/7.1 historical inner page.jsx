@@ -12,6 +12,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { openPlaceDirections } from "../utils/maps";
 
 const heroImage = require("../../assets/historical-sigiriya.jpg");
 
@@ -34,21 +35,19 @@ const facilities = [
 ];
 
 export default function HistoricalInnerPage({
+  place,
   onBack,
   onFavoritePress,
   onNavPress,
   favoriteIds = [],
 }) {
-  const favoriteItem = {
-    id: "historical-nearby-heritage-site",
-    title: "Nearby Heritage Site",
-    type: "HISTORICAL",
-    distance: "1.2 km",
-    rating: "4.9",
-    image: heroImage,
+  const favoriteItem = place || {
+    id: "historical-nearby-heritage-site", title: "Nearby Heritage Site", image: heroImage,
+    rating: "4.9", location: "Sri Lanka", description: "Discover this Sri Lankan historical place.",
+    openingHours: "Hours not available", entryFee: "Fee information not available", bestTime: "Any time",
   };
 
-  const favoriteKey = favoriteItem.id;
+  const favoriteKey = favoriteItem.id || favoriteItem._id || favoriteItem.title;
   const isFavorite =
     favoriteIds.includes(favoriteKey) || favoriteIds.includes(favoriteItem.title);
 
@@ -66,7 +65,7 @@ export default function HistoricalInnerPage({
           contentContainerStyle={styles.scrollContent}
         >
           <ImageBackground
-            source={heroImage}
+            source={favoriteItem.image || heroImage}
             style={styles.hero}
             imageStyle={styles.heroImage}
             resizeMode="cover"
@@ -96,15 +95,15 @@ export default function HistoricalInnerPage({
             <View style={styles.heroContent}>
               <View style={styles.metaRow}>
                 <Text style={styles.categoryPill}>HISTORICAL</Text>
-                <Text style={styles.ratingText}>★ 4.9 (1.2k reviews)</Text>
+                <Text style={styles.ratingText}>★ {favoriteItem.rating}</Text>
               </View>
 
-              <Text style={styles.title}>Nearby Heritage Site</Text>
+              <Text style={styles.title}>{favoriteItem.title || favoriteItem.name}</Text>
 
               <View style={styles.locationRow}>
                 <Ionicons name="location-outline" size={17} color={MUTED_TEXT} />
                 <Text style={styles.locationText}>
-                  Near your current location
+                  {favoriteItem.location}
                 </Text>
 
                 <MaterialCommunityIcons
@@ -113,7 +112,7 @@ export default function HistoricalInnerPage({
                   color={MUTED_TEXT}
                   style={styles.distanceIcon}
                 />
-                <Text style={styles.locationText}>1.2 km</Text>
+                <Text style={styles.locationText}>{favoriteItem.distanceKm != null ? `${favoriteItem.distanceKm} km` : ""}</Text>
               </View>
             </View>
           </ImageBackground>
@@ -121,20 +120,13 @@ export default function HistoricalInnerPage({
           <View style={styles.contentPanel}>
             <Text style={styles.sectionTitle}>About this Site</Text>
 
-            <Text style={styles.description}>
-              This UNESCO World Heritage site stands as a testament to the
-              island's golden era of architecture and hydraulic engineering.
-              Built over a millennium ago, it features intricate stone masonry
-              and sacred motifs that draw travelers from across the globe.
-              Experience the serene nocturnal mystery of these ancient grounds
-              under the soft glow of the tropical moon.
-            </Text>
+            <Text style={styles.description}>{favoriteItem.description}</Text>
 
             <View style={styles.infoGrid}>
               <View style={styles.infoCard}>
                 <Ionicons name="time-outline" size={20} color={SOFT_TEAL} />
                 <Text style={styles.infoLabel}>OPENING HOURS</Text>
-                <Text style={styles.infoValue}>07:00 AM - 08:30 PM</Text>
+                <Text style={styles.infoValue}>{favoriteItem.openingHours}</Text>
               </View>
 
               <View style={styles.infoCard}>
@@ -144,13 +136,13 @@ export default function HistoricalInnerPage({
                   color={SOFT_TEAL}
                 />
                 <Text style={styles.infoLabel}>ENTRY FEE</Text>
-                <Text style={styles.infoValue}>Rs. 2,000</Text>
+                <Text style={styles.infoValue}>{favoriteItem.entryFee}</Text>
               </View>
 
               <View style={styles.infoCard}>
                 <Ionicons name="settings-outline" size={20} color={SOFT_TEAL} />
                 <Text style={styles.infoLabel}>BEST TIME</Text>
-                <Text style={styles.infoValue}>Golden Hour</Text>
+                <Text style={styles.infoValue}>{favoriteItem.bestTime}</Text>
               </View>
             </View>
 
@@ -186,13 +178,13 @@ export default function HistoricalInnerPage({
               <Text style={styles.mapLabelTwo}>Kimbissa</Text>
               <Text style={styles.mapLabelThree}>Diyabeduma</Text>
 
-              <Pressable style={styles.mapButton}>
+              <Pressable style={styles.mapButton} onPress={() => openPlaceDirections(favoriteItem)}>
                 <Ionicons name="location" size={15} color={GOLD} />
                 <Text style={styles.mapButtonText}>Explore Area Map</Text>
               </Pressable>
             </View>
 
-            <Pressable style={styles.primaryButton}>
+            <Pressable style={styles.primaryButton} onPress={() => openPlaceDirections(favoriteItem)}>
               <Text style={styles.primaryButtonText}>Get Directions</Text>
             </Pressable>
 
