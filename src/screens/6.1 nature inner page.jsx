@@ -13,7 +13,6 @@ import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { openPlaceDirections } from "../utils/maps";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const heroImage = require("../../assets/nature-bomburella-waterfall.jpg");
 
@@ -178,7 +177,7 @@ export default function NatureInnerPage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

@@ -1,7 +1,6 @@
 import React from "react";
 import { OptimizedImage } from "./OptimizedImage";
 import { Image, Platform, Pressable, StyleSheet, Text, View } from "react-native";
-import { createThemedStyles, getCurrentThemeMode } from "../theme/runtimeTheme";
 
 const navLoginIcon = require("../../assets/nav-login.png");
 const nearlankaLogo = require("../../assets/nearlanka-logo.png");
@@ -10,11 +9,8 @@ const APP_BG = "#0B1211";
 const ACCENT_GOLD = "#D19F65";
 const SOFT_TEAL = "#B6D9D6";
 
-export default function AppHeader({ onMenuPress, onProfilePress, themeMode }) {
-  const light = (themeMode || getCurrentThemeMode()) === "Light";
-  const colors = light
-    ? { background: "#F3F6F2", border: "#C9D8D4", text: "#17322F", accent: "#245F58", icon: "#FFFFFF", profileBg: "#FFFFFF" }
-    : { background: APP_BG, border: "rgba(255,255,255,0.06)", text: "#C8D8D5", accent: ACCENT_GOLD, icon: "#0B1211", profileBg: "rgba(255,255,255,0.04)" };
+export default function AppHeader({ onMenuPress, onProfilePress }) {
+  const colors = { background: APP_BG, border: "rgba(255,255,255,0.06)", text: "#C8D8D5", accent: ACCENT_GOLD, profileBg: "rgba(255,255,255,0.04)" };
   return (
     <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
       <Pressable
@@ -32,7 +28,7 @@ export default function AppHeader({ onMenuPress, onProfilePress, themeMode }) {
       <Pressable style={[styles.loginLogoButton, { borderColor: colors.accent, backgroundColor: colors.profileBg }]} onPress={onProfilePress}>
         <OptimizedImage
           source={navLoginIcon}
-          style={[styles.loginLogoIcon, light && styles.lightLoginIcon]}
+          style={styles.loginLogoIcon}
           resizeMode="contain"
         />
       </Pressable>
@@ -40,7 +36,7 @@ export default function AppHeader({ onMenuPress, onProfilePress, themeMode }) {
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   header: {
     height: 62,
     flexDirection: "row",

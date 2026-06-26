@@ -13,7 +13,6 @@ import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { openPlaceDirections } from "../utils/maps";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const hotelHeroImage = require("../../assets/Home-Main-1742X871.jpg");
 const routeImage = require("../../assets/onboarding-navigate-easily.jpg");
@@ -186,7 +185,7 @@ export default function HotelInnerPage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

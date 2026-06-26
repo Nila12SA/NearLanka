@@ -13,7 +13,6 @@ import StatusBar from "../components/ThemedStatusBar";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -113,7 +112,7 @@ export default function FavoritesPage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

@@ -14,7 +14,6 @@ import { Ionicons } from "@expo/vector-icons";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const alexImage = require("../../assets/review-alex.jpg");
 const sarahImage = require("../../assets/review-sarah.jpg");
@@ -168,7 +167,7 @@ function StarRow({ rating, size }) {
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

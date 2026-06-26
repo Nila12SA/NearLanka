@@ -20,7 +20,6 @@ import AppHeader from "../components/AppHeader";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
 import { openGoogleMapsDirections } from "../utils/maps";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const placeImage = require("../../assets/Home-Main-1742X871.jpg");
 
@@ -235,7 +234,7 @@ export default function MapPage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

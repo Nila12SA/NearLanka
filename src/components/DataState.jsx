@@ -1,7 +1,6 @@
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 export default function DataState({ loading, error, empty, onRetry, compact = false }) {
   if (!loading && !error && !empty) return null;
@@ -35,7 +34,7 @@ export default function DataState({ loading, error, empty, onRetry, compact = fa
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   card: {
     minHeight: 210,
     alignItems: "center",

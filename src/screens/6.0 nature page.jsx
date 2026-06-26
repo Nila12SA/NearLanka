@@ -18,7 +18,6 @@ import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
 import { filterCategoryPlaces, filterPlacesByQuery } from "../utils/places";
 import { Ionicons } from "@expo/vector-icons";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const littleAdamsPeak = require("../../assets/nature-little-adams-peak.jpg");
 const ambuluwawaImage = require("../../assets/nature-ambuluwawa.jpg");
@@ -244,7 +243,7 @@ export default function NaturePage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

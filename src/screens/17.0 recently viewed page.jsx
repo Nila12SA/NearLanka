@@ -12,12 +12,8 @@ export default function RecentlyViewedPage({
   onBack,
   onNavPress,
   onPlacePress,
-  themeMode = "Dark",
 }) {
-  const light = themeMode === "Light";
-  const palette = light
-    ? { bg: "#F3F6F2", card: "#FFFFFF", text: "#17322F", muted: "#60736F", border: "#C9D8D4", accent: "#245F58" }
-    : { bg: "#0B1211", card: "#123F3A", text: "#F4F6F2", muted: "#B9C4BE", border: "#245F58", accent: "#D19F65" };
+  const palette = { bg: "#0B1211", card: "#123F3A", text: "#F4F6F2", muted: "#B9C4BE", border: "#245F58", accent: "#D19F65" };
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.bg }]}>
@@ -25,7 +21,6 @@ export default function RecentlyViewedPage({
       <AppHeader
         onMenuPress={() => {}}
         onProfilePress={() => onNavPress?.("Profile")}
-        themeMode={themeMode}
       />
 
       <View style={[styles.header, { borderBottomColor: palette.border }]}>

@@ -18,7 +18,6 @@ import BottomNav from "../components/BottomNav";
 import placesData from "../../backend/data/placesData";
 import { getPlacesWithDistance } from "../utils/distance";
 import { normalizePlaces } from "../utils/places";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const APP_BG = "#0B1211";
 const SEARCH_BG = "#2D302E";
@@ -277,7 +276,7 @@ export default function SearchPage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

@@ -1,14 +1,6 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { getCurrentThemeMode } from "../theme/runtimeTheme";
 
 export default function ThemedStatusBar(props) {
-  const light = getCurrentThemeMode() === "Light";
-  return (
-    <StatusBar
-      {...props}
-      style={light ? "dark" : "light"}
-      backgroundColor={light ? "#F3F6F2" : "#0B1211"}
-    />
-  );
+  return <StatusBar {...props} style={props.style || "light"} backgroundColor={props.backgroundColor || "#0B1211"} />;
 }

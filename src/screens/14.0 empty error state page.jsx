@@ -13,7 +13,6 @@ import StatusBar from "../components/ThemedStatusBar";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const refreshImage = require("../../assets/home-tea-estate.jpg");
 
@@ -200,7 +199,7 @@ export default function EmptyStatePage({ onNavPress, onMenuPress, onBack }) {
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

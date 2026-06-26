@@ -19,7 +19,6 @@ import LocationPill from "../components/LocationPill";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
 import { filterAndSortPlaces } from "../utils/places";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const teaEstateImage = require("../../assets/home-tea-estate.jpg");
 const trainBridgeImage = require("../../assets/home-nine-arch-train.jpg");
@@ -157,12 +156,12 @@ export default function HomePage({
 
           <View style={styles.searchPanel}>
             <View style={styles.searchBox}>
-              <Ionicons name="search" size={22} color="#B9C4BE" />
+              <Ionicons name="search" size={22} color="#AFC8C4" />
               <TextInput
                 value={query}
                 onChangeText={setQuery}
                 placeholder="Search nearby places"
-                placeholderTextColor="#B9C4BE"
+                placeholderTextColor="#91A8A5"
                 style={styles.searchPlaceholder}
                 selectionColor={GOLD}
               />
@@ -246,24 +245,24 @@ export default function HomePage({
                       color={favoriteIds.includes(place.id || place.title) ? "#F5C965" : "#E3EFEC"}
                     />
                   </Pressable>
-
-                  <View style={styles.nearbyOverlay}>
-                    <View style={styles.metaRow}>
-                      <Text style={styles.categoryPill}>{place.category}</Text>
-                      <View style={styles.ratingIconRow}>
-                        <Ionicons name="star" size={14} color={GOLD} />
-                        <Text style={styles.ratingText}>{place.rating}</Text>
-                      </View>
-                    </View>
-
-                    <Text style={styles.cardTitle}>{place.title}</Text>
-                    <Text style={styles.distanceText}>{place.distance}</Text>
-
-                    <Pressable style={styles.detailsButton} onPress={() => onPlacePress?.(place)}>
-                      <Text style={styles.detailsButtonText}>View Details</Text>
-                    </Pressable>
-                  </View>
                 </OptimizedImageBackground>
+
+                <View style={styles.nearbyOverlay}>
+                  <View style={styles.metaRow}>
+                    <Text style={styles.categoryPill}>{place.category}</Text>
+                    <View style={styles.ratingIconRow}>
+                      <Ionicons name="star" size={14} color={GOLD} />
+                      <Text style={styles.ratingText}>{place.rating}</Text>
+                    </View>
+                  </View>
+
+                  <Text style={styles.cardTitle}>{place.title}</Text>
+                  <Text style={styles.distanceText}>{place.distance}</Text>
+
+                  <Pressable style={styles.detailsButton} onPress={() => onPlacePress?.(place)}>
+                    <Text style={styles.detailsButtonText}>View Details</Text>
+                  </Pressable>
+                </View>
               </View>
             ))}
           </ScrollView>
@@ -301,26 +300,25 @@ export default function HomePage({
           <Text style={styles.sectionTitle}>Recommended</Text>
 
           {recommendedPlace ? (
-            <Pressable onPress={() => onPlacePress?.(recommendedPlace)}>
-              <OptimizedImageBackground
+            <Pressable
+              style={styles.recommendCard}
+              onPress={() => onPlacePress?.(recommendedPlace)}
+            >
+              <OptimizedImage
                 source={recommendedPlace.image}
-                style={styles.recommendCard}
-                imageStyle={styles.recommendImageRadius}
-                resizeMode="cover"
-              >
-                <View style={styles.recommendShade} />
+                style={styles.recommendImage}
+              />
 
-                <View style={styles.recommendContent}>
-                  <Text style={styles.recommendPill}>WORTH THE SHORT TRIP</Text>
-                  <Text style={styles.recommendTitle}>{recommendedPlace.title}</Text>
-                  <Text style={styles.recommendText} numberOfLines={2}>
-                    {recommendedPlace.description}
-                  </Text>
-                  <Text style={styles.bookText}>
-                    {recommendedPlace.distance}  â€¢  View Details &gt;
-                  </Text>
-                </View>
-              </OptimizedImageBackground>
+              <View style={styles.recommendContent}>
+                <Text style={styles.recommendPill}>WORTH THE SHORT TRIP</Text>
+                <Text style={styles.recommendTitle}>{recommendedPlace.title}</Text>
+                <Text style={styles.recommendText} numberOfLines={2}>
+                  {recommendedPlace.description}
+                </Text>
+                <Text style={styles.bookText}>
+                  {recommendedPlace.distance}  â€¢  View Details &gt;
+                </Text>
+              </View>
             </Pressable>
           ) : null}
 
@@ -357,7 +355,7 @@ export default function HomePage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -446,12 +444,12 @@ const styles = createThemedStyles({
   },
 
   searchBox: {
-    height: 50,
+    height: 61,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 15,
-    borderRadius: 25,
-    backgroundColor: "#303330",
+    paddingHorizontal: 17,
+    borderRadius: 18,
+    backgroundColor: "#123C39",
   },
 
   searchText: {
@@ -462,12 +460,10 @@ const styles = createThemedStyles({
   },
 
   searchPlaceholder: {
-    marginLeft: 12,
-    fontFamily: typography.fontFamily.body,
-    color: "#B9C4BE",
-    fontSize: 15,
-    lineHeight: 20,
-    fontWeight: "600",
+    flex: 1,
+    marginLeft: 13,
+    color: "#E7EFED",
+    fontSize: 16,
   },
 
   filterRow: {
@@ -550,19 +546,23 @@ const styles = createThemedStyles({
 
   nearbyCard: {
     width: 258,
-    height: 340,
-    borderRadius: 20,
-    overflow: "hidden",
-    backgroundColor: "#111312",
+    padding: 10,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: "rgba(83,166,158,0.42)",
+    backgroundColor: CARD_BG,
   },
 
   nearbyImage: {
-    flex: 1,
-    justifyContent: "space-between",
+    height: 170,
+    overflow: "hidden",
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
 
   nearbyImageRadius: {
-    borderRadius: 20,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
 
   favoriteButton: {
@@ -592,9 +592,9 @@ const styles = createThemedStyles({
   },
 
   nearbyOverlay: {
-    marginTop: "auto",
-    padding: 18,
-    backgroundColor: "rgba(0,0,0,0.28)",
+    paddingTop: 14,
+    paddingHorizontal: 6,
+    paddingBottom: 4,
   },
 
   metaRow: {
@@ -671,9 +671,9 @@ const styles = createThemedStyles({
     flexDirection: "row",
     alignItems: "center",
     padding: 14,
-    borderRadius: 14,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: "rgba(83,166,158,0.22)",
+    borderColor: "rgba(83,166,158,0.42)",
     backgroundColor: CARD_BG,
   },
 
@@ -742,25 +742,25 @@ const styles = createThemedStyles({
   },
 
   recommendCard: {
-    height: 320,
-    justifyContent: "flex-end",
     marginTop: 18,
-    overflow: "hidden",
-    borderRadius: 20,
-    backgroundColor: "#101211",
+    padding: 10,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: "rgba(83,166,158,0.42)",
+    backgroundColor: CARD_BG,
   },
 
-  recommendImageRadius: {
-    borderRadius: 20,
-  },
-
-  recommendShade: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.34)",
+  recommendImage: {
+    width: "100%",
+    height: 190,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
 
   recommendContent: {
-    padding: 22,
+    paddingTop: 14,
+    paddingHorizontal: 6,
+    paddingBottom: 6,
   },
 
   recommendPill: {
@@ -811,16 +811,22 @@ const styles = createThemedStyles({
 
   recentCard: {
     flex: 1,
+    padding: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(83,166,158,0.42)",
+    backgroundColor: CARD_BG,
   },
 
   recentImage: {
     width: "100%",
     height: 118,
-    borderRadius: 10,
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
   },
 
   recentTitle: {
-    marginTop: 10,
+    marginTop: 12,
     fontFamily: typography.fontFamily.body,
     color: colors.neutral[50],
     fontSize: 14,

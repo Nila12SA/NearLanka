@@ -18,7 +18,6 @@ import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
 import { filterAndSortPlaces } from "../utils/places";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -261,7 +260,7 @@ function ExploreCard({ place, isFavorite, onFavoritePress }) {
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

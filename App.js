@@ -4,7 +4,6 @@ import { Alert, Animated, Easing, Linking, Pressable, Text, View } from "react-n
 import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getPlaceId, normalizePlace } from "./src/utils/places";
-import { setCurrentThemeMode } from "./src/theme/runtimeTheme";
 
 import SplashScreen from "./src/screens/1.0 splashscreen";
 import OnboardingFindPlaces from "./src/screens/2.0 onboarding find places near you";
@@ -156,7 +155,6 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginReturnScreen, setLoginReturnScreen] = useState("home");
   const [userProfile, setUserProfile] = useState({ username: "Traveler", provider: "local" });
-  const [themeMode, setThemeMode] = useState("Dark");
   const onboardingTransition = useRef(new Animated.Value(1)).current;
 
   const refreshUserLocation = useCallback(async ({ requestPermission = false } = {}) => {
@@ -248,26 +246,18 @@ export default function App() {
   }, [recentPlaces, recentPlacesLoaded]);
 
   useEffect(() => {
-    AsyncStorage.multiGet([
-      "@nearlanka/user-profile",
-      "@nearlanka/theme",
-    ])
-      .then((entries) => {
-        const values = Object.fromEntries(entries);
-        if (values["@nearlanka/user-profile"]) {
-          setUserProfile(JSON.parse(values["@nearlanka/user-profile"]));
-        }
-        if (values["@nearlanka/theme"]) setThemeMode(values["@nearlanka/theme"]);
+    AsyncStorage.getItem("@nearlanka/user-profile")
+      .then((savedProfile) => {
+        if (savedProfile) setUserProfile(JSON.parse(savedProfile));
       })
       .catch((error) => console.error("Unable to load profile settings:", error));
   }, []);
 
   useEffect(() => {
-    AsyncStorage.multiSet([
-      ["@nearlanka/user-profile", JSON.stringify(userProfile)],
-      ["@nearlanka/theme", themeMode],
-    ]).catch((error) => console.error("Unable to save profile settings:", error));
-  }, [themeMode, userProfile]);
+    AsyncStorage.setItem("@nearlanka/user-profile", JSON.stringify(userProfile)).catch((error) =>
+      console.error("Unable to save profile settings:", error)
+    );
+  }, [userProfile]);
   useEffect(() => {
     if (screen === "splash") {
       const timer = setTimeout(() => {
@@ -505,8 +495,6 @@ export default function App() {
       },
     ],
   };
-
-  setCurrentThemeMode(themeMode);
 
   const renderOnboardingTransition = (content) => (
     <Animated.View style={onboardingAnimatedStyle}>{content}</Animated.View>
@@ -754,7 +742,6 @@ export default function App() {
           savedPlacesCount={favorites.length}
           recentPlacesCount={recentPlaces.length}
           userName={userProfile.username}
-          themeMode={themeMode}
         />
       )}
 
@@ -764,7 +751,6 @@ export default function App() {
           recentPlaces={recentPlaces}
           onPlacePress={handlePlacePress}
           onNavPress={handleNavPress}
-          themeMode={themeMode}
           onBack={() => setScreen(isLoggedIn ? "profile" : "login")}
         />
       )}
@@ -775,16 +761,15 @@ export default function App() {
           onNavPress={handleNavPress}
           hasLocationPermission={hasLocationPermission}
           onLocationChange={handleLocationSettingChange}
-          themeMode={themeMode}
           onBack={() => setScreen("profile")}
         />
       )}
       {screen === "about" && (
-        <ProfileDetailPage type="about" onNavPress={handleNavPress} themeMode={themeMode} onBack={() => setScreen("profile")} />
+        <ProfileDetailPage type="about" onNavPress={handleNavPress} onBack={() => setScreen("profile")} />
       )}
 
       {screen === "help" && (
-        <ProfileDetailPage type="help" onNavPress={handleNavPress} themeMode={themeMode} onBack={() => setScreen("profile")} />
+        <ProfileDetailPage type="help" onNavPress={handleNavPress} onBack={() => setScreen("profile")} />
       )}
       {screen === "reviews" && isLoggedIn && (
         <ReviewsPage onNavPress={handleNavPress} onMenuPress={() => {}} onBack={() => setScreen("profile")} />

@@ -18,7 +18,6 @@ import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
 import { filterCategoryPlaces, filterPlacesByQuery } from "../utils/places";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const cityHotelImage = require("../../assets/colombo-seven-h-facilities-rt.jpg");
 const rooftopHotelImage = require("../../assets/colombo-seven-h-facilities-left.jpg");
@@ -266,7 +265,7 @@ export default function HotelsPage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#0B1211",

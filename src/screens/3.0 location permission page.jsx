@@ -4,7 +4,6 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import * as Location from "expo-location";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const pinIcon = require("../../assets/location-pin-icon.png");
 
@@ -149,7 +148,7 @@ export default function LocationPermissionScreen({ onAllow, onLater }) {
 
 export { locationPermission };
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",

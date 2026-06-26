@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const heroImage = require("../../assets/onboarding-save-favorites-leopard.jpg");
 
@@ -56,7 +55,7 @@ export default function OnboardingSaveYourFavorites({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",

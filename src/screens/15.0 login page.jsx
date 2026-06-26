@@ -13,7 +13,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBar from "../components/ThemedStatusBar";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const DARK = { bg: "#0B1211", card: "#123F3A", text: "#F4F6F2", muted: "#B9C4BE", gold: "#D19F65", border: "rgba(182,217,214,0.22)" };
 
@@ -104,7 +103,7 @@ export default function LoginPage({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: DARK.bg }, flex: { flex: 1 },
   backButton: { position: "absolute", top: 18, left: 20, zIndex: 5, width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: DARK.border, backgroundColor: "#123F3A" },
   scrollContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 24, paddingTop: 70, paddingBottom: 30 },

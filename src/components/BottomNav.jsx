@@ -1,7 +1,6 @@
 import React from "react";
 import { OptimizedImage } from "../components/OptimizedImage";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { createThemedStyles, getCurrentThemeMode } from "../theme/runtimeTheme";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -21,11 +20,8 @@ const navItems = [
   { icon: navUserIcon, label: "Profile", key: "Profile" },
 ];
 
-export default function BottomNav({ activeKey, activeTab, onNavPress, themeMode }) {
-  const light = (themeMode || getCurrentThemeMode()) === "Light";
-  const colors = light
-    ? { background: "#FFFFFF", border: "#C9D8D4", muted: "#60736F", accent: "#245F58" }
-    : { background: APP_BG, border: "rgba(255,255,255,0.06)", muted: MUTED_GRAY, accent: ACCENT_GOLD };
+export default function BottomNav({ activeKey, activeTab, onNavPress }) {
+  const colors = { background: APP_BG, border: "rgba(255,255,255,0.06)", muted: MUTED_GRAY, accent: ACCENT_GOLD };
   const selectedTab = activeTab || activeKey;
   return (
     <View style={[styles.bottomNav, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
@@ -55,7 +51,7 @@ export default function BottomNav({ activeKey, activeTab, onNavPress, themeMode 
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   bottomNav: {
     position: "absolute",
     left: 0,

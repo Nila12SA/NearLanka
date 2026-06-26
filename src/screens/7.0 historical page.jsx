@@ -18,7 +18,6 @@ import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
 import { filterCategoryPlaces, filterPlacesByQuery } from "../utils/places";
 import { Ionicons } from "@expo/vector-icons";
-import { createThemedStyles } from "../theme/runtimeTheme";
 
 const sigiriyaImage = require("../../assets/historical-sigiriya.jpg");
 const templeImage = require("../../assets/historical-temple.jpg");
@@ -291,7 +290,7 @@ function HistoricalCard({
   );
 }
 
-const styles = createThemedStyles({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
