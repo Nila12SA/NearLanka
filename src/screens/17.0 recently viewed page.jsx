@@ -20,7 +20,6 @@ export default function RecentlyViewedPage({
       <StatusBar />
       <AppHeader
         onMenuPress={() => {}}
-        onProfilePress={() => onNavPress?.("Profile")}
       />
 
       <View style={[styles.header, { borderBottomColor: palette.border }]}>

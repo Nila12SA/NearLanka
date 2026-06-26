@@ -38,7 +38,7 @@ export default function ProfilePage({
     <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.bg }]}>
       <StatusBar backgroundColor={palette.bg} />
       <View style={[styles.screen, { backgroundColor: palette.bg }]}>
-        <AppHeader onMenuPress={onMenuPress} onProfilePress={() => onNavPress?.("Profile")} />
+        <AppHeader onMenuPress={onMenuPress} />
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.profileBlock}>
             <View style={[styles.avatarWrap, { borderColor: palette.accent }]}><OptimizedImage source={profileAvatar} style={styles.avatar} /></View>

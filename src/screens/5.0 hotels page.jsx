@@ -28,7 +28,6 @@ const navCompassIcon = require("../../assets/nav-compass.png");
 const navMapIcon = require("../../assets/nav-map.png");
 const navLoveIcon = require("../../assets/nav-love.png");
 const navUserIcon = require("../../assets/nav-user.png");
-const navLoginIcon = require("../../assets/nav-login.png");
 
 const hotels = [
   {
@@ -121,7 +120,6 @@ export default function HotelsPage({
       <View style={styles.screen}>
         <AppHeader
           onMenuPress={onMenuPress}
-          onProfilePress={() => onNavPress?.("Profile")}
         />
 
         <ScrollView
@@ -306,23 +304,6 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     color: "#C8D7D4",
     fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
-  },
-
-  loginLogoButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
-    borderColor: "#D19F65",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.04)",
-  },
-
-  loginLogoIcon: {
-    width: 20,
-    height: 20,
-    tintColor: "#B6D9D6",
   },
 
   scrollContent: {

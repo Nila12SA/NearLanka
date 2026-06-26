@@ -28,7 +28,6 @@ const navCompassIcon = require("../../assets/nav-compass.png");
 const navMapIcon = require("../../assets/nav-map.png");
 const navLoveIcon = require("../../assets/nav-love.png");
 const navUserIcon = require("../../assets/nav-user.png");
-const navLoginIcon = require("../../assets/nav-login.png");
 
 const APP_BG = "#0B1211";
 const CARD_BG = "#101817";
@@ -123,7 +122,6 @@ export default function HistoricalPage({
       <View style={styles.screen}>
         <AppHeader
           onMenuPress={onMenuPress}
-          onProfilePress={() => onNavPress?.("Profile")}
         />
 
         <ScrollView
@@ -331,23 +329,6 @@ const styles = StyleSheet.create({
     color: "#C8D7D4",
     fontSize: 26,
     lineHeight: 32,
-  },
-
-  loginLogoButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
-    borderColor: "#D19F65",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.04)",
-  },
-
-  loginLogoIcon: {
-    width: 20,
-    height: 20,
-    tintColor: SOFT_TEAL,
   },
 
   scrollContent: {

@@ -84,7 +84,6 @@ export default function SearchPage({
       >
         <AppHeader
           onMenuPress={onMenuPress}
-          onProfilePress={() => onNavPress?.("Profile")}
         />
 
         <ScrollView

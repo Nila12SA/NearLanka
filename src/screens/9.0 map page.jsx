@@ -191,7 +191,7 @@ export default function MapPage({
 
         <View style={styles.mapTint} pointerEvents="none" />
 
-        <AppHeader onProfilePress={() => onNavPress?.("Profile")} />
+        <AppHeader />
 
         <View style={styles.messageBubble}>
           <Text style={styles.messageText}>{locationMessage}</Text>

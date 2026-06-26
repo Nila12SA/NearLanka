@@ -71,7 +71,7 @@ export default function ProfileDetailPage({
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: palette.bg }]}>
       <StatusBar />
-      <AppHeader onMenuPress={() => {}} onProfilePress={() => onNavPress?.("Profile")} />
+      <AppHeader onMenuPress={() => {}} />
 
       <View style={styles.header}>
         <Pressable onPress={onBack} style={[styles.back, { borderColor: palette.border }]}>

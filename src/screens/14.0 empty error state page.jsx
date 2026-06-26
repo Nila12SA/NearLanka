@@ -84,7 +84,6 @@ export default function EmptyStatePage({ onNavPress, onMenuPress, onBack }) {
       <View style={styles.screen}>
         <AppHeader
           onMenuPress={onMenuPress}
-          onProfilePress={() => onNavPress?.("Profile")}
         />
 
         <Pressable style={styles.pageBack} onPress={onBack}>

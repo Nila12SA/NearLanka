@@ -137,7 +137,7 @@ export default function HomePage({
       <StatusBar style="light" backgroundColor={APP_BG} />
 
       <View style={styles.screen}>
-        <AppHeader onProfilePress={() => onNavPress?.("Profile")} />
+        <AppHeader />
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -345,9 +345,6 @@ export default function HomePage({
           </View>
         </ScrollView>
 
-        <View style={styles.mapButton}>
-          <Text style={styles.mapButtonText}>Map</Text>
-        </View>
 
         <BottomNav activeKey="Home" onNavPress={onNavPress} />
       </View>
@@ -396,23 +393,6 @@ const styles = StyleSheet.create({
     color: "#C8D7D4",
     fontSize: 26,
     lineHeight: 32,
-  },
-
-  loginLogoButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
-    borderColor: GOLD,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.04)",
-  },
-
-  loginLogoIcon: {
-    width: 20,
-    height: 20,
-    tintColor: ACCENT_TEAL,
   },
 
   scrollContent: {
@@ -842,23 +822,4 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 
-  mapButton: {
-    position: "absolute",
-    right: 28,
-    bottom: 82,
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#D9A35F",
-  },
-
-  mapButtonText: {
-    fontFamily: typography.fontFamily.body,
-    color: APP_BG,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: "700",
-  },
 });
