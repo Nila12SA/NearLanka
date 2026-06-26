@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { OptimizedImage } from "../components/OptimizedImage";
-import { Alert, Image, Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { getBestAvailableLocation } from "../utils/location";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import * as Location from "expo-location";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
 import { createThemedStyles } from "../theme/runtimeTheme";
@@ -31,21 +31,26 @@ export default function LocationPermissionScreen({ onAllow, onLater }) {
     setIsPermissionSheetVisible(false);
 
     try {
-      await getBestAvailableLocation({ requestPermission: true });
+      const permission = await Location.requestForegroundPermissionsAsync();
+
+      if (permission.status !== "granted") {
+        setPermissionMessage("Location permission was not allowed.");
+        onAllow?.("denied", null);
+        return;
+      }
+
+      const position = await Location.getCurrentPositionAsync({});
+      const userLocation = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      };
+
       setPermissionMessage(`${choiceLabel} selected. GPS location is ready.`);
-      onAllow?.("granted");
+      onAllow?.("granted", userLocation);
     } catch (error) {
       console.warn("Unable to prepare GPS location:", error.message);
-      setPermissionMessage(error.message);
-
-      Alert.alert(
-        "Location unavailable",
-        `${error.message}\n\nTurn on Location Services and Precise Location for Expo Go, then try again.`,
-        [
-          { text: "Cancel", style: "cancel" },
-          { text: "Open Settings", onPress: () => Linking.openSettings() },
-        ]
-      );
+      setPermissionMessage("Location is unavailable right now. Showing all places normally.");
+      onAllow?.("denied", null);
     } finally {
       setIsRequesting(false);
     }
@@ -54,7 +59,7 @@ export default function LocationPermissionScreen({ onAllow, onLater }) {
   const handleDenyLocation = () => {
     setIsPermissionSheetVisible(false);
     setPermissionMessage("Location permission was not allowed.");
-    onAllow?.("denied");
+    onAllow?.("denied", null);
   };
 
   return (

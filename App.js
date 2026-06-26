@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import StatusBar from "./src/components/ThemedStatusBar";
 import { Alert, Animated, Easing, Linking, Pressable, Text, View } from "react-native";
+import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getPlaceId, normalizePlace } from "./src/utils/places";
 import { setCurrentThemeMode } from "./src/theme/runtimeTheme";
@@ -150,12 +151,52 @@ export default function App() {
   const [recentPlaces, setRecentPlaces] = useState([]);
   const [recentPlacesLoaded, setRecentPlacesLoaded] = useState(false);
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
-  const [hasLocationPermission, setHasLocationPermission] = useState(true);
+  const [hasLocationPermission, setHasLocationPermission] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginReturnScreen, setLoginReturnScreen] = useState("home");
   const [userProfile, setUserProfile] = useState({ username: "Traveler", provider: "local" });
   const [themeMode, setThemeMode] = useState("Dark");
   const onboardingTransition = useRef(new Animated.Value(1)).current;
+
+  const refreshUserLocation = useCallback(async ({ requestPermission = false } = {}) => {
+    try {
+      let permission = await Location.getForegroundPermissionsAsync();
+
+      if (permission.status !== "granted" && requestPermission) {
+        permission = await Location.requestForegroundPermissionsAsync();
+      }
+
+      if (permission.status !== "granted") {
+        setHasLocationPermission(false);
+        setUserLocation(null);
+        return null;
+      }
+
+      const lastKnownPosition = await Location.getLastKnownPositionAsync({
+        maxAge: 5 * 60 * 1000,
+        requiredAccuracy: 2000,
+      });
+      const position = lastKnownPosition || (await Location.getCurrentPositionAsync({}));
+      const nextLocation = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      };
+
+      setHasLocationPermission(true);
+      setUserLocation(nextLocation);
+      return nextLocation;
+    } catch (error) {
+      console.warn("Unable to refresh current location:", error.message);
+      setHasLocationPermission(false);
+      setUserLocation(null);
+      return null;
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshUserLocation({ requestPermission: false });
+  }, [refreshUserLocation]);
 
   useEffect(() => {
     const loadFavorites = async () => {
@@ -296,9 +337,17 @@ export default function App() {
     setScreen("location");
   };
 
-  const goToHome = (locationStatus) => {
-    if (locationStatus) {
-      setHasLocationPermission(locationStatus === "granted");
+  const goToHome = async (locationStatus, nextUserLocation = null) => {
+    if (locationStatus === "granted") {
+      if (nextUserLocation) {
+        setHasLocationPermission(true);
+        setUserLocation(nextUserLocation);
+      } else {
+        await refreshUserLocation({ requestPermission: false });
+      }
+    } else if (locationStatus === "denied") {
+      setHasLocationPermission(false);
+      setUserLocation(null);
     }
 
     setScreen("home");
@@ -306,7 +355,18 @@ export default function App() {
 
   const continueWithoutLocation = () => {
     setHasLocationPermission(false);
+    setUserLocation(null);
     setScreen("home");
+  };
+
+  const handleLocationSettingChange = async (enabled) => {
+    if (enabled) {
+      await refreshUserLocation({ requestPermission: true });
+      return;
+    }
+
+    setHasLocationPermission(false);
+    setUserLocation(null);
   };
 
   const goToSearch = () => {
@@ -551,6 +611,7 @@ export default function App() {
           onPlacePress={handlePlacePress}
           recentPlaces={recentPlaces}
           hasLocationPermission={hasLocationPermission}
+          userLocation={userLocation}
           favoriteIds={favoriteIds}
           onFavoritePress={(place) =>
             toggleFavorite(place)
@@ -589,6 +650,7 @@ export default function App() {
           onMenuPress={() => {}}
           onSearchPress={goToSearch}
           hasLocationPermission={hasLocationPermission}
+          userLocation={userLocation}
           favoriteIds={favoriteIds}
           onFavoritePress={toggleFavorite}
         />
@@ -598,6 +660,7 @@ export default function App() {
         <SearchPage
           onNavPress={handleNavPress}
           onMenuPress={() => {}}
+          userLocation={userLocation}
           favoriteIds={favoriteIds}
           onFavoritePress={toggleFavorite}
         />
@@ -609,6 +672,7 @@ export default function App() {
           onMenuPress={() => {}}
           onHotelPress={goToHotelDetails}
           hasLocationPermission={hasLocationPermission}
+          userLocation={userLocation}
           favoriteIds={favoriteIds}
           onFavoritePress={toggleFavorite}
         />
@@ -630,6 +694,7 @@ export default function App() {
           onMenuPress={() => {}}
           onNaturePress={goToNatureDetails}
           hasLocationPermission={hasLocationPermission}
+          userLocation={userLocation}
           favoriteIds={favoriteIds}
           onFavoritePress={toggleFavorite}
         />
@@ -650,6 +715,7 @@ export default function App() {
           onMenuPress={() => {}}
           onHistoricalPress={goToHistoricalDetails}
           hasLocationPermission={hasLocationPermission}
+          userLocation={userLocation}
           favoriteIds={favoriteIds}
           onFavoritePress={toggleFavorite}
         />
@@ -668,6 +734,8 @@ export default function App() {
         <MapPage
           onNavPress={handleNavPress}
           hasLocationPermission={hasLocationPermission}
+          userLocation={userLocation}
+          onUserLocationChange={setUserLocation}
         />
       )}
 
@@ -706,7 +774,7 @@ export default function App() {
           type="location"
           onNavPress={handleNavPress}
           hasLocationPermission={hasLocationPermission}
-          onLocationChange={setHasLocationPermission}
+          onLocationChange={handleLocationSettingChange}
           themeMode={themeMode}
           onBack={() => setScreen("profile")}
         />
@@ -747,20 +815,3 @@ export default function App() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

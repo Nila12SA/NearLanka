@@ -188,6 +188,15 @@ export function filterPlacesByCategory(places = [], category = "All") {
   });
 }
 
+function getDistanceLimit(maxDistanceKm) {
+  if (maxDistanceKm === null || maxDistanceKm === undefined || maxDistanceKm === "") {
+    return null;
+  }
+
+  const distanceLimit = Number(maxDistanceKm);
+  return Number.isFinite(distanceLimit) ? distanceLimit : null;
+}
+
 export function sortPlacesByFilter(places = [], filter = "Nearest") {
   const normalizedFilter = normalizeSearchText(filter);
   const sortedPlaces = [...places];
@@ -211,9 +220,10 @@ export function filterAndSortPlaces(
   places = [],
   { query = "", category = "All", sort = "Nearest", maxDistanceKm = null } = {}
 ) {
-  const distanceFiltered = Number.isFinite(Number(maxDistanceKm))
+  const distanceLimit = getDistanceLimit(maxDistanceKm);
+  const distanceFiltered = distanceLimit !== null
     ? places.filter(
-        (place) => place.distanceKm === null || place.distanceKm <= Number(maxDistanceKm)
+        (place) => place.distanceKm === null || place.distanceKm <= distanceLimit
       )
     : places;
 
@@ -230,9 +240,10 @@ export function filterCategoryPlaces(
   activeFilter = "All",
   maxDistanceKm = 10
 ) {
-  const nearbyPlaces = Number.isFinite(Number(maxDistanceKm))
+  const distanceLimit = getDistanceLimit(maxDistanceKm);
+  const nearbyPlaces = distanceLimit !== null
     ? places.filter(
-        (place) => place.distanceKm === null || place.distanceKm <= Number(maxDistanceKm)
+        (place) => place.distanceKm === null || place.distanceKm <= distanceLimit
       )
     : places;
 

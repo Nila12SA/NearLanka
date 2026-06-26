@@ -88,6 +88,7 @@ export default function HomePage({
   onPlacePress,
   onNavPress,
   hasLocationPermission = true,
+  userLocation = null,
   favoriteIds = [],
   recentPlaces = [],
 }) {
@@ -96,6 +97,7 @@ export default function HomePage({
   const { places, loading, error, reload, usedLocation } = usePlaces({
     nearby: true,
     hasLocationPermission,
+    userLocation,
   });
 
   const homeMaxDistanceKm = query.trim() || activeCategory !== "All" ? null : 5;
@@ -315,7 +317,7 @@ export default function HomePage({
                     {recommendedPlace.description}
                   </Text>
                   <Text style={styles.bookText}>
-                    {recommendedPlace.distance}  •  View Details &gt;
+                    {recommendedPlace.distance}  â€¢  View Details &gt;
                   </Text>
                 </View>
               </OptimizedImageBackground>
@@ -854,6 +856,3 @@ const styles = createThemedStyles({
     fontWeight: "700",
   },
 });
-
-
-

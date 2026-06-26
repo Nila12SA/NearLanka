@@ -15,7 +15,9 @@ import StatusBar from "../components/ThemedStatusBar";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
-import places from "../data/places";
+import placesData from "../../backend/data/placesData";
+import { getPlacesWithDistance } from "../utils/distance";
+import { normalizePlaces } from "../utils/places";
 import { createThemedStyles } from "../theme/runtimeTheme";
 
 const APP_BG = "#0B1211";
@@ -46,12 +48,15 @@ export default function SearchPage({
   onMenuPress,
   favoriteIds = [],
   onFavoritePress,
+  userLocation = null,
 }) {
   const [query, setQuery] = useState("");
 
   const normalizedQuery = normalizeText(query);
 
   const filteredPlaces = useMemo(() => {
+    const places = normalizePlaces(getPlacesWithDistance(placesData, userLocation));
+
     return places.filter((place) => {
       const searchableText = [
         place.name,
@@ -65,7 +70,7 @@ export default function SearchPage({
 
       return !normalizedQuery || searchableText.includes(normalizedQuery);
     });
-  }, [normalizedQuery]);
+  }, [normalizedQuery, userLocation]);
 
   const hasNoResults =
     normalizedQuery.length > 0 && filteredPlaces.length === 0;

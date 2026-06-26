@@ -58,8 +58,17 @@ const mapStyle = [
   { featureType: "water", elementType: "geometry", stylers: [{ color: "#5F7874" }] },
 ];
 
-export default function MapPage({ onNavPress, hasLocationPermission = true }) {
-  const { places, loading, error, reload } = usePlaces({ nearby: true, hasLocationPermission });
+export default function MapPage({
+  onNavPress,
+  hasLocationPermission = true,
+  userLocation = null,
+  onUserLocationChange,
+}) {
+  const { places, loading, error, reload } = usePlaces({
+    nearby: true,
+    hasLocationPermission,
+    userLocation,
+  });
   const [selectedPlace, setSelectedPlace] = useState(null);
   const mapRef = useRef(null);
   const [region, setRegion] = useState(defaultRegion);
@@ -77,12 +86,28 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
     let subscription;
     let isMounted = true;
 
+    const applyCurrentRegion = (coords) => {
+      const nextRegion = {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.045,
+        longitudeDelta: 0.045,
+      };
+
+      setRegion(nextRegion);
+      mapRef.current?.animateToRegion(nextRegion, 650);
+    };
+
     const startLocationTracking = async () => {
       if (!hasLocationPermission) {
         return;
       }
 
-      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (userLocation) {
+        applyCurrentRegion(userLocation);
+      }
+
+      const { status } = await Location.getForegroundPermissionsAsync();
 
       if (status !== "granted") {
         if (isMounted) {
@@ -92,16 +117,15 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
       }
 
       const currentPosition = await getBestAvailableLocation();
-      const currentRegion = {
+      const currentLocation = {
         latitude: currentPosition.coords.latitude,
         longitude: currentPosition.coords.longitude,
-        latitudeDelta: 0.045,
-        longitudeDelta: 0.045,
       };
 
       if (isMounted) {
-        setRegion(currentRegion);
-        mapRef.current?.animateToRegion(currentRegion, 650);
+        onUserLocationChange?.(currentLocation);
+        applyCurrentRegion(currentLocation);
+        setLocationMessage("Here are the places around me right now.");
       }
 
       subscription = await Location.watchPositionAsync(
@@ -111,15 +135,13 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
           distanceInterval: 8,
         },
         (position) => {
-          const nextRegion = {
+          const nextLocation = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.045,
-            longitudeDelta: 0.045,
           };
 
-          setRegion(nextRegion);
-          mapRef.current?.animateToRegion(nextRegion, 650);
+          onUserLocationChange?.(nextLocation);
+          applyCurrentRegion(nextLocation);
         }
       );
     };
@@ -135,8 +157,7 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
       isMounted = false;
       subscription?.remove();
     };
-  }, [hasLocationPermission]);
-
+  }, [hasLocationPermission, onUserLocationChange, userLocation]);
   const openGoogleDirections = () => openPlaceDirections(selectedPlace);
   const openNativeMaps = () => openPlaceInMaps(selectedPlace);
 
@@ -377,6 +398,3 @@ const styles = createThemedStyles({
     fontWeight: "700",
   },
 });
-
-
-

@@ -105,12 +105,14 @@ export default function HistoricalPage({
   onFavoritePress,
   favoriteIds = [],
   hasLocationPermission = true,
+  userLocation = null,
 }) {
   const [activeFilter, setActiveFilter] = useState("All");
   const [query, setQuery] = useState("");
   const { places, loading, error, reload } = usePlaces({
     category: "historical",
     hasLocationPermission,
+    userLocation,
   });
   const filteredPlaces = filterCategoryPlaces(places, activeFilter, null);
   const displayedPlaces = filterPlacesByQuery(filteredPlaces, query);
@@ -631,6 +633,3 @@ const styles = createThemedStyles({
 
 
 });
-
-
-

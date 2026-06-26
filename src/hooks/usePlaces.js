@@ -1,24 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import { getBestAvailableLocation } from "../utils/location";
-import {
-  getAllPlaces,
-  getHistoricalPlaces,
-  getHotels,
-  getNaturePlaces,
-  getNearbyPlaces,
-} from "../api/api";
-import { normalizePlaces } from "../utils/places";
-
-const categoryLoaders = {
-  hotel: getHotels,
-  nature: getNaturePlaces,
-  historical: getHistoricalPlaces,
-};
+import placesData from "../../backend/data/placesData";
+import { getPlacesWithDistance, isValidLocation } from "../utils/distance";
+import { filterPlacesByCategory, normalizePlaces } from "../utils/places";
 
 export default function usePlaces({
   category,
   nearby = false,
   hasLocationPermission = true,
+  userLocation = null,
 } = {}) {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,42 +19,24 @@ export default function usePlaces({
     setError("");
 
     try {
-      let data;
-      let locationWasUsed = false;
-
-      if (nearby && hasLocationPermission) {
-        try {
-          const position = await getBestAvailableLocation();
-          data = await getNearbyPlaces(
-            position.coords.latitude,
-            position.coords.longitude,
-            category
-          );
-          locationWasUsed = true;
-        } catch (locationError) {
-          console.warn(
-            "Current location unavailable; loading regular places instead:",
-            locationError.message
-          );
-        }
-      }
-
-      if (!data) {
-        data = category ? await categoryLoaders[category]() : await getAllPlaces();
-      }
+      const filteredData = filterPlacesByCategory(placesData, category);
+      const locationWasUsed = hasLocationPermission && isValidLocation(userLocation);
+      const data = getPlacesWithDistance(
+        filteredData,
+        locationWasUsed ? userLocation : null
+      );
 
       setPlaces(normalizePlaces(data));
       setUsedLocation(locationWasUsed);
     } catch (loadError) {
       console.error("Unable to load NearLanka places:", loadError);
-      setError(
-        "We couldn't load places right now. Please check that the NearLanka backend is running and your phone is on the same Wi-Fi as this computer."
-      );
+      setError("We couldn't load places right now.");
       setPlaces([]);
+      setUsedLocation(false);
     } finally {
       setLoading(false);
     }
-  }, [category, hasLocationPermission, nearby]);
+  }, [category, hasLocationPermission, nearby, userLocation]);
 
   useEffect(() => {
     loadPlaces();

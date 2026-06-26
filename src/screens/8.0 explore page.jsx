@@ -96,11 +96,15 @@ export default function ExplorePage({
   onFavoritePress,
   favoriteIds = [],
   hasLocationPermission = true,
+  userLocation = null,
 }) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeSort, setActiveSort] = useState("Nearest");
-  const { places, loading, error, reload } = usePlaces();
+  const { places, loading, error, reload } = usePlaces({
+    hasLocationPermission,
+    userLocation,
+  });
   const displayedPlaces = filterAndSortPlaces(places, {
     query,
     category: activeCategory,
@@ -527,6 +531,3 @@ const styles = createThemedStyles({
 
 
 });
-
-
-
