@@ -25,6 +25,7 @@ expo-env.d.ts
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+expo-start*.log
 
 # macOS
 .DS_Store
@@ -39,3 +40,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# local assistant/editor files
+.claude/
+CLAUDE.md
