@@ -19,7 +19,7 @@ import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
-import { openPlaceDirections, openPlaceInMaps } from "../utils/maps";
+import { openGoogleMapsDirections } from "../utils/maps";
 import { createThemedStyles } from "../theme/runtimeTheme";
 
 const placeImage = require("../../assets/Home-Main-1742X871.jpg");
@@ -158,8 +158,7 @@ export default function MapPage({
       subscription?.remove();
     };
   }, [hasLocationPermission, onUserLocationChange, userLocation]);
-  const openGoogleDirections = () => openPlaceDirections(selectedPlace);
-  const openNativeMaps = () => openPlaceInMaps(selectedPlace);
+  const openGoogleDirections = () => openGoogleMapsDirections(selectedPlace);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -222,12 +221,9 @@ export default function MapPage({
 
               <View style={styles.buttonRow}>
                 <Pressable style={styles.directionsButton} onPress={openGoogleDirections}>
-                  <Text style={styles.directionsButtonText}>Get Directions</Text>
+                  <Text style={styles.directionsButtonText}>Open in Google Maps</Text>
                 </Pressable>
 
-                <Pressable style={styles.mapsButton} onPress={openNativeMaps}>
-                  <Text style={styles.mapsButtonText}>Open in Maps</Text>
-                </Pressable>
               </View>
             </>
           )}

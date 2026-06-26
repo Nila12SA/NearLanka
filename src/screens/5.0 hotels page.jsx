@@ -112,7 +112,7 @@ export default function HotelsPage({
     hasLocationPermission,
     userLocation,
   });
-  const filteredPlaces = filterCategoryPlaces(places, activeFilter, null);
+  const filteredPlaces = filterCategoryPlaces(places, activeFilter);
   const displayedPlaces = filterPlacesByQuery(filteredPlaces, query);
 
   return (

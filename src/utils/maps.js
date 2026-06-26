@@ -19,7 +19,7 @@ function readCoordinates(place) {
   return { latitude, longitude };
 }
 
-export async function openDirections(place) {
+export async function openDirections(place, { preferGoogleMaps = false } = {}) {
   const destination = readCoordinates(place);
 
   if (!destination) {
@@ -65,7 +65,11 @@ export async function openDirections(place) {
     `&destination=${encodeURIComponent(destinationCoordinates)}` +
     "&travelmode=driving&dir_action=navigate";
 
-  const platformUrl = Platform.OS === "ios" ? appleMapsUrl : googleMapsUrl;
+  const platformUrl = preferGoogleMaps
+    ? googleMapsUrl
+    : Platform.OS === "ios"
+      ? appleMapsUrl
+      : googleMapsUrl;
 
   try {
     const supported = await Linking.canOpenURL(platformUrl);
@@ -86,4 +90,6 @@ export async function openDirections(place) {
 
 // Preserve existing imports used by the current detail and map screens.
 export const openPlaceDirections = openDirections;
+export const openGoogleMapsDirections = (place) =>
+  openDirections(place, { preferGoogleMaps: true });
 export const openPlaceInMaps = openDirections;

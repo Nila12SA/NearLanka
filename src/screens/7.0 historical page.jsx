@@ -114,7 +114,7 @@ export default function HistoricalPage({
     hasLocationPermission,
     userLocation,
   });
-  const filteredPlaces = filterCategoryPlaces(places, activeFilter, null);
+  const filteredPlaces = filterCategoryPlaces(places, activeFilter);
   const displayedPlaces = filterPlacesByQuery(filteredPlaces, query);
 
   return (
