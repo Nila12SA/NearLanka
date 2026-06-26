@@ -1,18 +1,19 @@
 import React from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  ImageBackground,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const refreshImage = require("../../assets/home-tea-estate.jpg");
 
@@ -76,7 +77,7 @@ const statusItems = [
   },
 ];
 
-export default function EmptyStatePage({ onNavPress, onMenuPress }) {
+export default function EmptyStatePage({ onNavPress, onMenuPress, onBack }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -87,14 +88,17 @@ export default function EmptyStatePage({ onNavPress, onMenuPress }) {
           onProfilePress={() => onNavPress?.("Profile")}
         />
 
+        <Pressable style={styles.pageBack} onPress={onBack}>
+          <Ionicons name="arrow-back" size={22} color={TEXT} />
+          <View style={styles.pageHeading}>
+            <Text style={styles.title}>Experience Monitoring</Text>
+            <Text style={styles.pageDescription}>System states and edge cases in NearLanka.</Text>
+          </View>
+        </Pressable>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <Text style={styles.title}>Experience Monitoring</Text>
-          <Text style={styles.subtitle}>
-            Centralized view of system states and edge cases in the NearLanka premium ecosystem.
-          </Text>
           <View style={styles.divider} />
 
           <View style={styles.stateList}>
@@ -150,7 +154,7 @@ export default function EmptyStatePage({ onNavPress, onMenuPress }) {
             <View style={styles.skeletonLineSmall} />
           </View>
 
-          <ImageBackground
+          <OptimizedImageBackground
             source={refreshImage}
             style={styles.refreshCard}
             imageStyle={styles.refreshImage}
@@ -162,7 +166,7 @@ export default function EmptyStatePage({ onNavPress, onMenuPress }) {
             <Text style={styles.refreshText}>
               We are updating the latest excursion availability from our local partners.
             </Text>
-          </ImageBackground>
+          </OptimizedImageBackground>
 
           <View style={styles.statusList}>
             {statusItems.map((item) => (
@@ -190,14 +194,13 @@ export default function EmptyStatePage({ onNavPress, onMenuPress }) {
             ))}
           </View>
         </ScrollView>
-
         <BottomNav activeKey="Profile" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -208,6 +211,10 @@ const styles = StyleSheet.create({
     backgroundColor: APP_BG,
   },
 
+  pageBack: { marginTop: 12, marginHorizontal: 20, flexDirection: "row", alignItems: "center" },
+  pageHeading: { flex: 1, marginLeft: 12 },
+  pageDescription: { marginTop: 3, color: MUTED, fontSize: 13, lineHeight: 18 },
+  pageBackText: { marginLeft: 7, color: TEXT, fontWeight: "700" },
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 45,
@@ -443,3 +450,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+
+
+
+
+

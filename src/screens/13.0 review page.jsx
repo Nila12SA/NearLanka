@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { OptimizedImage } from "../components/OptimizedImage";
 import {
-  Image,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import { Ionicons } from "@expo/vector-icons";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const alexImage = require("../../assets/review-alex.jpg");
 const sarahImage = require("../../assets/review-sarah.jpg");
@@ -58,7 +59,7 @@ const initialReviews = [
   },
 ];
 
-export default function ReviewsPage({ onNavPress, onMenuPress }) {
+export default function ReviewsPage({ onNavPress, onMenuPress, onBack }) {
   const [reviews, setReviews] = useState(initialReviews);
 
   useEffect(() => {
@@ -84,16 +85,18 @@ export default function ReviewsPage({ onNavPress, onMenuPress }) {
           onProfilePress={() => onNavPress?.("Profile")}
         />
 
+        <Pressable style={styles.pageBack} onPress={onBack}>
+          <Ionicons name="arrow-back" size={22} color={TEXT} />
+          <View style={styles.pageHeading}>
+            <Text style={styles.title}>Reviews</Text>
+            <Text style={styles.pageDescription}>What travelers are saying</Text>
+          </View>
+        </Pressable>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <View style={styles.titleRow}>
-            <View>
-              <Text style={styles.title}>Reviews</Text>
-              <Text style={styles.subtitle}>What travelers are{`\n`}saying</Text>
-            </View>
-
+          <View style={styles.writeButtonRow}>
             <Pressable style={styles.writeButton}>
               <Text style={styles.writeButtonText}>Write a Review</Text>
             </Pressable>
@@ -120,7 +123,7 @@ export default function ReviewsPage({ onNavPress, onMenuPress }) {
             {reviews.map((review) => (
               <View key={review.name} style={styles.reviewCard}>
                 <View style={styles.reviewHeader}>
-                  <Image source={review.avatar} style={styles.avatar} resizeMode="cover" />
+                  <OptimizedImage source={review.avatar} style={styles.avatar} resizeMode="cover" />
                   <View style={styles.reviewerInfo}>
                     <Text style={styles.reviewerName}>{review.name}</Text>
                     <Text style={styles.reviewDate}>{review.date}</Text>
@@ -144,7 +147,6 @@ export default function ReviewsPage({ onNavPress, onMenuPress }) {
             <Ionicons name="chevron-down" size={18} color={ACCENT} />
           </Pressable>
         </ScrollView>
-
         <BottomNav activeKey="Profile" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
@@ -166,7 +168,7 @@ function StarRow({ rating, size }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -177,16 +179,23 @@ const styles = StyleSheet.create({
     backgroundColor: APP_BG,
   },
 
+  pageBack: { marginTop: 12, marginHorizontal: 20, flexDirection: "row", alignItems: "center" },
+  pageHeading: { flex: 1, marginLeft: 12 },
+  pageDescription: { marginTop: 2, color: MUTED, fontSize: 13, lineHeight: 18 },
+  pageBackText: { marginLeft: 7, color: TEXT, fontWeight: "700" },
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 34,
     paddingBottom: 118,
   },
 
+  writeButtonRow: {
+    alignItems: "flex-end",
+    marginBottom: 18,
+  },
+
   titleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    alignItems: "flex-end",
   },
 
   title: {
@@ -197,7 +206,9 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    marginTop: 6,
+    flex: 1,
+    marginTop: 0,
+    marginRight: 14,
     color: MUTED,
     fontSize: 16,
     lineHeight: 23,
@@ -369,3 +380,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+
+
+
+
+
+
+
+
+
+

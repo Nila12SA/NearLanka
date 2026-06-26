@@ -1,6 +1,6 @@
 import React from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  ImageBackground,
   Pressable,
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const heroImage = require("../../assets/onboarding-save-favorites-leopard.jpg");
 
@@ -19,7 +20,7 @@ export default function OnboardingSaveYourFavorites({
   return (
     <View style={styles.screen}>
       <View style={styles.heroFrame}>
-        <ImageBackground
+        <OptimizedImageBackground
           source={heroImageSource}
           style={styles.heroImage}
           imageStyle={styles.heroImageRadius}
@@ -28,7 +29,7 @@ export default function OnboardingSaveYourFavorites({
           <Pressable style={styles.skipButton} onPress={onSkip}>
             <Text style={styles.skipText}>Skip</Text>
           </Pressable>
-        </ImageBackground>
+        </OptimizedImageBackground>
       </View>
 
       <View style={styles.content}>
@@ -55,7 +56,7 @@ export default function OnboardingSaveYourFavorites({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   screen: {
     flex: 1,
     alignItems: "center",
@@ -172,3 +173,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+

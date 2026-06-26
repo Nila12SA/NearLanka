@@ -1,6 +1,7 @@
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 export default function DataState({ loading, error, empty, onRetry, compact = false }) {
   if (!loading && !error && !empty) return null;
@@ -12,7 +13,7 @@ export default function DataState({ loading, error, empty, onRetry, compact = fa
       : "No places found";
   const body = loading
     ? "NearLanka is checking the latest places around you."
-    : error || "There are no matching places to show right now.";
+    : error || "No nearby places found in your area.";
 
   return (
     <View style={[styles.card, compact && styles.compactCard]}>
@@ -34,7 +35,7 @@ export default function DataState({ loading, error, empty, onRetry, compact = fa
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   card: {
     minHeight: 210,
     alignItems: "center",
@@ -61,3 +62,5 @@ const styles = StyleSheet.create({
   },
   buttonText: { color: "#123F3A", fontSize: 14, fontWeight: "800" },
 });
+
+

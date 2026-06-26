@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { colors } from "../theme/colors";
 import { typography } from "../theme/typography";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 export default function SplashScreen({ onContinue }) {
   const logoText = "NearLanka";
@@ -70,7 +71,7 @@ export default function SplashScreen({ onContinue }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   container: {
     flex: 1,
     width: "100%",
@@ -105,3 +106,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
 });
+

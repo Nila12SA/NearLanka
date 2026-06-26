@@ -1,30 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
+import { OptimizedImage } from "../components/OptimizedImage";
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AppHeader from "../components/AppHeader";
 import BottomNav from "../components/BottomNav";
-import DataState from "../components/DataState";
-import { getAllPlaces, searchPlaces as searchPlacesApi } from "../api/api";
-import { normalizePlaces } from "../utils/places";
-
-const nineArchImage = require("../../assets/home-nine-arch-train.jpg");
-const beachImage = require("../../assets/home-mountain-view.jpg");
-const hotelImage = require("../../assets/explore-hotel-pool.jpg");
-const cityHotelImage = require("../../assets/colombo-seven-h-facilities-rt.jpg");
-const sigiriyaImage = require("../../assets/historical-sigiriya.jpg");
-const teaEstateImage = require("../../assets/home-tea-estate.jpg");
+import places from "../data/places";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const APP_BG = "#0B1211";
 const SEARCH_BG = "#2D302E";
@@ -38,73 +30,16 @@ const MUTED = "#B9C4BE";
 const suggestions = [
   { icon: "bed-outline", label: "Hotels near me", query: "hotel", type: "ion", active: true },
   { icon: "temple-buddhist", label: "Historical places", query: "historical", type: "mc" },
-  { icon: "silverware-fork-knife", label: "Restaurants", query: "restaurant", type: "mc" },
+  { icon: "leaf-outline", label: "Nature places", query: "nature", type: "ion" },
 ];
 
-const recentSearches = ["Sigiriya Rock Fortress", "Tea Gardens Nuwara Eliya"];
+const recentSearches = ["Hotel Clarion", "Kelaniya Raja Maha Vihara"];
 
-const searchPlaces = [
-  {
-    title: "Nine Arch Bridge",
-    location: "Ella, Sri Lanka",
-    rating: "4.8",
-    distance: "1.2 km away",
-    tags: ["HISTORICAL", "NATURE"],
-    keywords: ["place", "places", "bridge", "ella", "historical", "nature", "nearby"],
-    image: nineArchImage,
-    favorite: true,
-  },
-  {
-    title: "Teal Sands Resort",
-    location: "Bentota Beach",
-    rating: "4.5",
-    distance: "0.8 km away",
-    tags: ["HOTEL", "BEACHFRONT"],
-    keywords: ["hotel", "hotels", "resort", "place", "places", "beach", "bentota", "nearby"],
-    image: beachImage,
-    favorite: false,
-  },
-  {
-    title: "Azure Palms Resort",
-    location: "Mirissa Coast",
-    rating: "4.9",
-    distance: "2.4 km away",
-    tags: ["HOTEL", "LUXURY"],
-    keywords: ["hotel", "hotels", "resort", "stay", "luxury", "pool", "near me"],
-    image: hotelImage,
-    favorite: false,
-  },
-  {
-    title: "Nearby City Hotel",
-    location: "Colombo, Sri Lanka",
-    rating: "4.8",
-    distance: "0.8 km away",
-    tags: ["HOTEL", "OPEN NOW"],
-    keywords: ["hotel", "hotels", "city", "colombo", "stay", "open", "nearby"],
-    image: cityHotelImage,
-    favorite: false,
-  },
-  {
-    title: "Sigiriya Rock Fortress",
-    location: "Sigiriya, Sri Lanka",
-    rating: "4.9",
-    distance: "1.2 km away",
-    tags: ["HISTORICAL", "LANDMARK"],
-    keywords: ["sigiriya", "rock", "fortress", "historical", "place", "places", "landmark"],
-    image: sigiriyaImage,
-    favorite: true,
-  },
-  {
-    title: "Tea Gardens Nuwara Eliya",
-    location: "Nuwara Eliya",
-    rating: "4.7",
-    distance: "5.1 km away",
-    tags: ["NATURE", "TEA TRAIL"],
-    keywords: ["tea", "garden", "gardens", "nuwara eliya", "nature", "place", "places"],
-    image: teaEstateImage,
-    favorite: false,
-  },
-];
+const normalizeText = (text) =>
+  String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");
 
 export default function SearchPage({
   onNavPress,
@@ -113,41 +48,27 @@ export default function SearchPage({
   onFavoritePress,
 }) {
   const [query, setQuery] = useState("");
-  const [filteredPlaces, setFilteredPlaces] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [retryCounter, setRetryCounter] = useState(0);
-  const normalizedQuery = query.trim();
 
-  useEffect(() => {
-    let active = true;
-    const timer = setTimeout(async () => {
-      setLoading(true);
-      setError("");
+  const normalizedQuery = normalizeText(query);
 
-      try {
-        const data = normalizedQuery
-          ? await searchPlacesApi(normalizedQuery)
-          : await getAllPlaces();
-        if (active) setFilteredPlaces(normalizePlaces(data));
-      } catch (searchError) {
-        console.error("Unable to search NearLanka places:", searchError);
-        if (active) {
-          setError(searchError.message || "Search is unavailable right now.");
-          setFilteredPlaces([]);
-        }
-      } finally {
-        if (active) setLoading(false);
-      }
-    }, normalizedQuery ? 350 : 0);
+  const filteredPlaces = useMemo(() => {
+    return places.filter((place) => {
+      const searchableText = [
+        place.name,
+        place.title,
+        place.category,
+        place.location,
+        place.description,
+      ]
+        .map(normalizeText)
+        .join(" ");
 
-    return () => {
-      active = false;
-      clearTimeout(timer);
-    };
-  }, [normalizedQuery, retryCounter]);
+      return !normalizedQuery || searchableText.includes(normalizedQuery);
+    });
+  }, [normalizedQuery]);
 
-  const hasNoResults = normalizedQuery.length > 0 && !loading && !error && filteredPlaces.length === 0;
+  const hasNoResults =
+    normalizedQuery.length > 0 && filteredPlaces.length === 0;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -169,6 +90,7 @@ export default function SearchPage({
         >
           <View style={styles.searchBox}>
             <Ionicons name="search" size={22} color={ACCENT} />
+
             <TextInput
               autoFocus
               value={query}
@@ -178,6 +100,7 @@ export default function SearchPage({
               style={styles.searchInput}
               selectionColor={GOLD}
             />
+
             {query ? (
               <Pressable onPress={() => setQuery("")} hitSlop={10}>
                 <Ionicons name="close" size={22} color={MUTED} />
@@ -188,6 +111,7 @@ export default function SearchPage({
           </View>
 
           <Text style={styles.sectionEyebrow}>SUGGESTED</Text>
+
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -196,14 +120,26 @@ export default function SearchPage({
             {suggestions.map((item) => (
               <Pressable
                 key={item.label}
-                style={[styles.suggestionChip, item.active && styles.activeSuggestionChip]}
+                style={[
+                  styles.suggestionChip,
+                  item.active && styles.activeSuggestionChip,
+                ]}
                 onPress={() => setQuery(item.query)}
               >
                 {item.type === "mc" ? (
-                  <MaterialCommunityIcons name={item.icon} size={16} color={item.active ? ACCENT : MUTED} />
+                  <MaterialCommunityIcons
+                    name={item.icon}
+                    size={16}
+                    color={item.active ? ACCENT : MUTED}
+                  />
                 ) : (
-                  <Ionicons name={item.icon} size={16} color={item.active ? ACCENT : MUTED} />
+                  <Ionicons
+                    name={item.icon}
+                    size={16}
+                    color={item.active ? ACCENT : MUTED}
+                  />
                 )}
+
                 <Text style={styles.suggestionText}>{item.label}</Text>
               </Pressable>
             ))}
@@ -211,6 +147,7 @@ export default function SearchPage({
 
           <View style={styles.recentHeader}>
             <Text style={styles.sectionEyebrow}>RECENT</Text>
+
             <Pressable onPress={() => setQuery("")}>
               <Text style={styles.clearText}>Clear All</Text>
             </Pressable>
@@ -218,7 +155,11 @@ export default function SearchPage({
 
           <View style={styles.recentList}>
             {recentSearches.map((item) => (
-              <Pressable key={item} style={styles.recentItem} onPress={() => setQuery(item)}>
+              <Pressable
+                key={item}
+                style={styles.recentItem}
+                onPress={() => setQuery(item)}
+              >
                 <Ionicons name="time-outline" size={18} color={ACCENT} />
                 <Text style={styles.recentText}>{item}</Text>
                 <Ionicons name="close" size={24} color={MUTED} />
@@ -230,61 +171,97 @@ export default function SearchPage({
             {normalizedQuery ? `${filteredPlaces.length} Results` : "Nearby You"}
           </Text>
 
-          {loading || error ? (
-            <DataState loading={loading} error={error} onRetry={() => setRetryCounter((count) => count + 1)} />
-          ) : hasNoResults ? (
+          {hasNoResults ? (
             <View style={styles.emptyCard}>
               <View style={styles.emptyIconCircle}>
-                <MaterialCommunityIcons name="magnify-close" size={32} color={ACCENT} />
+                <MaterialCommunityIcons
+                  name="magnify-close"
+                  size={32}
+                  color={ACCENT}
+                />
               </View>
-              <Text style={styles.emptyTitle}>No Paths Found</Text>
+
+              <Text style={styles.emptyTitle}>No places found</Text>
+
               <Text style={styles.emptyText}>
-                We couldn't find matches for your search. Try searching for hotels, places, nature, or historical sites.
+                We couldn't find matches for your search. Try searching for
+                hotels, places, nature, or historical sites.
               </Text>
+
               <Pressable style={styles.emptyButton} onPress={() => setQuery("")}>
                 <Text style={styles.emptyButtonText}>Clear Search</Text>
               </Pressable>
             </View>
           ) : (
             <View style={styles.cardList}>
-              {filteredPlaces.map((place) => (
-                <View key={place.id || place.title} style={styles.placeCard}>
-                  <Image source={place.image} style={styles.placeImage} resizeMode="cover" />
-                  <View style={styles.ratingPill}>
-                    <Text style={styles.ratingText}>{place.rating}</Text>
-                    <Ionicons name="star" size={11} color="#102320" />
-                  </View>
+              {filteredPlaces.map((place) => {
+                const placeId = place.id || place.name || place.title;
+                const placeName = place.name || place.title;
+                const category = place.category || place.type || "place";
 
-                  <View style={styles.cardContent}>
-                    <View style={styles.cardTitleRow}>
-                      <View style={styles.cardTitleBlock}>
-                        <Text style={styles.placeTitle}>{place.title}</Text>
-                        <View style={styles.locationRow}>
-                          <Ionicons name="location-outline" size={15} color={MUTED} />
-                          <Text style={styles.locationText}>{place.location}</Text>
+                return (
+                  <View key={placeId} style={styles.placeCard}>
+                    <OptimizedImage
+                      source={place.image}
+                      style={styles.placeImage}
+                      resizeMode="cover"
+                    />
+
+                    <View style={styles.ratingPill}>
+                      <Text style={styles.ratingText}>{place.rating}</Text>
+                      <Ionicons name="star" size={11} color="#102320" />
+                    </View>
+
+                    <View style={styles.cardContent}>
+                      <View style={styles.cardTitleRow}>
+                        <View style={styles.cardTitleBlock}>
+                          <Text style={styles.placeTitle}>{placeName}</Text>
+
+                          <View style={styles.locationRow}>
+                            <Ionicons
+                              name="location-outline"
+                              size={15}
+                              color={MUTED}
+                            />
+                            <Text style={styles.locationText}>
+                              {place.location}
+                            </Text>
+                          </View>
                         </View>
+
+                        <Pressable
+                          onPress={() => onFavoritePress?.(place)}
+                          hitSlop={10}
+                        >
+                          <Ionicons
+                            name={
+                              favoriteIds.includes(placeId)
+                                ? "heart"
+                                : "heart-outline"
+                            }
+                            size={25}
+                            color={
+                              favoriteIds.includes(placeId) ? GOLD : TEXT
+                            }
+                          />
+                        </Pressable>
                       </View>
 
-                      <Pressable onPress={() => onFavoritePress?.(place)} hitSlop={10}>
-                        <Ionicons
-                          name={favoriteIds.includes(place.id || place.title) ? "heart" : "heart-outline"}
-                          size={25}
-                          color={favoriteIds.includes(place.id || place.title) ? GOLD : TEXT}
-                        />
-                      </Pressable>
-                    </View>
+                      <View style={styles.cardFooter}>
+                        <View style={styles.tagRow}>
+                          <Text style={styles.tagPill}>
+                            {String(category).toUpperCase()}
+                          </Text>
+                        </View>
 
-                    <View style={styles.cardFooter}>
-                      <View style={styles.tagRow}>
-                        {[place.type].map((tag) => (
-                          <Text key={tag} style={styles.tagPill}>{tag}</Text>
-                        ))}
+                        <Text style={styles.distanceText}>
+                          {place.distance || "Nearby"}
+                        </Text>
                       </View>
-                      <Text style={styles.distanceText}>{place.distance}</Text>
                     </View>
                   </View>
-                </View>
-              ))}
+                );
+              })}
             </View>
           )}
         </ScrollView>
@@ -295,7 +272,7 @@ export default function SearchPage({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,

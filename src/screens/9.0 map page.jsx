@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import { OptimizedImage } from "../components/OptimizedImage";
 import {
   Alert,
-  Image,
   Linking,
   Platform,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import * as Location from "expo-location";
 import { getBestAvailableLocation } from "../utils/location";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
@@ -20,6 +20,7 @@ import AppHeader from "../components/AppHeader";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
 import { openPlaceDirections, openPlaceInMaps } from "../utils/maps";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const placeImage = require("../../assets/Home-Main-1742X871.jpg");
 
@@ -187,7 +188,7 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
             />
           ) : (
             <>
-              <Image source={selectedPlace.image || placeImage} style={styles.placeImage} />
+              <OptimizedImage source={selectedPlace.image || placeImage} style={styles.placeImage} />
 
               <View style={styles.placeInfo}>
                 <Text style={styles.placeCategory}>{selectedPlace.type || selectedPlace.category}</Text>
@@ -217,7 +218,7 @@ export default function MapPage({ onNavPress, hasLocationPermission = true }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -376,3 +377,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
+
+
+

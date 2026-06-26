@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const ACCENT_GOLD = "#D19F65";
 const MUTED_TEXT = "#B9C4BE";
@@ -18,7 +19,7 @@ export default function LocationPill({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   pill: {
     alignSelf: "flex-start",
     height: 32,
@@ -39,3 +40,4 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
+

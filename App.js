@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { Animated, Easing, Pressable, Text, View } from "react-native";
+import StatusBar from "./src/components/ThemedStatusBar";
+import { Alert, Animated, Easing, Linking, Pressable, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getPlaceId, normalizePlace } from "./src/utils/places";
+import { setCurrentThemeMode } from "./src/theme/runtimeTheme";
 
 import SplashScreen from "./src/screens/1.0 splashscreen";
 import OnboardingFindPlaces from "./src/screens/2.0 onboarding find places near you";
@@ -24,6 +25,8 @@ import SearchPage from "./src/screens/12.0 search page";
 import ReviewsPage from "./src/screens/13.0 review page";
 import EmptyStatePage from "./src/screens/14.0 empty error state page";
 import LoginPage from "./src/screens/15.0 login page";
+import ProfileDetailPage from "./src/screens/16.0 profile detail page";
+import RecentlyViewedPage from "./src/screens/17.0 recently viewed page";
 
 const hotelDetailFavorite = {
   id: "hotel-nearby-city-hotel",
@@ -149,6 +152,9 @@ export default function App() {
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [hasLocationPermission, setHasLocationPermission] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginReturnScreen, setLoginReturnScreen] = useState("home");
+  const [userProfile, setUserProfile] = useState({ username: "Traveler", provider: "local" });
+  const [themeMode, setThemeMode] = useState("Dark");
   const onboardingTransition = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -200,6 +206,27 @@ export default function App() {
     );
   }, [recentPlaces, recentPlacesLoaded]);
 
+  useEffect(() => {
+    AsyncStorage.multiGet([
+      "@nearlanka/user-profile",
+      "@nearlanka/theme",
+    ])
+      .then((entries) => {
+        const values = Object.fromEntries(entries);
+        if (values["@nearlanka/user-profile"]) {
+          setUserProfile(JSON.parse(values["@nearlanka/user-profile"]));
+        }
+        if (values["@nearlanka/theme"]) setThemeMode(values["@nearlanka/theme"]);
+      })
+      .catch((error) => console.error("Unable to load profile settings:", error));
+  }, []);
+
+  useEffect(() => {
+    AsyncStorage.multiSet([
+      ["@nearlanka/user-profile", JSON.stringify(userProfile)],
+      ["@nearlanka/theme", themeMode],
+    ]).catch((error) => console.error("Unable to save profile settings:", error));
+  }, [themeMode, userProfile]);
   useEffect(() => {
     if (screen === "splash") {
       const timer = setTimeout(() => {
@@ -294,13 +321,30 @@ export default function App() {
     setScreen(isLoggedIn ? "emptyStates" : "login");
   };
 
-  const completeLogin = () => {
+  const completeLogin = ({ username = "Traveler", provider = "local" } = {}) => {
+    setUserProfile({ username, provider });
     setIsLoggedIn(true);
-    setScreen("home");
+    setScreen("profile");
+  };
+
+  const openProviderSignIn = async (provider) => {
+    const url = provider === "google"
+      ? "https://accounts.google.com/signin"
+      : "https://appleid.apple.com/sign-in";
+
+    try {
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert(
+        "Unable to open sign in",
+        `Could not open the official ${provider} sign-in page.`
+      );
+    }
   };
 
   const signOut = () => {
     setIsLoggedIn(false);
+    setLoginReturnScreen("home");
     setScreen("login");
   };
 
@@ -380,7 +424,12 @@ export default function App() {
     }
 
     if (screenName === "Profile") {
-      setScreen(isLoggedIn ? "profile" : "login");
+      if (isLoggedIn) {
+        setScreen("profile");
+      } else {
+        setLoginReturnScreen(screen);
+        setScreen("login");
+      }
     }
   };
 
@@ -396,6 +445,8 @@ export default function App() {
       },
     ],
   };
+
+  setCurrentThemeMode(themeMode);
 
   const renderOnboardingTransition = (content) => (
     <Animated.View style={onboardingAnimatedStyle}>{content}</Animated.View>
@@ -442,9 +493,12 @@ export default function App() {
         <LoginPage
           onSignIn={completeLogin}
           onSignUp={() => setScreen("signup")}
-          onGooglePress={() => setScreen("googleLogin")}
-          onApplePress={() => setScreen("appleLogin")}
+          onGooglePress={() => openProviderSignIn("google")}
+          onApplePress={() => openProviderSignIn("apple")}
           onForgotPassword={() => setScreen("forgotPassword")}
+          onFavoritesPress={() => setScreen("profileFavorites")}
+          onRecentPress={() => setScreen("recent")}
+          onBack={() => setScreen(loginReturnScreen)}
         />
       )}
 
@@ -620,22 +674,68 @@ export default function App() {
       {screen === "profile" && isLoggedIn && (
         <ProfilePage
           onNavPress={handleNavPress}
+          onFavoritesPress={() => setScreen("profileFavorites")}
+          onRecentPress={() => setScreen("recent")}
           onReviewsPress={goToReviews}
-          onEmptyStatesPress={goToEmptyStates}
-          onLoginPress={signOut}
+          onLocationPress={() => setScreen("locationSettings")}
+          onAboutPress={() => setScreen("about")}
+          onMonitoringPress={goToEmptyStates}
+          onHelpPress={() => setScreen("help")}
+          onSignOut={signOut}
           hasLocationPermission={hasLocationPermission}
           savedPlacesCount={favorites.length}
+          recentPlacesCount={recentPlaces.length}
+          userName={userProfile.username}
+          themeMode={themeMode}
         />
       )}
 
+
+      {screen === "recent" && (
+        <RecentlyViewedPage
+          recentPlaces={recentPlaces}
+          onPlacePress={handlePlacePress}
+          onNavPress={handleNavPress}
+          themeMode={themeMode}
+          onBack={() => setScreen(isLoggedIn ? "profile" : "login")}
+        />
+      )}
+
+      {screen === "locationSettings" && (
+        <ProfileDetailPage
+          type="location"
+          onNavPress={handleNavPress}
+          hasLocationPermission={hasLocationPermission}
+          onLocationChange={setHasLocationPermission}
+          themeMode={themeMode}
+          onBack={() => setScreen("profile")}
+        />
+      )}
+      {screen === "about" && (
+        <ProfileDetailPage type="about" onNavPress={handleNavPress} themeMode={themeMode} onBack={() => setScreen("profile")} />
+      )}
+
+      {screen === "help" && (
+        <ProfileDetailPage type="help" onNavPress={handleNavPress} themeMode={themeMode} onBack={() => setScreen("profile")} />
+      )}
       {screen === "reviews" && isLoggedIn && (
-        <ReviewsPage onNavPress={handleNavPress} onMenuPress={() => {}} />
+        <ReviewsPage onNavPress={handleNavPress} onMenuPress={() => {}} onBack={() => setScreen("profile")} />
       )}
 
       {screen === "emptyStates" && isLoggedIn && (
-        <EmptyStatePage onNavPress={handleNavPress} onMenuPress={() => {}} />
+        <EmptyStatePage onNavPress={handleNavPress} onMenuPress={() => {}} onBack={() => setScreen("profile")} />
       )}
 
+
+      {screen === "profileFavorites" && (
+        <FavoritesPage
+          favorites={favorites}
+          onFavoritePress={toggleFavorite}
+          onNavPress={handleNavPress}
+          onMenuPress={() => {}}
+          onBack={() => setScreen("profile")}
+        />
+      )}
       {screen === "favorites" && (
         <FavoritesPage
           favorites={favorites}
@@ -647,3 +747,20 @@ export default function App() {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

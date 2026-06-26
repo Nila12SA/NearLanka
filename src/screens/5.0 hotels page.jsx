@@ -1,23 +1,24 @@
 import React, { useState } from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  Image,
-  ImageBackground,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
+import { filterCategoryPlaces, filterPlacesByQuery } from "../utils/places";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const cityHotelImage = require("../../assets/colombo-seven-h-facilities-rt.jpg");
 const rooftopHotelImage = require("../../assets/colombo-seven-h-facilities-left.jpg");
@@ -104,11 +105,13 @@ export default function HotelsPage({
   hasLocationPermission = true,
 }) {
   const [activeFilter, setActiveFilter] = useState("All");
-  const { places, loading, error, reload, usedLocation } = usePlaces({
+  const [query, setQuery] = useState("");
+  const { places, loading, error, reload } = usePlaces({
     category: "hotel",
-    nearby: true,
     hasLocationPermission,
   });
+  const filteredPlaces = filterCategoryPlaces(places, activeFilter, null);
+  const displayedPlaces = filterPlacesByQuery(filteredPlaces, query);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -129,19 +132,13 @@ export default function HotelsPage({
           <View style={styles.searchBox}>
             <Ionicons name="search" size={22} color="#AFC8C4" />
             <TextInput
+              value={query}
+              onChangeText={setQuery}
               placeholder="Search nearby hotels"
               placeholderTextColor="#91A8A5"
               style={styles.searchInput}
             />
           </View>
-
-          {usedLocation ? (
-            <LocationPill
-              text="Near your current location"
-              iconName="navigate-outline"
-              style={styles.locationPill}
-            />
-          ) : null}
 
           <ScrollView
             horizontal
@@ -173,11 +170,11 @@ export default function HotelsPage({
             })}
           </ScrollView>
 
-          <DataState loading={loading} error={error} empty={!loading && !error && places.length === 0} onRetry={reload} />
+          <DataState loading={loading} error={error} empty={!loading && !error && displayedPlaces.length === 0} onRetry={reload} />
 
-          {places.map((hotel) => (
+          {displayedPlaces.map((hotel) => (
             <View key={hotel.id} style={styles.hotelCard}>
-              <ImageBackground
+              <OptimizedImageBackground
                 source={hotel.image}
                 style={styles.hotelImage}
                 imageStyle={styles.hotelImageRadius}
@@ -210,7 +207,7 @@ export default function HotelsPage({
 
                   <Text style={styles.hotelTitle}>{hotel.title}</Text>
                 </View>
-              </ImageBackground>
+              </OptimizedImageBackground>
 
               <View style={styles.hotelInfo}>
                 <View style={styles.distanceRow}>
@@ -267,7 +264,7 @@ export default function HotelsPage({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: "#0B1211",
@@ -567,3 +564,6 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+

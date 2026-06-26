@@ -15,17 +15,14 @@ export async function getBestAvailableLocation({ requestPermission = false } = {
     throw new Error("Location permission was not granted.");
   }
 
-  try {
-    return await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Balanced,
-    });
-  } catch (currentLocationError) {
-    const lastKnownPosition = await Location.getLastKnownPositionAsync({
-      maxAge: 10 * 60 * 1000,
-      requiredAccuracy: 2000,
-    });
+  const lastKnownPosition = await Location.getLastKnownPositionAsync({
+    maxAge: 10 * 60 * 1000,
+    requiredAccuracy: 2000,
+  });
 
-    if (lastKnownPosition) return lastKnownPosition;
-    throw currentLocationError;
-  }
+  if (lastKnownPosition) return lastKnownPosition;
+
+  return Location.getCurrentPositionAsync({
+    accuracy: Location.Accuracy.Balanced,
+  });
 }

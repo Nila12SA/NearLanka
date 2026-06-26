@@ -70,22 +70,6 @@ const places = [
     sourceUrl: "https://nashaplaneta.net/asia/srilanka/jaffna-dostoprimechatelnosti-point-pedro_en",
   },
   
-  {
-    name: "Manalkadu Beach and Sand Dunes",
-    category: "nature",
-    description:
-      "A coastal area near Point Pedro known for sand dunes, beach scenery, and nearby church ruins.",
-    location: "Manalkadu, near Point Pedro",
-    latitude: 9.7258,
-    longitude: 80.2496,
-    image: "manalkadu-title-photo_orig.jpg",
-    rating: 4.6,
-    openingHours: "Open daily",
-    entryFee: "Free",
-    bestTime: "Morning or late afternoon",
-    sourceUrl: "https://www.lanka-excursions-holidays.com/manalkadu.html",
-  },
-  
   
 
   // =====================
@@ -164,8 +148,8 @@ const places = [
       location: "Kiribathgoda, Kelaniya",
       latitude: 6.9839,
       longitude: 79.9307,
-      image: "hotel-clarion-kiribathgoda.jpg",
-      rating: 0,
+      image: "hotel-clarion.jpg",
+      rating: 4.2,
       openingHours: "Open 24 hours",
       entryFee: "Room rates vary",
       bestTime: "Year-round",
@@ -179,8 +163,8 @@ const places = [
       location: "Kiribathgoda",
       latitude: 6.9886,
       longitude: 79.9372,
-      image: "hotel-forever-city-kiribathgoda.jpg",
-      rating: 0,
+      image: "forever city hotel.jpg",
+      rating: 4.5,
       openingHours: "Open 24 hours",
       entryFee: "Room rates vary",
       bestTime: "Year-round",
@@ -194,8 +178,8 @@ const places = [
       location: "Hendala, Wattala",
       latitude: 6.9796,
       longitude: 79.8559,
-      image: "hotel-pegasus-reef-wattala.jpg",
-      rating: 0,
+      image: "pegasus reef hotel.jpg",
+      rating: 4.6,
       openingHours: "Open 24 hours",
       entryFee: "Room rates vary",
       bestTime: "December to April",
@@ -209,8 +193,8 @@ const places = [
       location: "Kelaniya",
       latitude: 6.9565,
       longitude: 79.9218,
-      image: "hotel-relax-on-plus-kelaniya.jpg",
-      rating: 0,
+      image: "relax-on-plus-kelaniya.jpg",
+      rating: 4.1,
       openingHours: "Open 24 hours",
       entryFee: "Room rates vary",
       bestTime: "Year-round",
@@ -224,8 +208,8 @@ const places = [
       location: "Gonawala, Kelaniya",
       latitude: 6.9658,
       longitude: 79.9301,
-      image: "hotel-royal-grand-paradise-kelaniya.jpg",
-      rating: 0,
+      image: "hotel royal grand paradise.jpg",
+      rating: 4.3,
       openingHours: "Open 24 hours",
       entryFee: "Room rates vary",
       bestTime: "Year-round",
@@ -244,8 +228,8 @@ const places = [
       latitude: 6.9568,
       longitude: 79.9226,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/Kelaniya.JPG",
-      rating: 0,
+        "kelani river.jpg",
+      rating: 4.5,
       openingHours: "Open daily",
       entryFee: "Free",
       bestTime: "Morning or evening",
@@ -260,8 +244,8 @@ const places = [
       latitude: 6.8869,
       longitude: 79.9071,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/Beddagana%20wetland%20park.jpg",
-      rating: 0,
+        "beddagama wetland park.jpg",
+      rating: 4.6,
       openingHours: "Check before visiting",
       entryFee: "Ticket may be required",
       bestTime: "Morning",
@@ -276,11 +260,11 @@ const places = [
       latitude: 6.9042,
       longitude: 79.9099,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/Diyatha%20uyana.jpg",
-      rating: 0,
+        "diyatha-uyana.jpg",
+      rating: 4.7,
       openingHours: "Open daily",
       entryFee: "Free",
-      bestTime: "Evening",
+      bestTime: "Evening", 
       sourceUrl: "https://commons.wikimedia.org/wiki/File:Diyatha_uyana.jpg",
     },
     {
@@ -292,8 +276,8 @@ const places = [
       latitude: 6.9736,
       longitude: 79.8667,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/Crow%20Island%20beach.%20Colombo%2015%20-%20Sri%20lanka.jpg",
-      rating: 0,
+        "crow-island-beach-park.jpg",
+      rating: 4.4,
       openingHours: "Open daily",
       entryFee: "Free",
       bestTime: "Evening",
@@ -308,8 +292,8 @@ const places = [
       latitude: 7.0875,
       longitude: 79.8669,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/Negombo%20Lagoon%20%28Muthurajawela%20marsh%29%2C%20Sri%20Lanka%20-%20panoramio.jpg",
-      rating: 0,
+        "Muthurajawela-Wetlands.jpg",
+      rating: 4.6,
       openingHours: "Check tour availability",
       entryFee: "Tour prices vary",
       bestTime: "Morning",
@@ -328,8 +312,8 @@ const places = [
       latitude: 6.9561,
       longitude: 79.9225,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/Kelaniya%20Temple%20%28Kelaniya%20Raja%20Maha%20Vihara%29%20%285439887839%29.jpg",
-      rating: 0,
+        "kelaniya raja maha vihara.jpg",
+      rating: 4.8,
       openingHours: "Open daily",
       entryFee: "Free",
       bestTime: "Morning or evening",
@@ -344,8 +328,8 @@ const places = [
       latitude: 6.9418,
       longitude: 79.8594,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/SL%20Colombo%20asv2020-01%20img01%20Wolvendaal%20Church.jpg",
-      rating: 0,
+        "Wolvendaal-Church-585x343.jpg",
+      rating: 4.4,
       openingHours: "Check before visiting",
       entryFee: "Free",
       bestTime: "Morning",
@@ -360,8 +344,8 @@ const places = [
       latitude: 6.9379,
       longitude: 79.8549,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/Colombo%20Dutch%20Museum.jpg",
-      rating: 0,
+        "Colombo-Dutch-Museum.jpg",
+      rating: 4.3,
       openingHours: "Check before visiting",
       entryFee: "Ticket may be required",
       bestTime: "Morning",
@@ -376,8 +360,8 @@ const places = [
       latitude: 6.9036,
       longitude: 79.8678,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/Independence%20Commemoration%20Hall.jpg",
-      rating: 0,
+        "independence memorial hall.jpg",
+      rating: 4.7,
       openingHours: "Open daily",
       entryFee: "Free",
       bestTime: "Morning or evening",
@@ -392,8 +376,8 @@ const places = [
       latitude: 6.9100,
       longitude: 79.8607,
       image:
-        "https://commons.wikimedia.org/wiki/Special:FilePath/National%20Museum%20of%20Colombo.jpg",
-      rating: 0,
+        "national-museum.jpg",
+      rating: 4.6,
       openingHours: "Check before visiting",
       entryFee: "Ticket required",
       bestTime: "Morning",
@@ -401,4 +385,4 @@ const places = [
     },
 ];
 
-module.exports = places;
+export default places;

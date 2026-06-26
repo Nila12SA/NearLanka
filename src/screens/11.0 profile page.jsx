@@ -1,360 +1,85 @@
 import React from "react";
-import {
-  Image,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { OptimizedImage } from "../components/OptimizedImage";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
-const navLoginIcon = require("../../assets/nav-login.png");
 const profileAvatar = require("../../assets/profile-avatar.jpg");
-
-const APP_BG = "#0B1211";
-const PANEL_BG = "#151A18";
-const CARD_BG = "#123F3A";
-const CARD_BORDER = "#245F58";
-const MUTED_GREEN = "#4F8178";
-const ACCENT = "#B6D9D6";
-const TEXT = "#F4F6F2";
-const MUTED_TEXT = "#B9C4BE";
-
-const stats = [
-  { value: "24", label: "Saved places" },
-  { value: "156", label: "Recently viewed" },
-];
-
-const menuSections = [
-  [
-    { icon: "heart-outline", label: "My Favorites", type: "ion" },
-    { icon: "history", label: "Recently Viewed", type: "mc" },
-    { icon: "star-outline", label: "Reviews", type: "ion", action: "reviews" },
-  ],
-  [
-    { icon: "locate-outline", label: "Location Settings", type: "ion" },
-    { icon: "globe-outline", label: "Language", value: "English", type: "ion" },
-    { icon: "moon-outline", label: "Theme Mode", value: "Dark", type: "ion" },
-  ],
-  [
-    { icon: "information-circle-outline", label: "About App", type: "ion" },
-    { icon: "alert-circle-outline", label: "Experience Monitoring", type: "ion", action: "emptyStates" },
-    { icon: "help-circle-outline", label: "Help", type: "ion" },
-  ],
-];
+const labels = { favorites: "My Favorites", recent: "Recently Viewed", reviews: "Reviews", location: "Location Settings", about: "About App", monitoring: "Experience Monitoring", help: "Help", signOut: "Sign Out", saved: "Saved places", viewed: "Recently viewed" };
 
 export default function ProfilePage({
-  onNavPress,
-  hasLocationPermission = true,
-  savedPlacesCount = 24,
-  onReviewsPress,
-  onEmptyStatesPress,
-  onLoginPress,
+  onNavPress, onMenuPress, onSignOut, onFavoritesPress, onRecentPress,
+  onReviewsPress, onLocationPress,
+  onAboutPress, onMonitoringPress, onHelpPress, hasLocationPermission = true,
+  savedPlacesCount = 0, recentPlacesCount = 0, userName = "Traveler",
+  themeMode = "Dark",
 }) {
+  const light = themeMode === "Light";
+  const t = labels;
+  const palette = light
+    ? { bg: "#F3F6F2", card: "#FFFFFF", border: "#C9D8D4", text: "#17322F", muted: "#60736F", accent: "#245F58", button: "#D7A85F" }
+    : { bg: "#0B1211", card: "#123F3A", border: "#245F58", text: "#F4F6F2", muted: "#B9C4BE", accent: "#B6D9D6", button: "#4F8178" };
+  const sections = [
+    [
+      { icon: "heart-outline", label: t.favorites, onPress: onFavoritesPress },
+      { icon: "history", label: t.recent, type: "mc", onPress: onRecentPress },
+      { icon: "star-outline", label: t.reviews, onPress: onReviewsPress },
+    ],
+    [
+      { icon: "locate-outline", label: t.location, value: hasLocationPermission ? "On" : "Off", onPress: onLocationPress },
+    ],
+    [
+      { icon: "information-circle-outline", label: t.about, onPress: onAboutPress },
+      { icon: "pulse-outline", label: t.monitoring, onPress: onMonitoringPress },
+      { icon: "help-circle-outline", label: t.help, onPress: onHelpPress },
+    ],
+  ];
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="light" backgroundColor={APP_BG} />
-
-      <View style={styles.screen}>
-        <AppHeader onProfilePress={() => onNavPress?.("Profile")} />
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.bg }]}>
+      <StatusBar style={light ? "dark" : "light"} backgroundColor={palette.bg} />
+      <View style={[styles.screen, { backgroundColor: palette.bg }]}>
+        <AppHeader onMenuPress={onMenuPress} onProfilePress={() => onNavPress?.("Profile")} themeMode={themeMode} />
+        <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.profileBlock}>
-            <View style={styles.avatarWrap}>
-              <Image source={profileAvatar} style={styles.avatar} resizeMode="cover" />
-              <Pressable style={styles.editButton}>
-                <Ionicons name="pencil" size={18} color="#0E2421" />
-              </Pressable>
-            </View>
-
-            <Text style={styles.userName}>Traveler</Text>
-
-            <View style={styles.locationStatusRow}>
-              <Ionicons name="location" size={15} color={ACCENT} />
-              <Text style={styles.locationStatusText}>
-                {hasLocationPermission ? "LOCATION ENABLED" : "LOCATION OFF"}
-              </Text>
-            </View>
+            <View style={[styles.avatarWrap, { borderColor: palette.accent }]}><OptimizedImage source={profileAvatar} style={styles.avatar} /></View>
+            <Text style={[styles.userName, { color: palette.text }]}>{userName}</Text>
+            <View style={styles.statusRow}><Ionicons name="location" size={15} color={palette.accent} /><Text style={[styles.statusText, { color: palette.muted }]}>{hasLocationPermission ? "LOCATION ENABLED" : "LOCATION OFF"}</Text></View>
           </View>
-
           <View style={styles.statsRow}>
-            {stats.map((stat, index) => (
-              <View key={stat.label} style={styles.statCard}>
-                <Text style={styles.statValue}>
-                  {index === 0 ? savedPlacesCount : stat.value}
-                </Text>
-                <Text style={styles.statLabel}>{stat.label}</Text>
-              </View>
-            ))}
+            <Stat value={savedPlacesCount} label={t.saved} palette={palette} />
+            <Stat value={recentPlacesCount} label={t.viewed} palette={palette} />
           </View>
-
-          {menuSections.map((section, sectionIndex) => (
-            <View key={`section-${sectionIndex}`} style={styles.menuCard}>
-              {section.map((item, itemIndex) => (
-                <ProfileRow
-                  key={item.label}
-                  item={item}
-                  showDivider={itemIndex < section.length - 1}
-                  onPress={item.action === "reviews" ? onReviewsPress : item.action === "emptyStates" ? onEmptyStatesPress : undefined}
-                />
-              ))}
+          {sections.map((section, index) => (
+            <View key={index} style={[styles.menuCard, { backgroundColor: palette.card, borderColor: palette.border }]}>
+              {section.map((item, itemIndex) => <ProfileRow key={item.label} item={item} palette={palette} divider={itemIndex < section.length - 1} />)}
             </View>
           ))}
-
-          <Pressable style={styles.signOutButton} onPress={onLoginPress}>
-            <Text style={styles.signOutText}>Sign Out</Text>
-          </Pressable>
+          <Pressable style={[styles.signOut, { backgroundColor: palette.button }]} onPress={onSignOut}><Text style={styles.signOutText}>{t.signOut}</Text></Pressable>
         </ScrollView>
-
-        <BottomNav activeTab="profile" onNavPress={onNavPress} />
+        <BottomNav activeKey="Profile" onNavPress={onNavPress} themeMode={themeMode} />
       </View>
     </SafeAreaView>
   );
 }
 
-function ProfileRow({ item, showDivider, onPress }) {
-  return (
-    <View>
-      <Pressable style={styles.profileRow} onPress={onPress}>
-        <View style={styles.rowIconWrap}>
-          {item.type === "mc" ? (
-            <MaterialCommunityIcons name={item.icon} size={23} color={ACCENT} />
-          ) : (
-            <Ionicons name={item.icon} size={23} color={ACCENT} />
-          )}
-        </View>
+function Stat({ value, label, palette }) { return <View style={[styles.stat, { backgroundColor: palette.card, borderColor: palette.border }]}><Text style={[styles.statValue, { color: palette.accent }]}>{value}</Text><Text style={[styles.statLabel, { color: palette.muted }]}>{label}</Text></View>; }
+function ProfileRow({ item, palette, divider }) { return <View><Pressable style={styles.row} onPress={item.onPress}><View style={[styles.iconWrap, { backgroundColor: palette.bg }]}>{item.type === "mc" ? <MaterialCommunityIcons name={item.icon} size={23} color={palette.accent} /> : <Ionicons name={item.icon} size={23} color={palette.accent} />}</View><Text style={[styles.rowLabel, { color: palette.text }]}>{item.label}</Text>{item.value ? <Text style={[styles.rowValue, { color: palette.muted }]}>{item.value}</Text> : null}<Ionicons name="chevron-forward" size={21} color={palette.muted} /></Pressable>{divider ? <View style={[styles.divider, { backgroundColor: palette.border }]} /> : null}</View>; }
 
-        <Text style={styles.rowLabel}>{item.label}</Text>
-
-        {!!item.value && <Text style={styles.rowValue}>{item.value}</Text>}
-        <Ionicons name="chevron-forward" size={22} color={MUTED_TEXT} />
-      </Pressable>
-
-      {showDivider ? <View style={styles.rowDivider} /> : null}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: APP_BG,
-  },
-
-  screen: {
-    flex: 1,
-    backgroundColor: APP_BG,
-  },
-
-  header: {
-    height: 62,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.06)",
-    backgroundColor: PANEL_BG,
-  },
-
-  menuIcon: {
-    width: 22,
-    height: 18,
-    justifyContent: "space-between",
-  },
-
-  menuLine: {
-    width: 20,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: "#B6D9D6",
-  },
-
-  logoText: {
-    marginLeft: 16,
-    flex: 1,
-    color: "#C8D8D5",
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
-    fontSize: 27,
-    lineHeight: 34,
-  },
-
-  loginLogoButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    borderWidth: 2,
-    borderColor: "#D19F65",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.04)",
-  },
-
-  loginLogoIcon: {
-    width: 22,
-    height: 22,
-  },
-
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 95,
-    paddingBottom: 128,
-  },
-
-  profileBlock: {
-    alignItems: "center",
-  },
-
-  avatarWrap: {
-    width: 126,
-    height: 126,
-    borderRadius: 63,
-    borderWidth: 4,
-    borderColor: "#7DA7A2",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#7DA7A2",
-  },
-
-  avatar: {
-    width: 116,
-    height: 116,
-    borderRadius: 58,
-  },
-
-  editButton: {
-    position: "absolute",
-    right: 3,
-    bottom: 3,
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: ACCENT,
-  },
-
-  userName: {
-    marginTop: 18,
-    color: TEXT,
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
-    fontSize: 25,
-    lineHeight: 31,
-  },
-
-  locationStatusRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-  },
-
-  locationStatusText: {
-    marginLeft: 6,
-    color: MUTED_TEXT,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: "700",
-  },
-
-  statsRow: {
-    flexDirection: "row",
-    gap: 16,
-    marginTop: 22,
-  },
-
-  statCard: {
-    flex: 1,
-    height: 102,
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: CARD_BORDER,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: CARD_BG,
-  },
-
-  statValue: {
-    color: ACCENT,
-    fontSize: 27,
-    lineHeight: 34,
-    fontWeight: "700",
-  },
-
-  statLabel: {
-    marginTop: 4,
-    color: MUTED_TEXT,
-    fontSize: 14,
-    lineHeight: 19,
-  },
-
-  menuCard: {
-    marginTop: 24,
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: CARD_BORDER,
-    paddingHorizontal: 25,
-    paddingVertical: 16,
-    backgroundColor: CARD_BG,
-  },
-
-  profileRow: {
-    minHeight: 66,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  rowIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 11,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(79, 129, 120, 0.34)",
-  },
-
-  rowLabel: {
-    flex: 1,
-    marginLeft: 17,
-    color: TEXT,
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: "600",
-  },
-
-  rowValue: {
-    marginRight: 4,
-    color: MUTED_TEXT,
-    fontSize: 14,
-    lineHeight: 19,
-  },
-
-  rowDivider: {
-    height: 1,
-    marginLeft: 56,
-    backgroundColor: "rgba(255,255,255,0.06)",
-  },
-
-  signOutButton: {
-    height: 45,
-    marginTop: 44,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: MUTED_GREEN,
-  },
-
-  signOutText: {
-    color: TEXT,
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: "700",
-  },
+const styles = createThemedStyles({
+  safeArea: { flex: 1 }, screen: { flex: 1 }, scrollContent: { paddingHorizontal: 20, paddingTop: 40, paddingBottom: 125 },
+  profileBlock: { alignItems: "center" }, avatarWrap: { width: 118, height: 118, borderRadius: 59, borderWidth: 4, padding: 4 }, avatar: { width: "100%", height: "100%", borderRadius: 54 },
+  userName: { marginTop: 16, fontSize: 26, fontWeight: "800" }, statusRow: { marginTop: 8, flexDirection: "row", alignItems: "center" }, statusText: { marginLeft: 6, fontSize: 12, fontWeight: "700" },
+  statsRow: { marginTop: 22, flexDirection: "row", gap: 14 }, stat: { flex: 1, minHeight: 96, alignItems: "center", justifyContent: "center", borderRadius: 15, borderWidth: 1 }, statValue: { fontSize: 27, fontWeight: "800" }, statLabel: { marginTop: 4, fontSize: 13, textAlign: "center" },
+  menuCard: { marginTop: 22, paddingHorizontal: 22, paddingVertical: 10, borderRadius: 15, borderWidth: 1 }, row: { minHeight: 62, flexDirection: "row", alignItems: "center" }, iconWrap: { width: 39, height: 39, alignItems: "center", justifyContent: "center", borderRadius: 11 }, rowLabel: { flex: 1, marginLeft: 15, fontSize: 15, fontWeight: "600" }, rowValue: { marginRight: 5, fontSize: 13 }, divider: { height: 1, marginLeft: 54, opacity: 0.45 },
+  signOut: { height: 46, marginTop: 34, alignItems: "center", justifyContent: "center", borderRadius: 14 }, signOutText: { color: "#FFFFFF", fontSize: 16, fontWeight: "800" },
 });
+
+
+
+
+

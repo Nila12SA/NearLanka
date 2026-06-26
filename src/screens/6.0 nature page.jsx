@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  Image,
-  ImageBackground,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
+import { filterCategoryPlaces, filterPlacesByQuery } from "../utils/places";
 import { Ionicons } from "@expo/vector-icons";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const littleAdamsPeak = require("../../assets/nature-little-adams-peak.jpg");
 const ambuluwawaImage = require("../../assets/nature-ambuluwawa.jpg");
@@ -97,11 +99,14 @@ export default function NaturePage({
   favoriteIds = [],
   hasLocationPermission = true,
 }) {
-  const { places, loading, error, reload, usedLocation } = usePlaces({
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [query, setQuery] = useState("");
+  const { places, loading, error, reload } = usePlaces({
     category: "nature",
-    nearby: true,
     hasLocationPermission,
   });
+  const filteredPlaces = filterCategoryPlaces(places, activeFilter, null);
+  const displayedPlaces = filterPlacesByQuery(filteredPlaces, query);
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -120,47 +125,62 @@ export default function NaturePage({
 
           <View style={styles.searchBox}>
             <Ionicons name="search" size={22} color="#AFC8C4" />
-            <Text style={styles.searchText}>Search nearby nature spots</Text>
-          </View>
-
-          {usedLocation ? (
-            <LocationPill
-              text="Near your current location"
-              iconName="navigate-outline"
-              style={styles.locationPill}
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder="Search nearby nature spots"
+              placeholderTextColor="#91A8A5"
+              style={styles.searchText}
             />
-          ) : null}
+          </View>
 
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.filtersRow}
           >
-            {filters.map((filter, index) => (
-              <Pressable
-                key={filter}
-                style={[styles.filterButton, index === 0 && styles.activeFilterButton]}
-              >
-                <Text
-                  style={[styles.filterText, index === 0 && styles.activeFilterText]}
+            {filters.map((filter) => {
+              const isActive = activeFilter === filter;
+
+              return (
+                <Pressable
+                  key={filter}
+                  onPress={() => setActiveFilter(filter)}
+                  style={[
+                    styles.filterButton,
+                    isActive && styles.activeFilterButton,
+                  ]}
                 >
-                  {filter}
-                </Text>
-              </Pressable>
-            ))}
+                  <Text
+                    style={[
+                      styles.filterText,
+                      isActive && styles.activeFilterText,
+                    ]}
+                  >
+                    {filter}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </ScrollView>
 
           <View style={styles.sortRow}>
             <Ionicons name="filter" size={13} color="#AFC8C4" />
-            <Text style={styles.sortText}>Sort: Nearest</Text>
+            <Text style={styles.sortText}>
+              {activeFilter === "Top Rated"
+                ? "Sort: Rating"
+                : activeFilter === "Open Now"
+                  ? "Filter: Open Now"
+                  : "Sort: Nearest"}
+            </Text>
           </View>
 
           <View style={styles.cardList}>
-            <DataState loading={loading} error={error} empty={!loading && !error && places.length === 0} onRetry={reload} />
+            <DataState loading={loading} error={error} empty={!loading && !error && displayedPlaces.length === 0} onRetry={reload} />
 
-            {places.map((spot, index) => (
+            {displayedPlaces.map((spot, index) => (
               <View key={spot.id || spot.title} style={styles.natureCard}>
-                <ImageBackground
+                <OptimizedImageBackground
                   source={spot.image}
                   style={[styles.cardImage, index === 3 && styles.tallCardImage]}
                   imageStyle={styles.cardImageRadius}
@@ -186,12 +206,15 @@ export default function NaturePage({
                       color={favoriteIds.includes(spot.id || spot.title) ? GOLD : "#E3EFEC"}
                     />
                   </Pressable>
-                </ImageBackground>
+                </OptimizedImageBackground>
 
                 <View style={styles.cardContent}>
                   <View style={styles.cardTitleRow}>
                     <Text style={styles.cardTitle}>{spot.title}</Text>
-                    <Text style={styles.ratingText}>* {spot.rating}</Text>
+                    <View style={styles.ratingRow}>
+                      <Ionicons name="star" size={14} color={GOLD} />
+                      <Text style={styles.ratingText}>{spot.rating}</Text>
+                    </View>
                   </View>
 
                   <View style={styles.distanceRow}>
@@ -219,7 +242,7 @@ export default function NaturePage({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -447,8 +470,14 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
 
-  ratingText: {
+  ratingRow: {
     marginLeft: 12,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  ratingText: {
+    marginLeft: 4,
     color: "#D19F65",
     fontSize: 13,
     lineHeight: 18,
@@ -498,3 +527,6 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+

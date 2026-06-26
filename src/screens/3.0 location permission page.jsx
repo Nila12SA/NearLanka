@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { OptimizedImage } from "../components/OptimizedImage";
 import { Alert, Image, Linking, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { getBestAvailableLocation } from "../utils/location";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const pinIcon = require("../../assets/location-pin-icon.png");
 
@@ -63,7 +65,7 @@ export default function LocationPermissionScreen({ onAllow, onLater }) {
           <View style={[styles.ring, styles.ringMiddle]} />
           <View style={[styles.ring, styles.ringInner]} />
           <View style={styles.glow} />
-          <Image source={pinIcon} style={styles.pinIcon} resizeMode="contain" />
+          <OptimizedImage source={pinIcon} style={styles.pinIcon} resizeMode="contain" />
         </View>
 
         <View style={styles.content}>
@@ -142,7 +144,7 @@ export default function LocationPermissionScreen({ onAllow, onLater }) {
 
 export { locationPermission };
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   screen: {
     flex: 1,
     alignItems: "center",

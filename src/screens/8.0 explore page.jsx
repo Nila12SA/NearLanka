@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  Image,
-  ImageBackground,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
+import { filterAndSortPlaces } from "../utils/places";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -85,18 +87,25 @@ const explorePlaces = [
   },
 ];
 
-const filterPills = ["All", "Open Now", "Top Rated", "Nearby"];
-const sortTabs = ["Nearest", "Top Rated", "Open Now", "42 Results"];
+const filterPills = ["All", "Hotels", "Nature", "Historical"];
+const sortTabs = ["Nearest", "Top Rated", "Open Now"];
 
 export default function ExplorePage({
   onNavPress,
   onMenuPress,
-  onSearchPress,
   onFavoritePress,
   favoriteIds = [],
   hasLocationPermission = true,
 }) {
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeSort, setActiveSort] = useState("Nearest");
   const { places, loading, error, reload } = usePlaces();
+  const displayedPlaces = filterAndSortPlaces(places, {
+    query,
+    category: activeCategory,
+    sort: activeSort,
+  });
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" backgroundColor={APP_BG} />
@@ -113,11 +122,24 @@ export default function ExplorePage({
         >
           <Text style={styles.title}>Explore Places Around{`\n`}You</Text>
 
-          <Pressable style={styles.searchBox} onPress={onSearchPress}>
+          <View style={styles.searchBox}>
             <Ionicons name="search" size={22} color={MUTED_TEXT} />
-            <Text style={styles.searchText}>Search destinations...</Text>
-            <MaterialCommunityIcons name="tune-variant" size={23} color={MUTED_TEXT} />
-          </Pressable>
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder="Search destinations..."
+              placeholderTextColor={MUTED_TEXT}
+              style={styles.searchText}
+              selectionColor={GOLD}
+            />
+            {query ? (
+              <Pressable onPress={() => setQuery("")} hitSlop={10}>
+                <Ionicons name="close" size={22} color={MUTED_TEXT} />
+              </Pressable>
+            ) : (
+              <MaterialCommunityIcons name="tune-variant" size={23} color={MUTED_TEXT} />
+            )}
+          </View>
 
           {hasLocationPermission ? (
             <LocationPill style={styles.locationPill} />
@@ -128,35 +150,44 @@ export default function ExplorePage({
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.filterRow}
           >
-            {filterPills.map((filter, index) => (
-              <Pressable
-                key={filter}
-                style={[styles.filterPill, index === 0 && styles.activeFilterPill]}
-              >
-                <Text
-                  style={[styles.filterText, index === 0 && styles.activeFilterText]}
+            {filterPills.map((filter) => {
+              const isActive = activeCategory === filter;
+              return (
+                <Pressable
+                  key={filter}
+                  onPress={() => setActiveCategory(filter)}
+                  style={[styles.filterPill, isActive && styles.activeFilterPill]}
                 >
-                  {filter}
-                </Text>
-              </Pressable>
-            ))}
+                  <Text
+                    style={[styles.filterText, isActive && styles.activeFilterText]}
+                  >
+                    {filter}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </ScrollView>
 
           <View style={styles.sortRow}>
-            {sortTabs.map((tab, index) => (
-              <Text key={tab} style={[styles.sortText, index === 0 && styles.activeSortText]}>
-                {tab}{index === 0 ? "  " : ""}
-                {index === 0 && <Ionicons name="chevron-down" size={11} color={GOLD} />}
-              </Text>
-            ))}
+            {sortTabs.map((tab) => {
+              const isActive = activeSort === tab;
+              return (
+                <Pressable key={tab} onPress={() => setActiveSort(tab)}>
+                  <Text style={[styles.sortText, isActive && styles.activeSortText]}>
+                    {tab}{isActive ? "  " : ""}
+                    {isActive && <Ionicons name="chevron-down" size={11} color={GOLD} />}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
 
           <View style={styles.divider} />
 
           <View style={styles.cardList}>
-            <DataState loading={loading} error={error} empty={!loading && !error && places.length === 0} onRetry={reload} />
+            <DataState loading={loading} error={error} empty={!loading && !error && displayedPlaces.length === 0} onRetry={reload} />
 
-            {places.map((place) => {
+            {displayedPlaces.map((place) => {
               const isFavorite = favoriteIds.includes(place.id) ||
                 favoriteIds.includes(place.title);
 
@@ -181,7 +212,7 @@ export default function ExplorePage({
 function ExploreCard({ place, isFavorite, onFavoritePress }) {
   return (
     <View style={styles.card}>
-      <ImageBackground
+      <OptimizedImageBackground
         source={place.image}
         style={styles.cardImage}
         imageStyle={styles.cardImageRadius}
@@ -198,7 +229,7 @@ function ExploreCard({ place, isFavorite, onFavoritePress }) {
             color={isFavorite ? GOLD : TEXT}
           />
         </Pressable>
-      </ImageBackground>
+      </OptimizedImageBackground>
 
       <View style={styles.cardContent}>
         <View style={styles.cardTopRow}>
@@ -226,7 +257,7 @@ function ExploreCard({ place, isFavorite, onFavoritePress }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -496,3 +527,6 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+

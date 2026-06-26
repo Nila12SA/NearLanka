@@ -1,19 +1,19 @@
 import React from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  Image,
-  ImageBackground,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { openPlaceDirections } from "../utils/maps";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const hotelHeroImage = require("../../assets/Home-Main-1742X871.jpg");
 const routeImage = require("../../assets/onboarding-navigate-easily.jpg");
@@ -67,7 +67,7 @@ export default function HotelInnerPage({
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <ImageBackground
+          <OptimizedImageBackground
             source={selectedPlace.image || hotelHeroImage}
             style={styles.hero}
             imageStyle={styles.heroImage}
@@ -101,7 +101,7 @@ export default function HotelInnerPage({
                 <Text style={styles.locationText}>{selectedPlace.location}</Text>
               </View>
             </View>
-          </ImageBackground>
+          </OptimizedImageBackground>
 
           <View style={styles.detailPanel}>
             <View style={styles.statsRow}>
@@ -147,7 +147,7 @@ export default function HotelInnerPage({
             <Text style={styles.sectionLabel}>BEST TIME</Text>
             <Text style={styles.description}>{selectedPlace.bestTime}</Text>
 
-            <ImageBackground
+            <OptimizedImageBackground
               source={routeImage}
               style={styles.travelCard}
               imageStyle={styles.travelImage}
@@ -163,7 +163,7 @@ export default function HotelInnerPage({
                   <Ionicons name="car-sport-outline" size={23} color={SOFT_TEAL} />
                 </View>
               </View>
-            </ImageBackground>
+            </OptimizedImageBackground>
 
             <Pressable style={styles.primaryButton} onPress={() => openPlaceDirections(selectedPlace)}>
               <Text style={styles.primaryButtonText}>Get Directions</Text>
@@ -186,7 +186,7 @@ export default function HotelInnerPage({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -498,3 +498,6 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+

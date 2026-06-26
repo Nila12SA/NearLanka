@@ -1,18 +1,19 @@
 import React from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  ImageBackground,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { openPlaceDirections } from "../utils/maps";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const heroImage = require("../../assets/nature-bomburella-waterfall.jpg");
 
@@ -51,7 +52,7 @@ export default function NatureInnerPage({
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <ImageBackground
+          <OptimizedImageBackground
             source={selectedPlace.image || heroImage}
             style={styles.hero}
             resizeMode="cover"
@@ -78,7 +79,10 @@ export default function NatureInnerPage({
             <View style={styles.heroContent}>
               <View style={styles.metaRow}>
                 <Text style={styles.categoryPill}>Nature</Text>
-                <Text style={styles.ratingText}>* {selectedPlace.rating}</Text>
+                <View style={styles.ratingRow}>
+                  <Ionicons name="star" size={15} color="#F0C46C" />
+                  <Text style={styles.ratingText}>{selectedPlace.rating}</Text>
+                </View>
                 <Text style={styles.reviewText}>(1.2k reviews)</Text>
               </View>
 
@@ -89,7 +93,7 @@ export default function NatureInnerPage({
                 <Text style={styles.locationText}>{selectedPlace.location}{selectedPlace.distanceKm != null ? `  •  ${selectedPlace.distanceKm} km away` : ""}</Text>
               </View>
             </View>
-          </ImageBackground>
+          </OptimizedImageBackground>
 
           <View style={styles.content}>
             <View style={styles.infoGrid}>
@@ -174,7 +178,7 @@ export default function NatureInnerPage({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -250,8 +254,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#507875",
   },
 
-  ratingText: {
+  ratingRow: {
     marginLeft: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  ratingText: {
+    marginLeft: 4,
     color: "#F0C46C",
     fontSize: 15,
     lineHeight: 20,
@@ -551,3 +561,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
+
+
+

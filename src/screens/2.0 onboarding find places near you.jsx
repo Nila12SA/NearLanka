@@ -1,6 +1,6 @@
 import React from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  ImageBackground,
   Pressable,
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const heroImage = require("../../assets/onboarding-find-places.jpg");
 
@@ -30,7 +31,7 @@ export default function OnboardingFindPlacesNearYou({
   return (
     <View style={styles.screen}>
       <View style={styles.heroFrame}>
-        <ImageBackground
+        <OptimizedImageBackground
           source={heroImageSource}
           resizeMode="cover"
           style={styles.heroImage}
@@ -41,7 +42,7 @@ export default function OnboardingFindPlacesNearYou({
               {onboardingFindPlaces.secondaryButton}
             </Text>
           </Pressable>
-        </ImageBackground>
+        </OptimizedImageBackground>
       </View>
 
       <View style={styles.content}>
@@ -80,7 +81,7 @@ export default function OnboardingFindPlacesNearYou({
 
 export { onboardingFindPlaces };
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   screen: {
     flex: 1,
     alignItems: "center",
@@ -198,3 +199,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+

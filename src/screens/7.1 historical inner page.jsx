@@ -1,18 +1,19 @@
 import React from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  ImageBackground,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { openPlaceDirections } from "../utils/maps";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const heroImage = require("../../assets/historical-sigiriya.jpg");
 
@@ -64,7 +65,7 @@ export default function HistoricalInnerPage({
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <ImageBackground
+          <OptimizedImageBackground
             source={favoriteItem.image || heroImage}
             style={styles.hero}
             imageStyle={styles.heroImage}
@@ -95,7 +96,10 @@ export default function HistoricalInnerPage({
             <View style={styles.heroContent}>
               <View style={styles.metaRow}>
                 <Text style={styles.categoryPill}>HISTORICAL</Text>
-                <Text style={styles.ratingText}>★ {favoriteItem.rating}</Text>
+                <View style={styles.ratingRow}>
+                  <Ionicons name="star" size={14} color={GOLD} />
+                  <Text style={styles.ratingText}>{favoriteItem.rating}</Text>
+                </View>
               </View>
 
               <Text style={styles.title}>{favoriteItem.title || favoriteItem.name}</Text>
@@ -115,7 +119,7 @@ export default function HistoricalInnerPage({
                 <Text style={styles.locationText}>{favoriteItem.distanceKm != null ? `${favoriteItem.distanceKm} km` : ""}</Text>
               </View>
             </View>
-          </ImageBackground>
+          </OptimizedImageBackground>
 
           <View style={styles.contentPanel}>
             <Text style={styles.sectionTitle}>About this Site</Text>
@@ -213,7 +217,7 @@ export default function HistoricalInnerPage({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -289,8 +293,14 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
 
-  ratingText: {
+  ratingRow: {
     marginLeft: 9,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  ratingText: {
+    marginLeft: 4,
     color: GOLD,
     fontSize: 13,
     lineHeight: 18,
@@ -566,3 +576,6 @@ const styles = StyleSheet.create({
     color: TEXT_WHITE,
   },
 });
+
+
+

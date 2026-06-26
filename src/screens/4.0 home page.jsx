@@ -1,33 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
+import { OptimizedImage, OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  Image,
-  ImageBackground,
   Pressable,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
+import StatusBar from "../components/ThemedStatusBar";
 import LocationPill from "../components/LocationPill";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
+import { filterAndSortPlaces } from "../utils/places";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const teaEstateImage = require("../../assets/home-tea-estate.jpg");
 const trainBridgeImage = require("../../assets/home-nine-arch-train.jpg");
 const mountainViewImage = require("../../assets/home-mountain-view.jpg");
-const navUserIcon = require("../../assets/nav-user.png");
-const navHomeIcon = require("../../assets/nav-home.png");
-const navCompassIcon = require("../../assets/nav-compass.png");
-const navMapIcon = require("../../assets/nav-map.png");
-const navLoveIcon = require("../../assets/nav-love.png");
-const navLoginIcon = require("../../assets/nav-login.png");
 
 const APP_BG = "#0B1211";
 const CARD_BG = "#123C39";
@@ -37,13 +33,6 @@ const GOLD = "#D19F65";
 
 const filters = ["All", "Hotels", "Nature", "Historical"];
 
-const navItems = [
-  { icon: navHomeIcon, label: "Home", isActive: true },
-  { icon: navCompassIcon, label: "Explore", isActive: false },
-  { icon: navMapIcon, label: "Map", isActive: false },
-  { icon: navLoveIcon, label: "Favorites", isActive: false },
-  { icon: navUserIcon, label: "Profile", isActive: false },
-];
 
 const nearbyPlaces = [
   {
@@ -98,25 +87,41 @@ export default function HomePage({
   onFavoritePress,
   onPlacePress,
   onNavPress,
-  onSearchPress,
   hasLocationPermission = true,
   favoriteIds = [],
   recentPlaces = [],
 }) {
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
   const { places, loading, error, reload, usedLocation } = usePlaces({
     nearby: true,
     hasLocationPermission,
   });
 
-  // The API is distance-sorted; rank the closest six by rating.
-  const popularNearby = [...places]
-    .slice(0, 6)
-    .sort((first, second) => Number(second.rating) - Number(first.rating))
+  const homeMaxDistanceKm = query.trim() || activeCategory !== "All" ? null : 5;
+  const homepageNearbyPlaces = filterAndSortPlaces(places, {
+    query,
+    category: activeCategory,
+    sort: "Nearest",
+    maxDistanceKm: homeMaxDistanceKm,
+  });
+
+  const popularNearby = [...homepageNearbyPlaces]
+    .filter((place) => place.category !== "hotel")
+    .sort(
+      (first, second) =>
+        Number(second.rating) - Number(first.rating) ||
+        first.distanceKm - second.distanceKm
+    )
     .slice(0, 2);
 
-  const recommendedPlace =
-    places.find((place) => !popularNearby.some((popular) => popular.id === place.id)) ||
-    places[0];
+  const hasActiveHomeFilters = query.trim() || activeCategory !== "All";
+  const recommendedCandidates = hasActiveHomeFilters
+    ? homepageNearbyPlaces
+    : places.filter((place) => place.distanceKm !== null && place.distanceKm > 5);
+  const recommendedPlace = recommendedCandidates.find(
+    (place) => !popularNearby.some((popular) => popular.id === place.id)
+  );
 
   const formatViewedTime = (viewedAt) => {
     if (!viewedAt) return "Recently viewed";
@@ -128,7 +133,7 @@ export default function HomePage({
   };
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={APP_BG} />
+      <StatusBar style="light" backgroundColor={APP_BG} />
 
       <View style={styles.screen}>
         <AppHeader onProfilePress={() => onNavPress?.("Profile")} />
@@ -149,35 +154,44 @@ export default function HomePage({
           </Text>
 
           <View style={styles.searchPanel}>
-            <Pressable style={styles.searchBox} onPress={onSearchPress}>
+            <View style={styles.searchBox}>
               <Ionicons name="search" size={22} color="#B9C4BE" />
-              <Text style={styles.searchPlaceholder}>Search nearby places</Text>
-            </Pressable>
+              <TextInput
+                value={query}
+                onChangeText={setQuery}
+                placeholder="Search nearby places"
+                placeholderTextColor="#B9C4BE"
+                style={styles.searchPlaceholder}
+                selectionColor={GOLD}
+              />
+              {query ? (
+                <Pressable onPress={() => setQuery("")} hitSlop={10}>
+                  <Ionicons name="close" size={20} color="#B9C4BE" />
+                </Pressable>
+              ) : null}
+            </View>
 
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.filterRow}
             >
-              {filters.map((filter, index) => (
+              {filters.map((filter) => (
                 <Pressable
                   key={filter}
                   onPress={() => {
+                    setActiveCategory(filter);
                     onCategoryPress?.(filter);
-
-                    if (filter === "Hotels") {
-                      onHotelsPress?.();
-                    }
                   }}
                   style={[
                     styles.filterPill,
-                    index === 0 && styles.activeFilterPill,
+                    activeCategory === filter && styles.activeFilterPill,
                   ]}
                 >
                   <Text
                     style={[
                       styles.filterText,
-                      index === 0 && styles.activeFilterText,
+                      activeCategory === filter && styles.activeFilterText,
                     ]}
                   >
                     {filter}
@@ -198,19 +212,19 @@ export default function HomePage({
           <DataState
             loading={loading}
             error={error}
-            empty={!loading && !error && places.length === 0}
+            empty={!loading && !error && homepageNearbyPlaces.length === 0}
             onRetry={reload}
           />
 
-          {!loading && !error && places.length > 0 ? (
+          {!loading && !error && homepageNearbyPlaces.length > 0 ? (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.nearbyRow}
           >
-            {places.map((place) => (
+            {homepageNearbyPlaces.map((place) => (
               <View key={place.id || place.title} style={styles.nearbyCard}>
-                <ImageBackground
+                <OptimizedImageBackground
                   source={place.image}
                   style={styles.nearbyImage}
                   imageStyle={styles.nearbyImageRadius}
@@ -234,7 +248,10 @@ export default function HomePage({
                   <View style={styles.nearbyOverlay}>
                     <View style={styles.metaRow}>
                       <Text style={styles.categoryPill}>{place.category}</Text>
-                      <Text style={styles.ratingText}>* {place.rating}</Text>
+                      <View style={styles.ratingIconRow}>
+                        <Ionicons name="star" size={14} color={GOLD} />
+                        <Text style={styles.ratingText}>{place.rating}</Text>
+                      </View>
                     </View>
 
                     <Text style={styles.cardTitle}>{place.title}</Text>
@@ -244,7 +261,7 @@ export default function HomePage({
                       <Text style={styles.detailsButtonText}>View Details</Text>
                     </Pressable>
                   </View>
-                </ImageBackground>
+                </OptimizedImageBackground>
               </View>
             ))}
           </ScrollView>
@@ -259,12 +276,15 @@ export default function HomePage({
                 style={styles.popularCard}
                 onPress={() => onPlacePress?.(place)}
               >
-                <Image source={place.image} style={styles.popularImage} />
+                <OptimizedImage source={place.image} style={styles.popularImage} />
 
                 <View style={styles.popularContent}>
                   <View style={styles.popularTitleRow}>
                     <Text style={styles.popularTitle}>{place.title}</Text>
-                    <Text style={styles.popularRating}>* {place.rating}</Text>
+                    <View style={styles.popularRatingRow}>
+                      <Ionicons name="star" size={13} color={GOLD} />
+                      <Text style={styles.popularRating}>{place.rating}</Text>
+                    </View>
                   </View>
 
                   <Text style={styles.popularSubtitle}>{place.location}</Text>
@@ -280,7 +300,7 @@ export default function HomePage({
 
           {recommendedPlace ? (
             <Pressable onPress={() => onPlacePress?.(recommendedPlace)}>
-              <ImageBackground
+              <OptimizedImageBackground
                 source={recommendedPlace.image}
                 style={styles.recommendCard}
                 imageStyle={styles.recommendImageRadius}
@@ -289,7 +309,7 @@ export default function HomePage({
                 <View style={styles.recommendShade} />
 
                 <View style={styles.recommendContent}>
-                  <Text style={styles.recommendPill}>RECOMMENDED NEAR YOU</Text>
+                  <Text style={styles.recommendPill}>WORTH THE SHORT TRIP</Text>
                   <Text style={styles.recommendTitle}>{recommendedPlace.title}</Text>
                   <Text style={styles.recommendText} numberOfLines={2}>
                     {recommendedPlace.description}
@@ -298,7 +318,7 @@ export default function HomePage({
                     {recommendedPlace.distance}  •  View Details &gt;
                   </Text>
                 </View>
-              </ImageBackground>
+              </OptimizedImageBackground>
             </Pressable>
           ) : null}
 
@@ -315,7 +335,7 @@ export default function HomePage({
                 style={styles.recentCard}
                 onPress={() => onPlacePress?.(item)}
               >
-                <Image source={item.image} style={styles.recentImage} />
+                <OptimizedImage source={item.image} style={styles.recentImage} />
                 <Text style={styles.recentTitle}>{item.title}</Text>
                 <Text style={styles.recentViewed}>
                   {formatViewedTime(item.viewedAt)}
@@ -335,7 +355,7 @@ export default function HomePage({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -593,6 +613,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(14,69,59,0.78)",
   },
 
+  ratingIconRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
   ratingText: {
     fontFamily: typography.fontFamily.body,
     color: colors.neutral[50],
@@ -676,8 +701,14 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 
-  popularRating: {
+  popularRatingRow: {
     marginLeft: 8,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  popularRating: {
+    marginLeft: 4,
     fontFamily: typography.fontFamily.body,
     color: colors.neutral[50],
     fontSize: 13,
@@ -823,3 +854,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
+
+
+

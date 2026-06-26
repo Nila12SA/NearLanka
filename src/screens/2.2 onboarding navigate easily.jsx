@@ -1,6 +1,6 @@
 import React from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  ImageBackground,
   Pressable,
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { colors, rgba } from "../theme/colors";
 import { typography } from "../theme/typography";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const heroImage = require("../../assets/onboarding-navigate-easily.jpg");
 
@@ -30,7 +31,7 @@ export default function OnboardingNavigateEasily({
   return (
     <View style={styles.screen}>
       <View style={styles.heroFrame}>
-        <ImageBackground
+        <OptimizedImageBackground
           source={heroImageSource}
           style={styles.heroImage}
           imageStyle={styles.heroImageRadius}
@@ -41,7 +42,7 @@ export default function OnboardingNavigateEasily({
               {onboardingNavigateEasily.secondaryButton}
             </Text>
           </Pressable>
-        </ImageBackground>
+        </OptimizedImageBackground>
       </View>
 
       <View style={styles.content}>
@@ -81,7 +82,7 @@ export default function OnboardingNavigateEasily({
 
 export { onboardingNavigateEasily };
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   screen: {
     flex: 1,
     alignItems: "center",
@@ -199,3 +200,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+

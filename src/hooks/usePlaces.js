@@ -58,7 +58,9 @@ export default function usePlaces({
       setUsedLocation(locationWasUsed);
     } catch (loadError) {
       console.error("Unable to load NearLanka places:", loadError);
-      setError(loadError.message || "Unable to load places right now.");
+      setError(
+        "We couldn't load places right now. Please check that the NearLanka backend is running and your phone is on the same Wi-Fi as this computer."
+      );
       setPlaces([]);
     } finally {
       setLoading(false);

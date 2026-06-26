@@ -1,23 +1,24 @@
 import React, { useState } from "react";
+import { OptimizedImageBackground } from "../components/OptimizedImage";
 import {
-  Image,
-  ImageBackground,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import BottomNav from "../components/BottomNav";
 import AppHeader from "../components/AppHeader";
 import LocationPill from "../components/LocationPill";
 import DataState from "../components/DataState";
 import usePlaces from "../hooks/usePlaces";
+import { filterCategoryPlaces, filterPlacesByQuery } from "../utils/places";
 import { Ionicons } from "@expo/vector-icons";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const sigiriyaImage = require("../../assets/historical-sigiriya.jpg");
 const templeImage = require("../../assets/historical-temple.jpg");
@@ -106,11 +107,13 @@ export default function HistoricalPage({
   hasLocationPermission = true,
 }) {
   const [activeFilter, setActiveFilter] = useState("All");
-  const { places, loading, error, reload, usedLocation } = usePlaces({
+  const [query, setQuery] = useState("");
+  const { places, loading, error, reload } = usePlaces({
     category: "historical",
-    nearby: true,
     hasLocationPermission,
   });
+  const filteredPlaces = filterCategoryPlaces(places, activeFilter, null);
+  const displayedPlaces = filterPlacesByQuery(filteredPlaces, query);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -131,19 +134,13 @@ export default function HistoricalPage({
           <View style={styles.searchBox}>
             <Ionicons name="search" size={22} color="#AFC8C4" />
             <TextInput
+              value={query}
+              onChangeText={setQuery}
               placeholder="Search nearby historical places"
               placeholderTextColor="#91A8A5"
               style={styles.searchInput}
             />
           </View>
-
-          {usedLocation ? (
-            <LocationPill
-              text="Near your current location"
-              iconName="navigate-outline"
-              style={styles.locationPill}
-            />
-          ) : null}
 
           <ScrollView
             horizontal
@@ -176,9 +173,9 @@ export default function HistoricalPage({
           </ScrollView>
 
           <View style={styles.cardList}>
-            <DataState loading={loading} error={error} empty={!loading && !error && places.length === 0} onRetry={reload} />
+            <DataState loading={loading} error={error} empty={!loading && !error && displayedPlaces.length === 0} onRetry={reload} />
 
-            {places.slice(0, 3).map((place) => (
+            {displayedPlaces.slice(0, 3).map((place) => (
               <HistoricalCard
                 key={place.id}
                 place={place}
@@ -188,7 +185,8 @@ export default function HistoricalPage({
               />
             ))}
 
-            <View style={styles.mapExploreCard}>
+            {displayedPlaces.length > 0 ? (
+              <View style={styles.mapExploreCard}>
               <View style={styles.mapGridOne} />
               <View style={styles.mapGridTwo} />
               <View style={styles.mapGlow} />
@@ -203,9 +201,10 @@ export default function HistoricalPage({
               <Pressable style={styles.mapButton}>
                 <Text style={styles.mapButtonText}>Open Interactive Map</Text>
               </Pressable>
-            </View>
+              </View>
+            ) : null}
 
-            {places.slice(3).map((place) => (
+            {displayedPlaces.slice(3).map((place) => (
               <HistoricalCard
                 key={place.id}
                 place={place}
@@ -233,7 +232,7 @@ function HistoricalCard({
 
   return (
     <View style={styles.placeCard}>
-      <ImageBackground
+      <OptimizedImageBackground
         source={place.image}
         style={styles.placeImage}
         imageStyle={styles.placeImageRadius}
@@ -247,47 +246,50 @@ function HistoricalCard({
         >
           <Ionicons
             name={isFavorite ? "heart" : "heart-outline"}
-            size={23}
+            size={25}
             color={isFavorite ? GOLD : "#DCE8E5"}
           />
         </Pressable>
+      </OptimizedImageBackground>
 
-        <View style={styles.cardBottomContent}>
-          <View style={styles.metaRow}>
-            <Ionicons name="star" size={13} color={GOLD} />
-            <Text style={styles.metaText}>{place.rating}</Text>
-            <View style={styles.metaDot} />
-            <Text style={styles.metaText}>{place.distance}</Text>
+      <View style={styles.placeInfo}>
+        <View style={styles.placeMetaRow}>
+          <View style={styles.ratingRow}>
+            <Ionicons name="star" size={14} color={GOLD} />
+            <Text style={styles.ratingText}>{place.rating}</Text>
           </View>
 
-          <Text style={styles.placeTitle}>{place.title}</Text>
-          <Text style={styles.placeDescription}>{place.description}</Text>
-
-          <View style={styles.cardFooter}>
-            <View style={styles.statusRow}>
-              <View
-                style={[
-                  styles.statusDot,
-                  place.statusActive && styles.activeStatusDot,
-                ]}
-              />
-              <Text style={styles.statusText}>{place.status}</Text>
-            </View>
-
-            <Pressable
-              style={styles.detailsButton}
-              onPress={() => onHistoricalPress?.(place)}
-            >
-              <Text style={styles.detailsButtonText}>View Details</Text>
-            </Pressable>
+          <View style={styles.distanceRow}>
+            <Ionicons name="location-outline" size={17} color="#AFC8C4" />
+            <Text style={styles.distanceText}>{place.distance}</Text>
           </View>
         </View>
-      </ImageBackground>
+
+        <Text style={styles.placeTitle}>{place.title}</Text>
+        <Text style={styles.placeDescription}>{place.description}</Text>
+
+        <View style={styles.statusRow}>
+          <View
+            style={[
+              styles.statusDot,
+              place.statusActive && styles.activeStatusDot,
+            ]}
+          />
+          <Text style={styles.statusText}>{place.status}</Text>
+        </View>
+
+        <Pressable
+          style={styles.detailsButton}
+          onPress={() => onHistoricalPress?.(place)}
+        >
+          <Text style={styles.detailsButtonText}>View Details</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -416,101 +418,105 @@ const styles = StyleSheet.create({
   },
 
   placeCard: {
-    height: 345,
-    borderRadius: 20,
+    borderRadius: 22,
     overflow: "hidden",
-    backgroundColor: CARD_BG,
+    backgroundColor: "#123F3A",
+    marginBottom: 4,
     shadowColor: "#000",
-    shadowOpacity: 0.32,
+    shadowOpacity: 0.25,
     shadowRadius: 18,
-    shadowOffset: { width: 0, height: 14 },
-    elevation: 9,
+    shadowOffset: { width: 0, height: 12 },
+    elevation: 8,
   },
 
   placeImage: {
-    flex: 1,
-    justifyContent: "space-between",
+    height: 255,
   },
 
   placeImageRadius: {
-    borderRadius: 20,
+    borderTopLeftRadius: 22,
+    borderTopRightRadius: 22,
   },
 
   imageOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.42)",
+    backgroundColor: "rgba(0,0,0,0.12)",
   },
 
   favoriteButton: {
     position: "absolute",
-    top: 14,
-    right: 14,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    top: 17,
+    right: 17,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     borderWidth: 1,
-    borderColor: "rgba(220,232,229,0.24)",
+    borderColor: "rgba(210, 232, 228, 0.3)",
+    backgroundColor: "rgba(20, 72, 66, 0.75)",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(18,60,57,0.78)",
   },
 
   activeFavoriteButton: {
-    borderColor: "rgba(255,192,90,0.85)",
-    backgroundColor: "rgba(18,63,58,0.95)",
+    borderColor: "rgba(255, 192, 90, 0.85)",
+    backgroundColor: "rgba(18, 63, 58, 0.95)",
   },
 
-  cardBottomContent: {
-    marginTop: "auto",
-    paddingHorizontal: 20,
-    paddingBottom: 18,
+  placeInfo: {
+    paddingHorizontal: 25,
+    paddingTop: 25,
+    paddingBottom: 25,
   },
 
-  metaRow: {
+  placeMetaRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
+    justifyContent: "space-between",
+    marginBottom: 16,
   },
 
-  metaText: {
+  ratingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  ratingText: {
     marginLeft: 5,
-    color: "#D4B36B",
-    fontSize: 12,
+    color: GOLD,
+    fontSize: 14,
     fontWeight: "800",
   },
 
-  metaDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    marginLeft: 9,
-    backgroundColor: "rgba(255,255,255,0.45)",
+  distanceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  distanceText: {
+    marginLeft: 6,
+    color: "#C5D4D1",
+    fontSize: 14,
+    fontWeight: "700",
   },
 
   placeTitle: {
     color: "#F2F0E8",
     fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
-    fontSize: 22,
-    lineHeight: 28,
+    fontSize: 25,
+    lineHeight: 32,
   },
 
   placeDescription: {
-    marginTop: 6,
-    color: "#D4DDDA",
-    fontSize: 14,
-    lineHeight: 19,
-  },
-
-  cardFooter: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 18,
+    marginTop: 14,
+    color: "#D3DEDB",
+    fontSize: 16,
+    lineHeight: 22,
   },
 
   statusRow: {
     flexDirection: "row",
     alignItems: "center",
+    marginTop: 18,
   },
 
   statusDot: {
@@ -532,17 +538,17 @@ const styles = StyleSheet.create({
   },
 
   detailsButton: {
-    height: 38,
-    minWidth: 125,
-    borderRadius: 15,
+    height: 45,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 24,
+    borderRadius: 14,
     backgroundColor: GOLD,
   },
 
   detailsButtonText: {
     color: "#123B37",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "800",
   },
 
@@ -625,3 +631,6 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+

@@ -1,18 +1,19 @@
 import React from "react";
+import { OptimizedImage } from "../components/OptimizedImage";
 import {
-  Image,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import BottomNav from "../components/BottomNav";
+import { SafeAreaView } from "react-native-safe-area-context";
+import StatusBar from "../components/ThemedStatusBar";
 import AppHeader from "../components/AppHeader";
+import BottomNav from "../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
+import { createThemedStyles } from "../theme/runtimeTheme";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -38,6 +39,7 @@ export default function FavoritesPage({
   onNavPress,
   onMenuPress,
   onFavoritePress,
+  onBack,
 }) {
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -49,12 +51,21 @@ export default function FavoritesPage({
           onProfilePress={() => onNavPress?.("Profile")}
         />
 
+        {onBack ? (
+          <Pressable style={styles.backButton} onPress={onBack}>
+            <Ionicons name="arrow-back" size={22} color="#F2F0E8" />
+            <View style={styles.backCopy}>
+              <Text style={styles.backText}>Your Favorites</Text>
+              <Text style={styles.backDescription}>Places you saved for later</Text>
+            </View>
+          </Pressable>
+        ) : null}
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <Text style={styles.title}>Your Favorites</Text>
-          <Text style={styles.subtitle}>Places you saved for later</Text>
+          {!onBack ? <Text style={styles.title}>Your Favorites</Text> : null}
+          {!onBack ? <Text style={styles.subtitle}>Places you saved for later</Text> : null}
 
           {favorites.length === 0 ? (
             <View style={styles.emptyCard}>
@@ -68,7 +79,7 @@ export default function FavoritesPage({
               {favorites.map((item) => (
                 <View key={item.id || item.title} style={styles.favoriteCard}>
                   {item.image && (
-                    <Image source={item.image} style={styles.favoriteImage} />
+                    <OptimizedImage source={item.image} style={styles.favoriteImage} />
                   )}
 
                   <View style={styles.favoriteContent}>
@@ -85,7 +96,10 @@ export default function FavoritesPage({
                       <Text style={styles.favoriteMeta}>{item.distance}</Text>
                     )}
                     {!!item.rating && (
-                      <Text style={styles.favoriteRating}>* {item.rating}</Text>
+                      <View style={styles.favoriteRatingRow}>
+                        <Ionicons name="star" size={13} color={GOLD} />
+                        <Text style={styles.favoriteRating}>{item.rating}</Text>
+                      </View>
                     )}
                   </View>
                 </View>
@@ -93,14 +107,13 @@ export default function FavoritesPage({
             </View>
           )}
         </ScrollView>
-
         <BottomNav activeKey="Favorites" onNavPress={onNavPress} />
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   safeArea: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -158,6 +171,33 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     tintColor: SOFT_TEAL,
+  },
+
+  backButton: {
+    marginTop: 14,
+    marginLeft: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+  },
+
+  backCopy: {
+    flex: 1,
+    marginLeft: 12,
+  },
+
+  backDescription: {
+    marginTop: 3,
+    color: "#AFC8C4",
+    fontSize: 13,
+    lineHeight: 18,
+  },
+
+  backText: {
+    color: "#F2F0E8",
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: "800",
   },
 
   scrollContent: {
@@ -252,7 +292,13 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 
+  favoriteRatingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
   favoriteRating: {
+    marginLeft: 4,
     marginTop: 5,
     color: GOLD,
     fontSize: 13,
@@ -266,3 +312,13 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+
+
+
+
+
+
+
+

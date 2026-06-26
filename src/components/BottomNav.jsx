@@ -1,5 +1,7 @@
 import React from "react";
+import { OptimizedImage } from "../components/OptimizedImage";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { createThemedStyles, getCurrentThemeMode } from "../theme/runtimeTheme";
 
 const navHomeIcon = require("../../assets/nav-home.png");
 const navCompassIcon = require("../../assets/nav-compass.png");
@@ -19,10 +21,14 @@ const navItems = [
   { icon: navUserIcon, label: "Profile", key: "Profile" },
 ];
 
-export default function BottomNav({ activeKey, activeTab, onNavPress }) {
+export default function BottomNav({ activeKey, activeTab, onNavPress, themeMode }) {
+  const light = (themeMode || getCurrentThemeMode()) === "Light";
+  const colors = light
+    ? { background: "#FFFFFF", border: "#C9D8D4", muted: "#60736F", accent: "#245F58" }
+    : { background: APP_BG, border: "rgba(255,255,255,0.06)", muted: MUTED_GRAY, accent: ACCENT_GOLD };
   const selectedTab = activeTab || activeKey;
   return (
-    <View style={styles.bottomNav}>
+    <View style={[styles.bottomNav, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
       {navItems.map((item) => {
         const isActive =
           item.key.toLowerCase() === String(selectedTab).toLowerCase();
@@ -35,13 +41,13 @@ export default function BottomNav({ activeKey, activeTab, onNavPress }) {
           >
             <Image
               source={item.icon}
-              style={[styles.navIcon, isActive && styles.activeNavIcon]}
+              style={[styles.navIcon, { tintColor: isActive ? colors.accent : colors.muted }]}
               resizeMode="contain"
             />
-            <Text style={[styles.navLabel, isActive && styles.activeNavText]}>
+            <Text style={[styles.navLabel, { color: isActive ? colors.accent : colors.muted }]}>
               {item.label}
             </Text>
-            <View style={[styles.activeDot, !isActive && styles.hiddenDot]} />
+            <View style={[styles.activeDot, { backgroundColor: colors.accent }, !isActive && styles.hiddenDot]} />
           </Pressable>
         );
       })}
@@ -49,7 +55,7 @@ export default function BottomNav({ activeKey, activeTab, onNavPress }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createThemedStyles({
   bottomNav: {
     position: "absolute",
     left: 0,
@@ -106,3 +112,5 @@ const styles = StyleSheet.create({
     opacity: 0,
   },
 });
+
+
